@@ -45,20 +45,31 @@
 
   \begin{acknowledgments}
     \vspace{1.1in}
-    I would like to thank my advisor, Professor Marios Pattichis, for his continuous
-    support in reviewing my source code and for helping me shape my ideas for this thesis.
-    I would also like to thank
-    Elmyra Grelle for helping me stay on track with all the necessary requirements
-    to graduate.
+    I would like to thank my advisor, Professor Marios Pattichis, for his
+    continuous support in reviewing my source code and for helping me shape my
+    ideas for this thesis. I would also like to thank Elmyra Grelle for helping
+    me stay on track with all the necessary requirements to graduate. Finally, I
+    would like to thank Sandia National Laboratories for supporting me
+    financially in my academic endeavors.
   \end{acknowledgments}
 
   \maketitleabstract %(required even though there's no abstract title anymore)
 
   \begin{abstract}
-    We develop a distributed processing system for analyzing classroom videos to assess student learning while participating in the advancing out of school learning in mathematics and 
-engineering (AOLME) project. We demonstrate our system in detecting writing and typing activities based on the Video Distributed Analysis (VIDA) system. VIDA uses a master node to 
-optimally distribute video segments to specific devices (e.g., CPU, GPU) within each heterogeneous processing node. The results are then collected by the master node. We 
-demonstrate the scalability and speedup of VIDA for analyzing videos with large image formats over different numbers of processing nodes.
+    This thesis proposes a distributed processing system for analyzing classroom
+    videos to assess student learning while they participate in the advancing
+    out of school learning in mathematics and engineering (AOLME) project. The
+    proposed architecture is demonstrated by detecting writing and typing
+    activities based on the Video Distributed Analysis (VIDA) system. VIDA
+    leverages Amazon Web Services (AWS) to optimally distribute segments of
+    video to a heterogenous compute cloud consisting of machines that have both
+    CPU and GPU processing hardware onboard. The master node is responsible for
+    distributing the videos and the slave nodes perform feature reduction on the
+    videos by calculating a handful of cumulative distribution functions (CDF)
+    to then be returned to the master node for analysis using support vector
+    machines for classification. This thesis will  demonstrate the accuracy,
+    scalability and flexibility of VIDA for videos collected through AOLME.
+
     \clearpage %(required for 1-page abstract)
   \end{abstract}
 

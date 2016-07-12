@@ -7,3 +7,6 @@
 *.gz
 *.tar
 *.toc
+*.fls
+*.fdb
+*.fdb_latexmk

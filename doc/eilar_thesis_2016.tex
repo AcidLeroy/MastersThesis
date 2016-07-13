@@ -21,20 +21,14 @@
 
   % \setlength{\parskip}{0.30cm}
 
-
   \title{Distributed Video Analysis for the  Advancing  \\
   Out of School Learning in Mathematics and Engineering Project}
 
   \author{Cody Wilson Eilar}
-
   \degreesubject{M.S., Computer Engineering}
-
   \degree{Master of Science \\ Computer Engineering}
-
   \documenttype{Thesis}
-
   \previousdegrees{B.S., University of New Mexico, 2010}
-
   \date{July, \thisyear}
 
   \maketitle
@@ -70,7 +64,7 @@
     machines (SVM). This thesis will demonstrate the accuracy,
     scalability and flexibility of VIDA for videos collected through AOLME. Furthermore,
     this thesis delves into the architectural details essential to distributed
-    video processing on cloud infrastructures.
+    video processing on cloud infrastructures \cite{LopezLeiva2016}.
 
     \clearpage %(required for 1-page abstract)
   \end{abstract}
@@ -86,11 +80,10 @@
 
   \mainmatter
 
+  % Include the topic chapters
   \include{chapter_1}
-
-
-  \chapter{Future Work}
-  I'm sure my future work will consist of lots of other famous stuff.
+  \include{chapter_2}
+  \include{chapter_3}
 
   \chapter*{Appendices}
 
@@ -107,7 +100,7 @@
   \chapter{Derivation of $A = \pi r^2$}
   A circle is really a square without corners.  QED.
 
-  %\bibliographystyle{AMS}
-  %\bibliography{bibfile_name}
+  \bibliographystyle{acm}
+  \bibliography{ivpcl_publications}
 
 \end{document}

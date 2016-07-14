@@ -10,7 +10,8 @@
 % OR
 % Use the following specification for TOP page numbering:
 % \documentclass[fleqn]{unmeethesis}
-
+\usepackage{amsmath}
+\usepackage{hyperref}
 \begin{document}
 
   \frontmatter
@@ -64,7 +65,7 @@
     machines (SVM). This thesis will demonstrate the accuracy,
     scalability and flexibility of VIDA for videos collected through AOLME. Furthermore,
     this thesis delves into the architectural details essential to distributed
-    video processing on cloud infrastructures \cite{LopezLeiva2016}.
+    video processing on cloud infrastructures .
 
     \clearpage %(required for 1-page abstract)
   \end{abstract}
@@ -90,8 +91,8 @@
   \addcontentsline{toc}{chapter}{Appendices}
   % Next lines duplicated from .toc file and used to create mini
   % "Appendix Table of Contents," if desired:
-  \contentsline {chapter}{\numberline {A}Proving $E=MC^2$}{4}
-  \contentsline {chapter}{\numberline {B}Derivation of $A = \pi r^2$}{5}
+  %\contentsline {chapter}{\numberline {A}Proving $E=MC^2$}{4}
+ % \contentsline {chapter}{\numberline {B}Derivation of $A = \pi r^2$}{5}
   % End mini table of contents
 
   \appendix

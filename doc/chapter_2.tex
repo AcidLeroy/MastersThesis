@@ -26,12 +26,31 @@ important motion features from the AOLME videos. Although as we see with our
 experiments, that the Farneback algorithm is better suited for pulling out
 motion features that our unique to the particular motion for which we attempt
 to find in our videos. In either case, both algorithms attempt to solve
-Equation \ref{eq:delta_image}.
+Equation \ref{eq:delta_image}
 
 \begin{equation}
 I(x,y,t) = I(x+dx, y+dy, t+dt)
 \label{eq:delta_image}
 \end{equation}
+
+where $I$ is the the image, $x$ \& $y$ are the column row coordinates respectively,
+and $t$ is the time between two adjacent image frames. Taking the Talylor
+series expansion of Equation \ref{eq:delta_image} results in Equation \ref{eq:taylor_expansion}
+
+
+\begin{equation}
+f_x u + f_y v + f_t = 0
+\label{eq:taylor_expansion}
+\end{equation}
+
+where
+
+\begin{equation}
+f_x = \frac{\partial f}{\partial x} \; ; \; f_y = \frac{\partial f}{\partial y} \\
+u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
+\label{eq:taylor_expansion_partial}
+\end{equation}
+
 
 \subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method}
 For this thesis, we leverage a common C++ library that has already implemented

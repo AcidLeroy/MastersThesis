@@ -10,3 +10,6 @@
 *.fls
 *.fdb
 *.fdb_latexmk
+*.bbl
+*.blg
+*.out

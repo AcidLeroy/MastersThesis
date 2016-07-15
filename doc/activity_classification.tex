@@ -82,13 +82,13 @@ is small and roughly constant within a pixel neighborhood. This algorithm, then,
 by definition cannot handle large motions between frames, and hence the algorithm
 presented in \cite{bouguet2001pyramidal} attempts to more robustly solve
 optical flow and is the algorithm that is implemented in the OpenCV \cite{itseez2015opencv}
-library. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack} 
+library. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
 and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
 that can be easily tracked from one frame to the other using the Shi-Tomasi
 algorithm \cite{shi1994good}. The next method then calculates the optical flow
 between the good points using the pyramidal implementation of the Lucas-Kanade
-algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general 
-program flow for calculating motion vectors in ViDA. 
+algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
+program flow for calculating motion vectors in ViDA.
 
 \begin{algorithm}
 \caption{Calculating Lucas-Optical Flow from Videos}
@@ -97,7 +97,7 @@ program flow for calculating motion vectors in ViDA.
 \Procedure{CalculateVectors}{$frame1$, $frame2$}
   \If{\text{$track\_points\_initialized$}}
   	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
-  \Else 
+  \Else
   	\State $track\_points \gets \texttt{goodFeaturesToTrack}(frame1)$
 	\State $track\_points\_initialized \gets True$
 	\State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
@@ -106,6 +106,14 @@ program flow for calculating motion vectors in ViDA.
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{\label{subsection:farneback_method} Farneback Method}
+Again, we leverage the C++ OpenCV library to calculate the motion vectors for
+Farneback optical flow. Unlike the previous method, the Farneback algorithm does not require
+any track points to estimate motion vectors because it is a dense optical flow
+algorithm, i.e. 100\% of the pixels has an associated optical flow vector. The
+main idea behind calculating the motion vectors in this method, is to use
+polynomial expansion for a neighborhood of pixels \cite{farneback2003two}. 
 
 
 \section{\label{section:feature_extraction}Feature Extraction from Optical Flow}

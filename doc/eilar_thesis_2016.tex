@@ -14,6 +14,8 @@
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{minted}
+
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
@@ -102,10 +104,7 @@
   % End mini table of contents
 
   \appendix
-  \chapter{Proving $E=MC^2$}
-  I refer the reader to many of grandpa's famous books on this subject.
-  \chapter{Derivation of $A = \pi r^2$}
-  A circle is really a square without corners.  QED.
+  \include{cents_and_orients}
 
   \bibliographystyle{acm}
   \bibliography{ivpcl_publications}

@@ -189,14 +189,28 @@ then used to extract the subset of data from each of the dense matrices.
 
 Using the optical flow bitmask, $\mathbf{V_m}$, we can then extract features
 from each one of our dense matrices using the Hadamard product as shown in
-Equation \ref{eq:subset}, where $\|\mathbf{V\prime}\|, \mathbf{V_x\prime},\mathbf{V_y\prime},
-\mathbf{\Phi\prime}$ are subset matrices for the magnitude, x and y direction
-and orientation respectively. We have now reduced the feature space somewhat,
-but depending the size of the video and the amount of entropy per frame pair,
-we could still have a significant amount of data to process for classification.
+Equation \ref{eq:subset}, where $\|\mathbf{V\prime}\|,
+\mathbf{V_x\prime},\mathbf{V_y\prime}, \mathbf{\Phi\prime}$ are subset matrices
+for the magnitude, x and y direction and orientation respectively. We have now
+reduced the feature space somewhat, but depending the size of the video and the
+amount of entropy per frame pair, we could still have a significant amount of
+data to process for classification.
 
-
-
-
+In addition to extracting generic vectors from the video, we also add
+geometrical centroids, blob orientation and background motion around the blobs
+to the optical flow statistics being used for classification. We implement these
+methods to attempt to leverage information that could be useful during
+classification. In order to calculate the geometrical centroids and orientations
+of each blob, we use some well known algorithms available in OpenCV,
+\texttt{connectedComponentsWithStats} and \texttt{findContours}
+\cite{itseez2015opencv}. \texttt{connectedComponentsWithStats} is a function
+that allows us to compute the centroid for each blob of connected pixels. The
+input to this function is our binary mask image, $\mathbf{V_m}$. Once we have
+all the connected blobs, we can then calculate the orientation of each one of
+those blobs using \texttt{findContours} in combination with with
+\texttt{fitEllipse}. The full implementation of this algorithm is outlined in
+Appendix \ref{ap:centroids}. The final step is to then dilate each blob, and
+then calculate the optical flow statistics in the difference region. Figure %todo
+and Figure blah illustrate the concept of the above steps. 
 
 \section{\label{section:classification}Classifying the Reduced Feature Space}

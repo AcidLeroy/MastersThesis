@@ -144,7 +144,37 @@ have been calculated with Farneback optical flow unless otherwise specified.
 The \texttt{CalculateVectors} function in both Algorithm \ref{alg:lk_flow} and
 \ref{alg:farneback} returns several dense matrices that represent the features
 that we can extract from the optical flow output. These features are magnitude,
-orientation, x direction and y direction of the optical flow features.
+orientation, x direction and y direction of the optical flow features. These
+are ultimately the features that use to train and classify using an SVM. However,
+if we had two $N \times M$ video frames as the input, we now have $4 \times N \times M$
+features. Clearly we have not yet reduced the input feature space. Thus, based
+on information that we know \textit{a-priori}, we can reduce our feature space
+significantly.
+
+In the case of typing and writing, we know we can expect there to be motion from
+one frame to the next. We don't know by how much, but we do know that it is not
+zero. Using this knowledge, we can then threshold the optical flow vectors that
+we get back from Algorithms \ref{alg:lk_flow} and \ref{alg:farneback}. The
+threshold value used was empirically calculated from doing multiple runs. For
+the dataset that we used, we found we got the best results by only retrieving
+optical flow vectors with a magnitude greater than 75\% of the max value. The set
+of Equations in \ref{eq:optical_threshod} illustrate this idea.
+
+\begin{align}
+  \label{eq:optical_threshold}
+  \begin{split}
+  \mathbf{V} &= (\mathbf{V_x}, \mathbf{V_y}) \\
+  \mathbf{V\prime} &\subset \mathbf{V}\\
+  \mathbf{V\prime} &=
+  \begin{cases}
+    \mathbf{V}, & \text{if } \|\mathbf{V}\| \geq \max( \|\mathbf{V}\|) \times 0.25 \\
+    \text{null}, & \text{otherwise}
+  \end{cases}
+  \end{split}
+\end{align}
+where $\mathbf{V_x}$ and $\mathbf{V_y}$ are the optical flow vectors in the
+x and y directions respectively.
+
 
 
 

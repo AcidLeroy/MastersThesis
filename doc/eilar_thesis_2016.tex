@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{algorithm}
+\usepackage{graphicx}
 \usepackage[noend]{algpseudocode}
 \usepackage{minted}
 
@@ -28,7 +29,7 @@
   % That is, if you see paragraphs float with lots of white space
   % in between them:
 
-  % \setlength{\parskip}{0.30cm}
+  %\setlength{\parskip}{0.30cm}
 
   \title{Distributed Video Analysis for the  Advancing  \\
   Out of School Learning in Mathematics and Engineering Project}
@@ -59,21 +60,20 @@
   \maketitleabstract %(required even though there's no abstract title anymore)
 
   \begin{abstract}
-    This thesis proposes a distributed processing system for analyzing
-    videos acquired through the advancing out of school learning in
-    mathematics and engineering (AOLME) project. The
-    proposed architecture is demonstrated by detecting writing and typing
-    activities based on the Video Analysis (ViDA) system. VIDA
-    leverages Amazon Web Services (AWS) to optimally distribute segments of
-    video to a heterogenous compute cloud consisting of machines that have both
-    CPU and GPU processing hardware onboard. The master node is responsible for
-    distributing the videos and the slave nodes perform feature reduction on the
-    videos by calculating a handful of cumulative distribution functions (CDF)
-    to then be returned to the master for classification using a support vector
-    machine (SVM). This thesis will demonstrate the accuracy,
-    scalability and flexibility of ViDA for videos collected through AOLME. Furthermore,
-    this thesis delves into the architectural details essential to distributed
-    video processing on cloud infrastructures.
+    This thesis introduces a distributed processing system for analyzing videos
+    acquired through the advancing out of school learning in mathematics and
+    engineering (AOLME) project. The proposed architecture is demonstrated by
+    detecting writing and typing activities based on the Video Analysis (ViDA)
+    system. VIDA leverages Amazon Web Services (AWS) to optimally distribute
+    segments of video to a heterogenous compute cloud consisting of machines
+    that have both CPU and GPU processing hardware onboard. The master node is
+    responsible for distributing the videos and the slave nodes perform feature
+    reduction on the videos by calculating a handful of cumulative distribution
+    functions (CDF) to then be returned to the master for classification using a
+    support vector machine (SVM). This thesis will demonstrate the accuracy,
+    scalability and flexibility of ViDA for videos collected through AOLME.
+    Furthermore, this thesis delves into the architectural details essential to
+    distributed video processing on cloud infrastructures.
 
     \clearpage %(required for 1-page abstract)
   \end{abstract}

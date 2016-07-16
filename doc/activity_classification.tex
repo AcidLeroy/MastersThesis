@@ -211,7 +211,39 @@ those blobs using \texttt{findContours} in combination with with
 \texttt{fitEllipse}. The full implementation of this algorithm is outlined in
 Appendix \ref{ap:centroids}. The final step is to then dilate each blob, and
 then calculate the optical flow statistics in the difference region. Appendix
-\ref{ap:dilate}. Figure %todo
-and Figure blah illustrate the concept of the above steps.
+\ref{ap:dilate}. Figure \ref{fig:orient_cent} illustrates the idea of acquiring
+the centroid and orientation of the blobs from $\mathbf{V_m}$.
+
+\begin{figure}[h]
+  \label{fig:orient_cent}
+  \centering
+  \includegraphics[width=8cm]{figures/cent_and_orient}
+  \caption{Example of orientation measurement on the left, and the centroid calculation on the right.}
+\end{figure}
+
+When the previous optical flow features have been generated, their values are then
+organized into a probability density function (PDF) with 25 bins. That is to say that
+each frame pair generates a PDF and that PDF is accumulated for every subsequent
+frame in the video sequence. When our software reaches the end of the video file,
+a normalized, cumulative distribution function (CDF) is calculated and output
+for each vector. So for each input video there will be one CDF with 25 bins
+for blob orientation, blob centroid x and y, motion vector magnitude, motion
+vector orientation and background motion vector magnitude. Figure \ref{fig:extract_flow}
+clearly depicts this concept.
+
+\begin{figure}[h]
+  \label{fig:extract_flow}
+  \centering
+  \includegraphics[width=14cm]{figures/extract_features_flow}
+  \caption{Flow of the extract features program. For every input video, it will
+  return a CDF with 25 bins for each of the extracted features from the motion
+  vectors}
+\end{figure}
+
+\section{\label{section:the_data}The AOLME Dataset}
+The data used for this thesis is a subset of the entire AOLME dataset. By hand,
+we have selected a few videos and extracted typing and writing clips from
+the original dataset and are using these as ground truth.
+
 
 \section{\label{section:classification}Classifying the Reduced Feature Space}

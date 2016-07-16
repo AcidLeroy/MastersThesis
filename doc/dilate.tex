@@ -1,0 +1,35 @@
+\chapter{\label{ap:dilate}Retrieving Statistics Around Motion Blob}
+\begin{minted}{cpp}
+/**
+ * Get the histogram for the image around the motion.
+ */
+template <typename T>
+void GetHistoAround(const T& thresholded_motion, int disk_size,
+                    const T& gray_scale_image, T* bg_histogram) {
+  T dialated;
+  // Get disk
+  T disk = cv::getStructuringElement(cv::MORPH_ELLIPSE,
+                                     cv::Size(disk_size, disk_size));
+  // Dilate motion to get pixels around motion
+  cv::dilate(thresholded_motion, dialated, disk);
+  T diff_image = dialated - thresholded_motion;
+  diff_image.convertTo(diff_image, CV_8U);
+  T background;
+  gray_scale_image.copyTo(background, diff_image);
+  // Get histogram of background intensity
+  constexpr int num_bins = 25;
+  constexpr float range[] = {0, 256};  // the upper boundary is exclusive
+  const float* hist_range = {range};
+  bool uniform = true;
+  bool accumulate = false;
+
+  T hist;
+  cv::calcHist(&background, 1, 0, T(), hist, 1, &num_bins, &hist_range, uniform,
+               accumulate);
+  if (bg_histogram->empty()) {
+    hist.copyTo(*bg_histogram);
+  } else {
+    (*bg_histogram) = (*bg_histogram) + hist;
+  }
+}
+\end{minted}

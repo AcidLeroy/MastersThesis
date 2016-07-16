@@ -113,8 +113,39 @@ Farneback optical flow. Unlike the previous method, the Farneback algorithm does
 any track points to estimate motion vectors because it is a dense optical flow
 algorithm, i.e. 100\% of the pixels has an associated optical flow vector. The
 main idea behind calculating the motion vectors in this method, is to use
-polynomial expansion for a neighborhood of pixels \cite{farneback2003two}. 
+polynomial expansion for a neighborhood of pixels \cite{farneback2003two} and
+then use that estimation to find a global translation between the two frames. This
+essentially aids with global background movement. The main algorithm used in ViDA
+is similar to Algorithm \ref{alg:lk_flow} but contains fewer steps since there
+is no need to get good features to track. The Farneback implementation is shown
+in Algorithm \ref{alg:farneback}.
 
+\begin{algorithm}
+\caption{Calculating Farneback Flow from Videos}
+\label{alg:farneback}
+\begin{algorithmic}[1]
+\Procedure{CalculateVectors}{$frame1$, $frame2$}
+  \State $optical\_flow \gets \texttt{calcOpticalFlowFarneback}(frame1, frame2)$\\
+  \Return $optical\_flow$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{\label{subsection:comparison}Comparison of Methods}
+We implemented the Lucas-Kanade method first in our research because in general,
+performance is a concern and, as long as not too many features or
+too few features are detected, the Lucas-Kanade algorithm will be faster
+\cite{de2015choosing}. Despite this fact, we found that our classifier did
+not perform as well on features extracted from the Lucas-Kanade method, as it
+did using the Farneback method. As a result, most of the results in this thesis
+have been calculated with Farneback optical flow unless otherwise specified.
 
 \section{\label{section:feature_extraction}Feature Extraction from Optical Flow}
+The \texttt{CalculateVectors} function in both Algorithm \ref{alg:lk_flow} and
+\ref{alg:farneback} returns several dense matrices that represent the features
+that we can extract from the optical flow output. These features are magnitude,
+orientation, x direction and y direction of the optical flow features.
+
+
+
 \section{\label{section:classification}Classifying the Reduced Feature Space}

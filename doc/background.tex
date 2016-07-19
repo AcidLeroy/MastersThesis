@@ -1,0 +1,138 @@
+\chapter{Background}
+Human activity classification in videos is not only a difficult problem to solve
+algorithmically but also pushes current computing solutions to the edge of
+their capability. Many possible solutions have been proposed for robust activity
+classification in videos \cite{niebles2010modeling} \cite{bashir2007object}
+\cite{ribeiro2005human} \cite{karpathy2014large}.
+
+\section{\label{section:activity_classification}Activity Classification in Videos}
+One of the main objectives of this research is to provide a reliable method for
+activity classification in videos. For this thesis, two activities of interest
+to the College of Education are studied: when students are writing and when they
+typing. The idea being that if we can prove that classification using ViDA works
+for simple activities, we can extend the system to handle other activities just
+by changing the training data and training a new classifier on that data, making
+the system extremely flexible. This chapter reviews the basic techniques that
+are used for reducing the feature space of videos so that any machine learning
+algorithm, such as an SVM, can be used to classify the activities. It explains
+the basic implementation of the Farneback optical flow algorithm
+\cite{farneback2003two}, also known as dense optical flow, the current state-of
+-the-art in video activity classification,
+
+\subsection{\label{section:optical_flow_methods}Optical Flow Methods}
+In this thesis we attempt to classify two types of activities in video,  typing
+and writing. Since both of these activities involve motion, i.e. a change of
+apparent structure position from one video frame to the next, optical flow
+algorithms  are a suitable tool for attempting to extract germane features from
+the video.
+
+Currently, there are several varieties of optical flow algorithms that have been
+published. We use both Lucas-Kanade \cite{lucas1981iterative} and the Farneback
+\cite{farneback2003two}  optical flow algorithms to attempt to extract
+important motion features from the AOLME videos. Although as we see with our
+experiments, that the Farneback algorithm is better suited for pulling out
+motion features that our unique to the particular motion for which we attempt
+to find in our videos. In either case, both algorithms attempt to solve
+Equation \ref{eq:delta_image}
+
+\begin{equation}
+I(x,y,t) = I(x+dx, y+dy, t+dt)
+\label{eq:delta_image}
+\end{equation}
+
+where $I$ is the the image, $x$ \& $y$ are the column row coordinates
+respectively, and $t$ is the time between two adjacent image frames. Taking the
+Talylor series expansion of Equation \ref{eq:delta_image} results in Equation
+\ref{eq:taylor_expansion}
+
+
+\begin{equation}
+f_x u + f_y v + f_t = 0
+\label{eq:taylor_expansion}
+\end{equation}
+
+where
+
+\begin{equation}
+f_x = \frac{\partial f}{\partial x} \; ; \; f_y = \frac{\partial f}{\partial y} \\
+u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
+\label{eq:taylor_expansion_partial}
+\end{equation}
+
+ Equation is \ref{eq:taylor_expansion_partial} is known as the Optical Flow
+ equation. The object is determine what $u$ and $v$ are given that $f_x$ and
+ $f_y$ are the image gradients and $f_t$ is the time gradient. Since in Equation
+ \ref{eq:taylor_expansion} we have two unknowns, we cannot solve the system
+ without additional constraints. This is known as the \textit{aperture problem}.
+ Both the Lucas-Kanade method and the Farneback method attempt to estimate this
+ problem. Lucas-Kande attempts to reframe the problem such that we have an
+ overdetermined system, solving it and then providing motion vectors for only
+ features that move. The Farneback solution, on the other hand, argues that is
+ possible to solve the \textit{aperture problem} by first approximating each
+ neighborhood of both frames with quadratic polynomials, and then estimating the
+ displacement fields between the frames using polynomial expansion. Rather than
+ providing only a few motion vectors, the Farneback method provides dense
+ optical flow. That is to say that there is a motion vector for every pixel
+ between the frames \cite{farneback2003two}.
+
+\subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method} For this
+thesis, we leverage a common C++ library that has already implemented a
+specialized version of the general Lucas-Kanade algorithm which uses pyramids to
+solve the optical flow at different scales of motion
+\cite{bouguet2001pyramidal}. This algorithm is provided freely in a C++ computer
+vision library known as OpenCV \cite{itseez2015opencv}. Essentially, this
+algorithm is much like the original paper published by Lucas and Kanade, but it
+solves the issue of large motions between frames. By definition, the Lucas-Kande
+method assumes that the displacement of features in the image between two frames
+is small and roughly constant within a pixel neighborhood. This algorithm, then,
+by definition cannot handle large motions between frames, and hence the algorithm
+presented in \cite{bouguet2001pyramidal} attempts to more robustly solve
+optical flow and is the algorithm that is implemented in the OpenCV \cite{itseez2015opencv}
+library. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
+and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
+that can be easily tracked from one frame to the other using the Shi-Tomasi
+algorithm \cite{shi1994good}. The next method then calculates the optical flow
+between the good points using the pyramidal implementation of the Lucas-Kanade
+algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
+program flow for calculating motion vectors in ViDA.
+
+\begin{algorithm}
+\caption{Calculating Lucas-Optical Flow from Videos}
+\label{alg:lk_flow}
+\begin{algorithmic}[1]
+\Procedure{CalculateVectors}{$frame1$, $frame2$}
+  \If{\text{$track\_points\_initialized$}}
+  	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
+  \Else
+  	\State $track\_points \gets \texttt{goodFeaturesToTrack}(frame1)$
+	\State $track\_points\_initialized \gets True$
+	\State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
+  \EndIf
+  \Return $optical\_flow$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{\label{subsection:farneback_method} Farneback Method}
+Again, we leverage the C++ OpenCV library to calculate the motion vectors for
+Farneback optical flow. Unlike the previous method, the Farneback algorithm does not require
+any track points to estimate motion vectors because it is a dense optical flow
+algorithm, i.e. 100\% of the pixels has an associated optical flow vector. The
+main idea behind calculating the motion vectors in this method, is to use
+polynomial expansion for a neighborhood of pixels \cite{farneback2003two} and
+then use that estimation to find a global translation between the two frames. This
+essentially aids with global background movement. The main algorithm used in ViDA
+is similar to Algorithm \ref{alg:lk_flow} but contains fewer steps since there
+is no need to get good features to track. The Farneback implementation is shown
+in Algorithm \ref{alg:farneback}.
+
+\begin{algorithm}
+\caption{Calculating Farneback Flow from Videos}
+\label{alg:farneback}
+\begin{algorithmic}[1]
+\Procedure{CalculateVectors}{$frame1$, $frame2$}
+  \State $optical\_flow \gets \texttt{calcOpticalFlowFarneback}(frame1, frame2)$\\
+  \Return $optical\_flow$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}

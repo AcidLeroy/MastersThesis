@@ -1,9 +1,26 @@
 \chapter{Background}
 Human activity classification in videos is not only a difficult problem to solve
-algorithmically but also pushes current computing solutions to the edge of
-their capability. Many possible solutions have been proposed for robust activity
-classification in videos \cite{niebles2010modeling} \cite{bashir2007object}
-\cite{ribeiro2005human} \cite{karpathy2014large}.
+algorithmically but also pushes current computing solutions to the edge of their
+capability, especially when attempting to keep up with real-time video rates.
+Many possible solutions have been proposed for robust activity classification in
+videos \cite{niebles2010modeling} \cite{bashir2007object}
+\cite{ribeiro2005human} \cite{karpathy2014large}. Methods such as
+\cite{bashir2007object} rely on principal component analysis (PCA) and hidden
+Markov models (HMMs) to attempt to classify motions using trajectories; however,
+all the datasets study consist of hardware augmentation (a motion tracking glob
+for example), used to track motions of hands etc, and do not rely solely on the
+video source for classification. Other methods such as
+\cite{niebles2010modeling}, use similar techniques that are done in this thesis,
+however they do not address the computational burden of producing a histogram of
+features to use for classification. Finally, new deep learning methods such as
+convolutional neural networks are also gaining popularity in activity
+classification in videos because there is no need to select the type of features
+\textit{a-priori}, you let the network select what is important for
+classification \cite{karpathy2014large}. This technique has much promise, but is
+extremely time consuming to train, it took nearly one month of training in
+\cite{karpathy2014large}.
+
+
 
 \section{\label{section:activity_classification}Activity Classification in Videos}
 One of the main objectives of this research is to provide a reliable method for

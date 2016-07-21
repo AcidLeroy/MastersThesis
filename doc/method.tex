@@ -1,6 +1,14 @@
 \chapter{Methods}
+In this chapter we review the basic implementation details of our ViDA framework.
+We first demonstrate how we use Lucas-Kanade and Farneback optical flow algorithms
+to reduce the feature space to only 6 25 bin features. With that feature space,
+we the show how to accurately classify activities in the videos using support
+vector machines and k nearest neighbors. Finally, we cover the details of distributing
+this system over an elastic cloud architecture for scalability and flexibility
+using Amazon Web Services (AWS).
 
-\subsection{\label{subsection:comparison}Comparison of Methods}
+
+\section{\label{subsection:comparison}Comparison of Methods}
 We implemented the Lucas-Kanade method first in our research because in general,
 performance is a concern and, as long as not too many features or
 too few features are detected, the Lucas-Kanade algorithm will be faster

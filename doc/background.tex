@@ -7,8 +7,8 @@ videos \cite{niebles2010modeling} \cite{bashir2007object}
 \cite{ribeiro2005human} \cite{karpathy2014large}. Methods such as
 \cite{bashir2007object} rely on principal component analysis (PCA) and hidden
 Markov models (HMMs) to attempt to classify motions using trajectories; however,
-all the datasets study consist of hardware augmentation (a motion tracking glob
-for example), used to track motions of hands etc, and do not rely solely on the
+all the datasets study consist of hardware augmentation (a motion tracking glob for
+example), used to track motions of hands etc, and do not rely solely on the
 video source for classification. Other methods such as
 \cite{niebles2010modeling}, use similar techniques that are done in this thesis,
 however they do not address the computational burden of producing a histogram of
@@ -16,25 +16,28 @@ features to use for classification. Finally, new deep learning methods such as
 convolutional neural networks are also gaining popularity in activity
 classification in videos because there is no need to select the type of features
 \textit{a-priori}, you let the network select what is important for
-classification \cite{karpathy2014large}. This technique has much promise, but is
-extremely time consuming to train, it took nearly one month of training in
-\cite{karpathy2014large}.
+classification \cite{karpathy2014large}. This technique is computationally
+expensive and requires huge amounts of data to properly classify activities
+\cite{karpathy2014large}. The study presented by Laptev et al.
+\cite{laptev2008learning} showed that it is possible to reduce a video dataset
+size significantly using optical flow and using a technique called bag of
+features (BoF) which is ultimately used by a machine learning algorithm, such as
+non-linear support vector machines to classify the activities. The BoF
+technique, however, lacks scalability and proposes no solution to this problem.
+
+Thus we have defined some of the important research in this area and where it is
+lacking. In the following sections, we explore important algorithms that are
+foundational to the success of our classification and scalable architecture.
+First we review optical flow and how it can be used for classification and then
+we explore the current state of the art cloud computing techniques and how they
+can be utilized to create a flexible and scalable architecture.
 
 
-
-\section{\label{section:activity_classification}Activity Classification in Videos}
-One of the main objectives of this research is to provide a reliable method for
-activity classification in videos. For this thesis, two activities of interest
-to the College of Education are studied: when students are writing and when they
-typing. The idea being that if we can prove that classification using ViDA works
-for simple activities, we can extend the system to handle other activities just
-by changing the training data and training a new classifier on that data, making
-the system extremely flexible. This chapter reviews the basic techniques that
-are used for reducing the feature space of videos so that any machine learning
-algorithm, such as an SVM, can be used to classify the activities. It explains
-the basic implementation of the Farneback optical flow algorithm
-\cite{farneback2003two}, also known as dense optical flow, the current state-of
--the-art in video activity classification,
+\section{\label{section:activity_classification}Optical Flow}
+In this section, we review techniques that are commonly used for analyzing
+motions in videos. We explain the implementation of the Farneback optical flow algorithm
+\cite{farneback2003two}, also known as dense optical flow, and the pyramidal,
+Lucas-Kanade approach to optical flow \cite{bouguet2001pyramidal}.
 
 \subsection{\label{section:optical_flow_methods}Optical Flow Methods}
 In this thesis we attempt to classify two types of activities in video,  typing
@@ -92,20 +95,19 @@ u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
  optical flow. That is to say that there is a motion vector for every pixel
  between the frames \cite{farneback2003two}.
 
-\subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method} For this
-thesis, we leverage a common C++ library that has already implemented a
+\subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method}
+We leverage a common C++ library that has already implemented a
 specialized version of the general Lucas-Kanade algorithm which uses pyramids to
 solve the optical flow at different scales of motion
 \cite{bouguet2001pyramidal}. This algorithm is provided freely in a C++ computer
 vision library known as OpenCV \cite{itseez2015opencv}. Essentially, this
 algorithm is much like the original paper published by Lucas and Kanade, but it
-solves the issue of large motions between frames. By definition, the Lucas-Kande
+solves the issue of large motions between frames and at different scales. By definition, the Lucas-Kande
 method assumes that the displacement of features in the image between two frames
 is small and roughly constant within a pixel neighborhood. This algorithm, then,
 by definition cannot handle large motions between frames, and hence the algorithm
 presented in \cite{bouguet2001pyramidal} attempts to more robustly solve
-optical flow and is the algorithm that is implemented in the OpenCV \cite{itseez2015opencv}
-library. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
+optical flow. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
 and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
 that can be easily tracked from one frame to the other using the Shi-Tomasi
 algorithm \cite{shi1994good}. The next method then calculates the optical flow

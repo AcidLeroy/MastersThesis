@@ -116,7 +116,7 @@ flow. The Lucas-Kanade method in OpenCV is often used with Shi-Tomasi
 in a frame. This allows the Lucas-Kanade algorithm to perform calculations on a
 sparse matrix rather than computing dense optical flow.
 
-\subsection{\label{subsection:farneback_method} Farneback Method} Again, we
+\subsection{\label{subsection:farneback_method}Farneback Method} Again, we
 leverage the C++ OpenCV library to calculate the motion vectors for Farneback
 optical flow. Unlike the previous method, the Farneback algorithm does not
 require any track points to estimate motion vectors because it is a dense
@@ -127,23 +127,58 @@ and then use that estimation to find a global translation between the two
 frames. This essentially aids with global background movement so that unique
 movements in the foreground can be accurately measured.
 
-\section{\label{section:cloud_computing} Cloud Computing}
-Cloud computing has become a common practice among scientists and engineers
+\section{\label{section:cloud_computing}Cloud Computing}
+Cloud computing has become a common practice among scientists, engineers and
+business owners
 alike for solving computationally expensive problems at a relative low cost.
 Cloud computing offers services on demand rather than provisioning hardware and
 software ahead of time. This has opened the door to researchers who require
 thousands of computers but don't necessarily have the funds or access to a
-cluster of their own. Cloud computing offers a model that is pay as you go, you
-only pay for what you use. This contrasts with the traditional way of solving
-computationally expensive problems by acquiring hardware and software ahead of
-time to run on dedicated machines. This has the advantage that the owner of the
-hardware has full control of its resources, but it has the disadvantage of
-costing a significant amount of money and there is a chance that the originally
-allocated hardware is  either insufficient for the task or is too much therefore
-wasting money and computational resources.  At its core, information technology
-resources are now a programmable resource, rather than one that has to be
-manually setup and configured. In the following subsections we explore the current
-state of cloud computing and what types of applications can leverage a cloud like
-infrastructure.
+cluster of their own \cite{armbrust2009above}. Cloud computing offers a model
+that is pay as you go, you only pay for what you use. This contrasts with the
+traditional way of solving computationally expensive problems by acquiring
+hardware and software ahead of time to run on dedicated machines. This has the
+advantage that the owner of the hardware has full control of its resources, but
+it has the disadvantage of costing a significant amount of money and there is a
+chance that the originally allocated hardware is  either insufficient for the
+task or is too much therefore wasting money and computational resources.  At its
+core, information technology resources are now a programmable resource, rather
+than one that has to be manually setup and configured. In the following
+subsections we explore the current state of cloud computing and what types of
+applications can leverage a cloud like infrastructure.
 
-\subsection{\label{section:in_the_cloud} What's in the cloud?}
+\subsection{\label{subsection:in_the_cloud}What's in the cloud?}
+In most of the modern cloud architectures such as Amazon Web Services (AWS),
+Microsoft's Azure and Google's Cloud Platform, services offered range from
+compute power to database solutions. However, the resources that are often
+most important are access to compute resources, highly available networks and
+redundant and durable storage. With these three resources available, its possible
+to create almost any kind of application in a cloud architecture. The idea is
+to eliminate servers, and instead replace it with services. Buzzwords
+that emerge from this context are software as a service (SaaS), hardware as a service
+(HaaS), and X as a service (XaaS) where X can refer to any number common IT
+processes.
+
+The compute resources that are provided are simply virtual machines that can be
+created programmatically, usually through some kind of application program
+interface (API) provided by the cloud company. These virtual machines can
+usually be provisioned with almost any kind of operating system that is
+supported by the cloud company of choice. As a result, developers can easily
+stand up thousands of virtual instances in the cloud with their operating system
+of choice with the click of a button, and tear them down just as quickly.
+
+Storage resources are also crucial to effective cloud software development.
+Making storage resources highly available has the advantage of there being
+no single point of failure in the data and also facilitates fast access to the
+data because no one network interface will be throttled on the network. In a
+distributed computing sense, this is extremely important so that data can be operated
+upon efficiently over potentially thousands of nodes.
+
+Without a well provisioned network, this could be the ultimate bottleneck for
+a software package attempting to leverage the cloud. Fortunately, network as a
+service (NaaS) is also available in most commercially available clouds. Most
+providers will supply very basic networking for free, but then as with most
+resources available in the cloud, it is something that can be upgraded, provisioned
+and tailored to the developer's desire.
+
+\subsection{\label{subsection:aws}Amazon Web Services}

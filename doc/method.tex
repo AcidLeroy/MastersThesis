@@ -8,7 +8,51 @@ this system over an elastic cloud architecture for scalability and flexibility
 using Amazon Web Services (AWS).
 
 
-\section{\label{subsection:comparison}Comparison of Methods}
+\section{\label{section} Implementing Optical Flow in ViDA}
+In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
+and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
+that can be easily tracked from one frame to the other using the Shi-Tomasi
+algorithm \cite{shi1994good}. The next method then calculates the optical flow
+between the good points using the pyramidal implementation of the Lucas-Kanade
+algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
+program flow for calculating motion vectors in ViDA.
+
+\begin{algorithm}
+\caption{Calculating Lucas-Optical Flow from Videos}
+\label{alg:lk_flow}
+\begin{algorithmic}[1]
+\Procedure{CalculateVectors}{$frame1$, $frame2$}
+  \If{\text{$track\_points\_initialized$}}
+  	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
+  \Else
+  	\State $track\_points \gets \texttt{goodFeaturesToTrack}(frame1)$
+	\State $track\_points\_initialized \gets True$
+	\State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
+  \EndIf
+  \Return $optical\_flow$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm used in ViDA is similar to Algorithm \ref{alg:lk_flow} but
+contains fewer steps since there is no need to get good features to track. The
+Farneback implementation is shown in Algorithm \ref{alg:farneback}.
+
+\begin{algorithm}
+\caption{Calculating Farneback Flow from Videos}
+\label{alg:farneback}
+\begin{algorithmic}[1]
+\Procedure{CalculateVectors}{$frame1$, $frame2$}
+  \State $optical\_flow \gets \texttt{calcOpticalFlowFarneback}(frame1, frame2)$\\
+  \Return $optical\_flow$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+\section{\label{section:comparison}Comparison of Methods}
 We implemented the Lucas-Kanade method first in our research because in general,
 performance is a concern and, as long as not too many features or
 too few features are detected, the Lucas-Kanade algorithm will be faster

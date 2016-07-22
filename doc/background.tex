@@ -27,17 +27,22 @@ technique, however, lacks scalability and proposes no solution to this problem.
 
 Thus we have defined some of the important research in this area and where it is
 lacking. In the following sections, we explore important algorithms that are
-foundational to the success of our classification and scalable architecture.
-First we review optical flow and how it can be used for classification and then
-we explore the current state of the art cloud computing techniques and how they
-can be utilized to create a flexible and scalable architecture.
+foundational to the success of our classification and scalable architecture. In
+section \ref{section:optical_flow} we review optical flow and how it can be used
+for classification and then in section \ref{section:cloud_computing} we explore
+the current state-of-the-art cloud computing techniques and how they can be
+utilized to create a flexible and scalable architecture.
 
 
-\section{\label{section:activity_classification}Optical Flow}
-In this section, we review techniques that are commonly used for analyzing
-motions in videos. We explain the implementation of the Farneback optical flow algorithm
-\cite{farneback2003two}, also known as dense optical flow, and the pyramidal,
-Lucas-Kanade approach to optical flow \cite{bouguet2001pyramidal}.
+\section{\label{section:optical_flow}Optical Flow}
+There are many varieties of algorithms that aid in the analysis of motions in
+videos.  Farneback, Lucas-Kanade and Horn-Schunck \cite{horn1981determining} are
+all well studied and successful algorithms for this analysis. In this paper
+though, we have chosen to limit the scope to two optical flow methods that are
+available to a variety of languages. We explain the implementation of the
+Farneback optical flow algorithm \cite{farneback2003two}, also known as dense
+optical flow, and the pyramidal, Lucas-Kanade approach to optical flow
+\cite{bouguet2001pyramidal}.
 
 \subsection{\label{section:optical_flow_methods}Optical Flow Methods}
 In this thesis we attempt to classify two types of activities in video,  typing
@@ -46,13 +51,12 @@ apparent structure position from one video frame to the next, optical flow
 algorithms  are a suitable tool for attempting to extract germane features from
 the video.
 
-Currently, there are several varieties of optical flow algorithms that have been
-published. We use both Lucas-Kanade \cite{lucas1981iterative} and the Farneback
+We use both Lucas-Kanade \cite{lucas1981iterative} and the Farneback
 \cite{farneback2003two}  optical flow algorithms to attempt to extract
-important motion features from the AOLME videos. Although as we see with our
-experiments, that the Farneback algorithm is better suited for pulling out
-motion features that our unique to the particular motion for which we attempt
-to find in our videos. In either case, both algorithms attempt to solve
+important motion features from the AOLME videos. Both algorithms attempt to solve
+a common problem known as the \textit{aperture problem}. The problem is defined
+by assuming that there have been small changes in both the $x$, $y$ and time components
+of a video scene. This is outlined in Equation \ref{eq:delta_image}
 Equation \ref{eq:delta_image}
 
 \begin{equation}
@@ -62,7 +66,7 @@ I(x,y,t) = I(x+dx, y+dy, t+dt)
 
 where $I$ is the the image, $x$ \& $y$ are the column row coordinates
 respectively, and $t$ is the time between two adjacent image frames. Taking the
-Talylor series expansion of Equation \ref{eq:delta_image} results in Equation
+Taylor series expansion of Equation \ref{eq:delta_image} results in Equation
 \ref{eq:taylor_expansion}
 
 
@@ -80,9 +84,9 @@ u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
 \end{equation}
 
  Equation is \ref{eq:taylor_expansion_partial} is known as the Optical Flow
- equation. The object is determine what $u$ and $v$ are given that $f_x$ and
+ equation. The object is to determine what $u$ and $v$ are given that $f_x$ and
  $f_y$ are the image gradients and $f_t$ is the time gradient. Since in Equation
- \ref{eq:taylor_expansion} we have two unknowns, we cannot solve the system
+ \ref{eq:taylor_expansion} we have only two unknowns, we cannot solve the system
  without additional constraints. This is known as the \textit{aperture problem}.
  Both the Lucas-Kanade method and the Farneback method attempt to estimate this
  problem. Lucas-Kande attempts to reframe the problem such that we have an
@@ -96,62 +100,50 @@ u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
  between the frames \cite{farneback2003two}.
 
 \subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method}
-We leverage a common C++ library that has already implemented a
-specialized version of the general Lucas-Kanade algorithm which uses pyramids to
-solve the optical flow at different scales of motion
-\cite{bouguet2001pyramidal}. This algorithm is provided freely in a C++ computer
-vision library known as OpenCV \cite{itseez2015opencv}. Essentially, this
-algorithm is much like the original paper published by Lucas and Kanade, but it
-solves the issue of large motions between frames and at different scales. By definition, the Lucas-Kande
-method assumes that the displacement of features in the image between two frames
-is small and roughly constant within a pixel neighborhood. This algorithm, then,
-by definition cannot handle large motions between frames, and hence the algorithm
-presented in \cite{bouguet2001pyramidal} attempts to more robustly solve
-optical flow. In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
-and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
-that can be easily tracked from one frame to the other using the Shi-Tomasi
-algorithm \cite{shi1994good}. The next method then calculates the optical flow
-between the good points using the pyramidal implementation of the Lucas-Kanade
-algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
-program flow for calculating motion vectors in ViDA.
+We leverage a common C++ library that has already implemented a specialized
+version of the general Lucas-Kanade algorithm which uses pyramids to solve the
+optical flow at different scales of motion \cite{bouguet2001pyramidal}. This
+algorithm is provided freely in a C++ computer vision library known as OpenCV
+\cite{itseez2015opencv}. Essentially, this algorithm is much like the original
+paper published by Lucas and Kanade, but it solves the issue of large motions
+between frames and at different scales. By definition, the Lucas-Kande method
+assumes that the displacement of features in the image between two frames is
+small and roughly constant within a pixel neighborhood. This algorithm, then, by
+definition cannot handle large motions between frames, and hence the algorithm
+presented in \cite{bouguet2001pyramidal} attempts to more robustly solve optical
+flow. The Lucas-Kanade method in OpenCV is often used with Shi-Tomasi
+\cite{shi1994good} detection points to estimate what are good features to track
+in a frame. This allows the Lucas-Kanade algorithm to perform calculations on a
+sparse matrix rather than computing dense optical flow.
 
-\begin{algorithm}
-\caption{Calculating Lucas-Optical Flow from Videos}
-\label{alg:lk_flow}
-\begin{algorithmic}[1]
-\Procedure{CalculateVectors}{$frame1$, $frame2$}
-  \If{\text{$track\_points\_initialized$}}
-  	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
-  \Else
-  	\State $track\_points \gets \texttt{goodFeaturesToTrack}(frame1)$
-	\State $track\_points\_initialized \gets True$
-	\State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
-  \EndIf
-  \Return $optical\_flow$
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
+\subsection{\label{subsection:farneback_method} Farneback Method} Again, we
+leverage the C++ OpenCV library to calculate the motion vectors for Farneback
+optical flow. Unlike the previous method, the Farneback algorithm does not
+require any track points to estimate motion vectors because it is a dense
+optical flow algorithm, i.e. 100\% of the pixels has an associated optical flow
+vector. The main idea behind calculating the motion vectors in this method, is
+to use polynomial expansion for a neighborhood of pixels \cite{farneback2003two}
+and then use that estimation to find a global translation between the two
+frames. This essentially aids with global background movement so that unique
+movements in the foreground can be accurately measured.
 
-\subsection{\label{subsection:farneback_method} Farneback Method}
-Again, we leverage the C++ OpenCV library to calculate the motion vectors for
-Farneback optical flow. Unlike the previous method, the Farneback algorithm does not require
-any track points to estimate motion vectors because it is a dense optical flow
-algorithm, i.e. 100\% of the pixels has an associated optical flow vector. The
-main idea behind calculating the motion vectors in this method, is to use
-polynomial expansion for a neighborhood of pixels \cite{farneback2003two} and
-then use that estimation to find a global translation between the two frames. This
-essentially aids with global background movement. The main algorithm used in ViDA
-is similar to Algorithm \ref{alg:lk_flow} but contains fewer steps since there
-is no need to get good features to track. The Farneback implementation is shown
-in Algorithm \ref{alg:farneback}.
+\section{\label{section:cloud_computing} Cloud Computing}
+Cloud computing has become a common practice among scientists and engineers
+alike for solving computationally expensive problems at a relative low cost.
+Cloud computing offers services on demand rather than provisioning hardware and
+software ahead of time. This has opened the door to researchers who require
+thousands of computers but don't necessarily have the funds or access to a
+cluster of their own. Cloud computing offers a model that is pay as you go, you
+only pay for what you use. This contrasts with the traditional way of solving
+computationally expensive problems by acquiring hardware and software ahead of
+time to run on dedicated machines. This has the advantage that the owner of the
+hardware has full control of its resources, but it has the disadvantage of
+costing a significant amount of money and there is a chance that the originally
+allocated hardware is  either insufficient for the task or is too much therefore
+wasting money and computational resources.  At its core, information technology
+resources are now a programmable resource, rather than one that has to be
+manually setup and configured. In the following subsections we explore the current
+state of cloud computing and what types of applications can leverage a cloud like
+infrastructure.
 
-\begin{algorithm}
-\caption{Calculating Farneback Flow from Videos}
-\label{alg:farneback}
-\begin{algorithmic}[1]
-\Procedure{CalculateVectors}{$frame1$, $frame2$}
-  \State $optical\_flow \gets \texttt{calcOpticalFlowFarneback}(frame1, frame2)$\\
-  \Return $optical\_flow$
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
+\subsection{\label{section:in_the_cloud} What's in the cloud?}

@@ -129,23 +129,38 @@ movements in the foreground can be accurately measured.
 
 \section{\label{section:cloud_computing}Cloud Computing}
 Cloud computing has become a common practice among scientists, engineers and
-business owners
-alike for solving computationally expensive problems at a relative low cost.
-Cloud computing offers services on demand rather than provisioning hardware and
-software ahead of time. This has opened the door to researchers who require
-thousands of computers but don't necessarily have the funds or access to a
-cluster of their own \cite{armbrust2009above}. Cloud computing offers a model
-that is pay as you go, you only pay for what you use. This contrasts with the
-traditional way of solving computationally expensive problems by acquiring
-hardware and software ahead of time to run on dedicated machines. This has the
-advantage that the owner of the hardware has full control of its resources, but
-it has the disadvantage of costing a significant amount of money and there is a
-chance that the originally allocated hardware is  either insufficient for the
-task or is too much therefore wasting money and computational resources.  At its
-core, information technology resources are now a programmable resource, rather
-than one that has to be manually setup and configured. In the following
-subsections we explore the current state of cloud computing and what types of
-applications can leverage a cloud like infrastructure.
+business owners alike for solving computationally expensive problems at a
+relative low cost. Cloud computing offers services on demand rather than
+provisioning hardware and software ahead of time. This has opened the door to
+researchers who require thousands of computers but don't necessarily have the
+funds or access to a cluster of their own \cite{armbrust2009above}. Cloud
+computing offers a model that is pay as you go, you only pay for what you use.
+This contrasts with the traditional way of solving computationally expensive
+problems by acquiring hardware and software ahead of time to run on dedicated
+machines. This has the advantage that the owner of the hardware has full control
+of its resources, but it has the disadvantage of costing a significant amount of
+money and there is a chance that the originally allocated hardware is  either
+insufficient for the task or is overdone,  therefore wasting money and
+computational resources.  At its core, information technology resources are now
+a programmable resource in the cloud, rather than one that has to be manually
+setup and configured.
+
+The programming model for cloud computing is fundamentally different than
+traditional software models. In the traditional infrastructure of computing,
+applications ran on servers and often times relied on the state of a particular
+server to perform computations \cite{awsbestpractices}. That model must be
+broken in order to efficiently develop applications for the cloud. Clearly, not
+all applications can be stateless, but the keys is to eliminate as many stateful
+components as possible and replace them with stateless ones. When this paradigm
+is followed, along with designing software with well defined interface, list
+RESTful, it makes creating a scalable, flexible application easy using cloud
+service providers \cite{awsbestpractices} and how to make auto deployment a snap
+for rapid testing and distribution using container technologies such as docker.
+
+In the following subsections we explore the current state of cloud computing and
+what types of applications can leverage a cloud like infrastructure, a high
+level overview AWS and a few of the services that can benefit a video processing
+application.
 
 \subsection{\label{subsection:in_the_cloud}What's in the cloud?}
 In most of the modern cloud architectures such as Amazon Web Services (AWS),
@@ -210,5 +225,52 @@ stored on a hard drive at amazon, but is replicated over hundreds of machines
 and locations.
 \item Simple queue service (SQS) - Is a distributed queue that allows asynchronous
 reads and writes to any node in a cluster that has access. This service allows
-extremely reliable communication between micro services. 
+extremely reliable communication between micro services.
+\item Amazon Auto Scaling (AAS) - Auto scaling is a service that allows users
+to scale their EC2 instances automatically based on CPU and memory saturation. It
+is a key service that allows users to keep costs low yet perform at maximum
+capability.
+\item Elastic container service (ECS) - This services provides orchestration for
+automatic deployment of containers. This is an especially useful service if
+your application is deployed into a Docker container.
 \end{itemize}
+
+The list provided is by no means meant to be exhaustive, but rather provide
+a brief summary of the services that are important to creating an application
+that can be horizontally scaled on the cloud. AWS offers dozens of services, each
+one can be tailored to the specific needs of the developer and the application
+requirements.
+
+EC2 instances are the work horses in the Amazon cloud. Not only are they important
+for horizontal scalability, but they are also important for vertical scalability.
+There are a number of instance types that can be chosen for customized
+applications needs. For example, instances can be provisioned with a single CPU
+of moderate frequency and several hundred MBs of random access memory (RAM) or
+they can be vertically scaled to contain state-of-the-art GPUs with dozens of
+CPU cores and hundreds of GBs of RAM. In fact, AWS is one of the few cloud
+services providers that does provide access to instances with GPUs, which is
+extremely important for video processing algorithms that leverage efficient
+GPU algorithms written in CUDA and/or OpenCL. Thus applications can be scaled
+vertically and horizontally using these EC2 instances.
+
+\subsection{\label{subsection:docker}Docker}
+Over the last two years, Docker has gained significant traction amongst software
+developers for application deployment. Docker is a software package that allows
+a variety of *nix type machines to run applications developed on a different
+platforms to be run natively. For example, if an application was developed to run
+on Ubuntu 14.04, a user who has Docker installed on Cent OS 7 will be able to
+run that same byte code. This has a significant impact on the way that software
+is deployed. With Docker, gone are the days when software had to be compiled on
+multiple architectures or having users install hundreds of third
+party libraries just to run the release version of the software.
+
+This paradigm has significant advantages for deploying scalable applications
+in a cloud infrastructure. The first advantage being that as long as a *nix
+machine is being run on an EC2 instance, you can deploy the package to the instance as
+fast as it takes to download the docker image. As a result, maintaining packages
+on the instance is not needed. All the software needed for the application
+is packaged into the docker image. Secondly, ECS makes it a trivial task to deploy
+your Docker container to thousands of instances with only a few commands. With
+ECS you can start and stop services, orchestrate varieties of instances and
+also perform load balancing to ensure that your application is being run at
+top performance and not costing exorbitant amounts of money. 

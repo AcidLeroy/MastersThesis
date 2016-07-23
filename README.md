@@ -11,4 +11,4 @@ document:
 - `pdflatex -shell-escape doc/eilar_thesis_2016.tex`
 
 You have to compile the document multiple times to get the references to show up
-correctly. 
+correctly.

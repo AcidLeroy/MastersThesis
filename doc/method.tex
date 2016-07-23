@@ -1,16 +1,18 @@
 \chapter{Methods}
-In this chapter we review the basic implementation details of our ViDA framework.
-We first demonstrate how we use Lucas-Kanade and Farneback optical flow algorithms
-to reduce the feature space to only 6 25 bin features. With that feature space,
-we the show how to accurately classify activities in the videos using support
-vector machines and k nearest neighbors. Finally, we cover the details of distributing
-this system over an elastic cloud architecture for scalability and flexibility
-using Amazon Web Services (AWS).
+In this chapter we review the basic implementation details of our ViDA
+framework. We first demonstrate how we use Lucas-Kanade and Farneback optical
+flow algorithms to reduce the feature space to only six 25 bin feature vectors.
+With that feature space, we outline how to classify the videos using several
+well known machine learning algorithms such as K-nearest neighbors and support
+vector machines (SVM). Finally, we cover the details of distributing this system
+over an elastic cloud architecture for scalability and flexibility using Amazon
+Web Services (AWS).
 
 
 \section{\label{section} Implementing Optical Flow in ViDA}
 In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
-and \texttt{calcOpticalFlowPyrLK}. The first function is used to find features
+and \\
+\texttt{calcOpticalFlowPyrLK}. The first function is used to find features
 that can be easily tracked from one frame to the other using the Shi-Tomasi
 algorithm \cite{shi1994good}. The next method then calculates the optical flow
 between the good points using the pyramidal implementation of the Lucas-Kanade
@@ -113,7 +115,7 @@ from each one of our dense matrices using the Hadamard product as shown in
 Equation \ref{eq:subset}, where $\|\mathbf{V\prime}\|,
 \mathbf{V_x\prime},\mathbf{V_y\prime}, \mathbf{\Phi\prime}$ are subset matrices
 for the magnitude, x and y direction and orientation respectively. We have now
-reduced the feature space somewhat, but depending the size of the video and the
+reduced the feature space somewhat, but depending on the size of the video and the
 amount of entropy per frame pair, we could still have a significant amount of
 data to process for classification.
 

@@ -182,3 +182,33 @@ resources available in the cloud, it is something that can be upgraded, provisio
 and tailored to the developer's desire.
 
 \subsection{\label{subsection:aws}Amazon Web Services}
+Amazon Web Services (AWS) is the most mature cloud solution architecture available
+to the public. A popular streaming service in the United States, Netflix,
+recently moved all of its streaming services to AWS \cite{netflixawsmove}. This is important to note
+because Netflix almost exclusively serves streaming video to hundreds of thousands
+of customers everyday. It's obvious from this move alone that there is a lot
+of potential in AWS for processing videos. Netflix cites many reason as to why
+they moved their monolithic video streaming app to hundreds of micro services
+that are run on the AWS cloud, but a few that truly stand out are \enquote{scalable
+computing and storage needs}, \enquote{service availability}, and \enquote{cost reduction}
+\cite{netflixawsmove}. All of these reasons are enough for any academic institution
+to begin leveraging the power of micro services and cloud infrastructure.
+
+AWS provides a number of services that are important to scaling ViDA
+both horizontally and vertically. Several services that are important to
+our video processing paradigm are:
+\begin{itemize}
+\item Elastic compute cloud (EC2) - These are virtual machines that can be provisioned
+quickly and can be configured a number of ways. They are the work horses for
+operating effectively on the AWS cloud. Furthermore, you can provision one, a thousand,
+or have them created as you begin to saturate existing instances.
+\item Simple storage service (S3) - This services provides storage that is enormous,
+durable and distributed over regions in the united states. Petabytes of data can
+be easily accessed from anywhere within an Amazon region and have the advantage
+of being redundant and fault tolerant. That is to say, the data is not simply
+stored on a hard drive at amazon, but is replicated over hundreds of machines
+and locations.
+\item Simple queue service (SQS) - Is a distributed queue that allows asynchronous
+reads and writes to any node in a cluster that has access. This service allows
+extremely reliable communication between micro services. 
+\end{itemize}

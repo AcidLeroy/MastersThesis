@@ -1,5 +1,7 @@
 # Master's Thesis
 
+[![Build Status](https://travis-ci.com/AcidLeroy/MastersThesis.svg?token=1pyYXgvyMtnujVfKq8wz&branch=master)](https://travis-ci.com/AcidLeroy/MastersThesis)
+
 ## Welcome to my thesis!
 In order to compile my LaTeX document, you are going to need latex with
 many of the texlive packages. The following list demonstrates how to compile the

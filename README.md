@@ -8,7 +8,7 @@ many of the texlive packages. The following list demonstrates how to compile the
 document:
 
 - `pdflatex -shell-escape doc/eilar_thesis_2016.tex`
-- `bibtex *.aux`
+- `bibtex eilar_thesis_2016.aux`
 - `pdflatex -shell-escape doc/eilar_thesis_2016.tex`
 - `pdflatex -shell-escape doc/eilar_thesis_2016.tex`
 

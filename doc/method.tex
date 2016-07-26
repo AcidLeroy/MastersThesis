@@ -4,19 +4,19 @@ framework. We first demonstrate how we use Lucas-Kanade and Farneback optical
 flow algorithms to reduce the feature space to only six 25 bin feature vectors.
 With that feature space, we outline how to classify the videos using several
 well known machine learning algorithms such as K-nearest neighbors and support
-vector machines (SVM). Finally, we cover the details of distributing this system
-over an elastic cloud architecture for scalability and flexibility using Amazon
-Web Services (AWS).
+vector machines (SVM). Finally, we cover how we designed this system to be
+completely horizontally and vertically scalable on the AWS cloud.
 
 
 \section{\label{section} Implementing Optical Flow in ViDA}
 In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
 and \\
-\texttt{calcOpticalFlowPyrLK}. The first function is used to find features
-that can be easily tracked from one frame to the other using the Shi-Tomasi
-algorithm \cite{shi1994good}. The next method then calculates the optical flow
-between the good points using the pyramidal implementation of the Lucas-Kanade
-algorithm \cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
+\texttt{calcOpticalFlowPyrLK} to implement the Lucase-Kanade Pyrmidal optical
+flow. The first function is used to find features that can be easily tracked
+from one frame to the other using the Shi-Tomasi algorithm \cite{shi1994good}.
+The next method then calculates the optical flow between the good points using
+the pyramidal implementation of the Lucas-Kanade algorithm
+\cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
 program flow for calculating motion vectors in ViDA.
 
 \begin{algorithm}
@@ -37,7 +37,8 @@ program flow for calculating motion vectors in ViDA.
 \end{algorithm}
 
 The algorithm used in ViDA is similar to Algorithm \ref{alg:lk_flow} but
-contains fewer steps since there is no need to get good features to track. The
+contains fewer steps since there is no need to get good features to track.
+In the C++ software, we also implemented Farneback method. The
 Farneback implementation is shown in Algorithm \ref{alg:farneback}.
 
 \begin{algorithm}
@@ -51,7 +52,11 @@ Farneback implementation is shown in Algorithm \ref{alg:farneback}.
 \end{algorithmic}
 \end{algorithm}
 
-
+As can be seen in \ref{alg:farneback}, we don't need any good features to track
+because we are calculating the optical flow globally between frames, rather than
+selecting a few features. This has the advantage of tracking optical flow objects
+that may fail the Shi-Tomasi method for tracking, but because it is no discriminant
+in the features, the resulting motion vectors are dense.
 
 
 \section{\label{section:comparison}Comparison of Methods}
@@ -60,19 +65,19 @@ performance is a concern and, as long as not too many features or
 too few features are detected, the Lucas-Kanade algorithm will be faster
 \cite{de2015choosing}. Despite this fact, we found that our classifier did
 not perform as well on features extracted from the Lucas-Kanade method, as it
-did using the Farneback method. As a result, most of the results in this thesis
+did using the Farneback method. Hence most of the results in this thesis
 have been calculated with Farneback optical flow unless otherwise specified.
 
 \section{\label{section:feature_extraction}Feature Extraction from Optical Flow}
 The \texttt{CalculateVectors} function in both Algorithm \ref{alg:lk_flow} and
 \ref{alg:farneback} returns several dense matrices that represent the features
 that we can extract from the optical flow output. These features are magnitude,
-orientation, x direction and y direction of the optical flow features. These
-are ultimately the features that we use to train and classify using an SVM. However,
-if we had two $N \times M$ video frames as the input, we now have $4 \times N \times M$
-features. Clearly we have not yet reduced the input feature space. Thus, based
-on information that we know \textit{a-priori}, we can reduce our feature space
-significantly.
+orientation, x direction and y direction of the optical flow features. These are
+ultimately the features that we use to train and classify using an SVM. However,
+if we had two $N \times M$ video frames as the input, we now have $4 \times N
+\times M$ features. Clearly we have not yet reduced the input feature space.
+Thus, based on information that we know \textit{a-priori}, we can reduce our
+feature space significantly.
 
 In the case of typing and writing, we know we can expect there to be motion from
 one frame to the next. We don't know by how much, but we do know that it is not
@@ -117,7 +122,8 @@ Equation \ref{eq:subset}, where $\|\mathbf{V\prime}\|,
 for the magnitude, x and y direction and orientation respectively. We have now
 reduced the feature space somewhat, but depending on the size of the video and the
 amount of entropy per frame pair, we could still have a significant amount of
-data to process for classification.
+data to process for classification, this idea is especially true for
+Farneback optical flow.
 
 In addition to extracting generic vectors from the video, we also add
 geometrical centroids, blob orientation and background motion around the blobs
@@ -133,7 +139,7 @@ all the connected blobs, we can then calculate the orientation of each one of
 those blobs using \texttt{findContours} in combination with with
 \texttt{fitEllipse}. The full implementation of this algorithm is outlined in
 Appendix \ref{ap:centroids}. The final step is to then dilate each blob, and
-then calculate the optical flow statistics in the difference region. Appendix
+then retrieve the magnitude of the optical flow in this region. Appendix
 \ref{ap:dilate}. Figure \ref{fig:orient_cent} illustrates the idea of acquiring
 the centroid and orientation of the blobs from $\mathbf{V_m}$.
 
@@ -141,18 +147,19 @@ the centroid and orientation of the blobs from $\mathbf{V_m}$.
   \label{fig:orient_cent}
   \centering
   \includegraphics[width=8cm]{figures/cent_and_orient}
-  \caption{Example of orientation measurement on the left, and the centroid calculation on the right.}
+  \caption{Example of orientation measurement on the left, and the centroid
+  calculation on the right.}
 \end{figure}
 
-When the previous optical flow features have been generated, their values are then
-organized into a probability density function (PDF) with 25 bins. That is to say that
-each frame pair generates a PDF and that PDF is accumulated for every subsequent
-frame in the video sequence. When our software reaches the end of the video file,
-a normalized, cumulative distribution function (CDF) is calculated and output
-for each vector. So for each input video there will be one CDF with 25 bins
-for blob orientation, blob centroid x and y, motion vector magnitude, motion
-vector orientation and background motion vector magnitude. Figure \ref{fig:extract_flow}
-clearly illustrates this concept.
+When the previous optical flow features have been generated, their values are
+then organized into a probability density function (PDF) with 25 bins. That is
+to say that each frame pair generates a PDF and that PDF is accumulated for
+every subsequent frame in the video sequence. When our software reaches the end
+of the video file, a normalized, cumulative distribution function (CDF) is
+calculated and output for each vector. So for each input video there will be one
+CDF with 25 bins for blob orientation, blob centroid x and y, motion vector
+magnitude, motion vector orientation and background motion vector magnitude.
+Figure \ref{fig:extract_flow} clearly illustrates this concept.
 
 \begin{figure}[h]
   \label{fig:extract_flow}
@@ -163,38 +170,60 @@ clearly illustrates this concept.
   vectors}
 \end{figure}
 
-\section{\label{section:the_data}The AOLME Dataset}
-The AOLME dataset is an enormous repository of over 900 hours of video
-recordings of students [reference needed]. The videos contain students
-interacting with facilitators, their peers and computers to write code in
-Python on the Raspberry Pi.  The dataset is wealth of information but difficult
-to exploit in its current state.  The data used for this thesis is a subset of
-the entire AOLME dataset. By hand, we have selected several videos and extracted
-typing and writing clips from the original dataset and are using these as ground
-truth for measuring the accuracy of our classification. Figure \ref{fig:typing_writing}
-is representative of the features that have been extracted by hand.
-
-\begin{figure}[h]
-  \label{fig:typing_writing}
-  \centering
-  \includegraphics[width=\textwidth]{figures/typing_writing_clip}
-  \caption{Example of features that have been manually extracted from the dataset
-  for training and testing. For the above example, we need to classifiers for each
-  activity to determine if the activity is being performed, or it is not.}
-\end{figure}
-
-As Figure \ref{fig:typing_writing} suggests, we are only using a cropped version
-of the video. The reason for this is that we are not attempting to solve the tracking
-problem in this thesis, only the classification problem. Hence, we assume that
-the videos entering into our software have already been clipped and cropped with
-the target activities inside of them and the corresponding lack of the activity.
-Our subset of the AOLME database consists of the following:
-
-\begin{itemize}
-\item Twenty videos of typing
-\item Twenty videos of no typing
-\item Twenty videos of writing
-\item Twenty Videos of no writing
-\end{itemize}
+Ultimately, these are the features that are then accumulated for multiple AOLME
+videos and used for classification.
 
 \section{\label{section:classification}Classifying the Reduced Feature Space}
+At this point we now have accumulated a bag of features for videos. The features
+that are collected are stored in a comma separated file (csv) that can be read
+in by the any of the popular machine learning packages such as those provided
+by the R language or Python's SciKit-Learn. The file contains labels that have
+filename, centroid x CDF, centroid Y CDF, background motion CDF, motion magnitude
+CDF, motion orientation CDF and classification. We can then use an SVM to classify
+the features. To validate our results, we use leave-one-out cross validation
+to ensure that we have not overfit the data.
+
+\section{\label{section:distributed_processing}Scalable Architecture}
+A core principal for a well designed, horizontally scalable application, is
+to design it such that it does not contain state \cite{awsbestpractices}.
+When state is required, it the software complexity increases substantially and
+makes it difficult to distribute the system over a scalable amount of nodes.
+However, if the software was designed such that each service can operate and
+stand on its own, it is the perfect embarrassingly parallel computing task to
+tackle. For this thesis we focus on ensuring that our feature extractor,
+as described in Section \ref{section:feature_extraction}, is completely stateless.
+This is a design feature that has allowed us the flexibility to scale our
+system over as many nodes as are available on the AWS cloud.
+
+\subsection{\label{subsection:architecture_overview}Architecture Overview}
+Our system builds upon AWS to create an easy-to-maintain and easy-to-scale
+video processing system. We use S3 storage to put small video clips that
+have been extracted from our AOLME dataset. These clips are made available to
+to all of the processing nodes. The processing nodes communicate with the master
+node using Amazon's simple queue service (SQS). Figure \ref{fig:dataflow} illustrates
+the basic distributed system design.
+
+\begin{figure}[h]
+  \label{fig:dataflow}
+  \centering
+  \includegraphics[width=\textwidth]{figures/extract_features_dataflow}
+  \caption{Dataflow of the distributed video system using AWS components}
+\end{figure}
+
+From Figure \ref{fig:dataflow} we see that the first step is to upload
+the videos to S3. We keep the videos very small, because as we show in our experiments
+section, it takes quit a long time to process large videos therefore there is a
+significant benefit to keeping the video chunks relatively small so that many
+machines could potentially work on the feature extraction process. The next step
+is to place a message on the SQS queue specifying which video to process and
+what its classification is. For the purposes of this thesis, we manually place
+messages on the queue so that we can control the flow of messages. In
+a production system though, we would have the S3 bucket notify the SQS queue that
+a new video was uploaded and ready for processing. The third step is the processing
+step. In our setup, we create 20 EC2 instances running our feature extractor application.
+Each one of these instances polls the SQS queue waiting for a message to arrive.
+As soon as one does, it downloads the appropriate video from the S3 bucket,
+processes the video, and then places the results on another SQS queue. At this
+point, the master node is polling the results queue and collecting the results
+into a csv file. Finally, the csv file can be used to train the SVM in the R
+code. 

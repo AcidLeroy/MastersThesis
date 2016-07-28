@@ -226,4 +226,50 @@ As soon as one does, it downloads the appropriate video from the S3 bucket,
 processes the video, and then places the results on another SQS queue. At this
 point, the master node is polling the results queue and collecting the results
 into a csv file. Finally, the csv file can be used to train the SVM in the R
-code. 
+code.
+
+\subsection{\label{subsection:master_node}Master Node Configuration}
+The master node in our system is responsible for sending out jobs to process and
+then coalescing the results from the calculations performed by the slave nodes.
+All of these processes are done using the boto3 \cite{boto3} Python  software
+development kit (SDK). The core implementation of AWS uses a  representational
+state transfer like (RESTful) interface to communicate to all the services that
+Amazon offers in a programatic  way, but they also offer several easy-to-use
+object oriented libraries written  in several languages. The master node
+need not be any specific operating system as long as the Python language
+can be interpret on it. In this thesis, we use Ubuntu 14.04 to run our master
+node logic.
+
+The master node performs several basic tasks. The first of which is to put
+messages on the SQS queue.  This is orchestrated by reading
+a csv file that consists of an S3 link to a video segment, the classification of
+the segment, the SQS queue to to which to output the features and finally the
+optical flow method to use. An example of the file is show in Table
+ \ref{table:message_queue}.
+
+\begin{table}[h]
+  \label{table:message_queue}
+  \begin{tabular}{ | l | l | l | p{3cm} |}
+  \hline
+  \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{of\_algorithm}\\ \hline
+  aolme/data/typing/seg\_1.mp4 & 1 & feature\_queue & farneback \\ \hline
+  aolme/data/notyping/seg\_1.mp4 & 2 & feature\_queue & farneback \\
+  \hline
+  \end{tabular}
+  \caption{Example of data file that use by the master node to place messages on
+  the SQS queue. }
+\end{table}
+
+From the example data shown in Table \ref{table:message_queue}, we can see that
+the nodes have the ability to switch the algorithm as well as associate a
+classification from the video. Having the ability to switch method types allows
+us to easily benchmark using Lucas-Kanade optical flow versus Farneback.
+We also put the output queue in the message so that the slave nodes know to which
+queue to place the results of their calculations. This information is also necessary
+for the master to know which queue to wait on to collect all the results.
+
+Once the master node has sent all the messages to the queue, it then polls
+on the queue it placed the messages on to verify that all the messages have been
+remove by the slave nodes. This is an important step to validate that the
+slave nodes are indeed pulling messages off the SQS queue and processing
+the videos that are associated with each message. 

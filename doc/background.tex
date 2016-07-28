@@ -2,28 +2,34 @@
 Human activity classification in videos is not only a difficult problem to solve
 algorithmically but also pushes current computing solutions to the edge of their
 capability, especially when attempting to keep up with real-time video rates.
-Many possible solutions have been proposed for robust activity classification in
-videos \cite{niebles2010modeling} \cite{bashir2007object}
-\cite{ribeiro2005human} \cite{karpathy2014large}. Methods such as
-\cite{bashir2007object} rely on principal component analysis (PCA) and hidden
-Markov models (HMMs) to attempt to classify motions using trajectories; however,
-all the datasets study consist of hardware augmentation (a motion tracking glob for
-example), used to track motions of hands etc, and do not rely solely on the
-video source for classification. Other methods such as
-\cite{niebles2010modeling}, use similar techniques that are done in this thesis,
-however they do not address the computational burden of producing a histogram of
-features to use for classification. Finally, new deep learning methods such as
-convolutional neural networks are also gaining popularity in activity
+Many solutions have been proposed for robust activity classification in videos
+\cite{niebles2010modeling} \cite{bashir2007object} \cite{ribeiro2005human}
+\cite{karpathy2014large}. Methods such as \cite{bashir2007object} rely on
+principal component analysis (PCA) and hidden Markov models (HMMs) to attempt to
+classify motions using trajectories; however, all the datasets study consist of
+hardware augmentation (a motion tracking device for example), used to track
+motions of hands etc, and do not rely solely on the video source for
+classification. Our method requires no other augmentation  other than the
+videos.  Other methods such as \cite{niebles2010modeling}, use similar
+techniques that are done in this thesis, however they do not address the
+computational burden of producing a histogram of features to use for
+classification. We extend parts of their idea and create a  distributed that
+scales both horizontally and vertically. Finally, new deep learning methods such
+as convolutional neural networks are also gaining popularity in activity
 classification in videos because there is no need to select the type of features
 \textit{a-priori}, you let the network select what is important for
 classification \cite{karpathy2014large}. This technique is computationally
-expensive and requires huge amounts of data to properly classify activities
-\cite{karpathy2014large}. The study presented by Laptev et al.
-\cite{laptev2008learning} showed that it is possible to reduce a video dataset
-size significantly using optical flow and using a technique called bag of
-features (BoF) which is ultimately used by a machine learning algorithm, such as
-non-linear support vector machines to classify the activities. The BoF
-technique, however, lacks scalability and proposes no solution to this problem.
+expensive, requires huge amounts of data to properly classify activities
+\cite{karpathy2014large} and also lacks insight into what is or is not
+functioning properly  in the network, essentially rendering the CNN as a black
+box. The study presented by Laptev et al. \cite{laptev2008learning} showed that
+it is possible to reduce a video dataset size significantly using optical flow
+and a technique called bag of features (BoF) which is ultimately used by a
+machine learning algorithm, such as non-linear support vector machines to
+classify the activities. The BoF technique, however, lacks scalability and
+proposes no solution to this problem. Indeed we use a similar method to
+reduce the feature set, but we augment the bag of features and propose
+solution that is also scalable.
 
 Thus we have defined some of the important research in this area and where it is
 lacking. In the following sections, we explore important algorithms that are
@@ -33,8 +39,8 @@ for classification and then in section \ref{section:cloud_computing} we explore
 the current state-of-the-art cloud computing techniques and how they can be
 utilized to create a flexible and scalable architecture.
 
-
-\section{\label{section:optical_flow}Optical Flow}
+\section{\label{section:activity_classification}Human Activity Classification in Videos}
+\subsection{\label{section:optical_flow}Optical Flow}
 There are many varieties of algorithms that aid in the analysis of motions in
 videos.  Farneback, Lucas-Kanade and Horn-Schunck \cite{horn1981determining} are
 all well studied and successful algorithms for this analysis. In this paper
@@ -273,4 +279,4 @@ is packaged into the docker image. Secondly, ECS makes it a trivial task to depl
 your Docker container to thousands of instances with only a few commands. With
 ECS you can start and stop services, orchestrate varieties of instances and
 also perform load balancing to ensure that your application is being run at
-top performance and not costing exorbitant amounts of money. 
+top performance and not costing exorbitant amounts of money.

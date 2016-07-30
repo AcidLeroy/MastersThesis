@@ -40,6 +40,49 @@ the current state-of-the-art cloud computing techniques and how they can be
 utilized to create a flexible and scalable architecture.
 
 \section{\label{section:activity_classification}Human Activity Classification in Videos}
+Human activity classification in video is an unsolved problem and has attracted
+a variety of different image and video processing techniques. One of the main
+contributing factors to its difficulty is the sheer size of the data, videos tend
+to be very large and pose a very interesting problem to the big data community. Another contributing factor in
+making videos difficult to classify is the scale and frequency in which activities
+appear in the videos. In other words, if the activity we are searching for
+is typing, then it is difficult to find that activity when the action
+could be taking up the entire frame or only tens of pixels. Furthermore, we must
+also account for the speed of the action. Depending on the frame rate, the
+actions in the video could appear to be slower in some scenarios than in others,
+therefore any algorithm must account for time-varying activities.
+
+In current big data processing techniques, a method that is employed to reduce
+the data size to discover important features about data is known as map-reduce
+\cite{dean2008mapreduce}. Many software packages have since been developed to
+implement the ideas in \cite{dean2008mapreduce} such as Hadoop, Spark, Storm
+and many others. However, these frameworks assume that individual pieces of the
+large dataset are atomic and relatively small. For example, Amazon needs to process
+information about products that they sell. They can use a relatively small amount
+of information to represent this each product (especially compared to videos).
+As a result they are able to distribute these small amounts of data to thousands
+of clusters to build a product recommender system and associate every product to
+every other product to create similarities between products. All of this processing
+can easily be done with Hadoop\cite{White:2009:HDG:1717298} or Spark. However,
+passing messages around that contain video segments is not feasible with these
+systems and is not advised. Since video human activity classification would
+require such a message passing system, we innovate in this area by proposing a
+framework that is simple, robust and extremely fast using Amazon Web Services
+for human activity recognition in videos.
+
+Encoding videos as succinct datasets that can easily be classified and are
+representative of the underlying features is another area that this thesis
+attempts to address. In \textit{Learning to encode motion using spatio-temporal
+synchrony} \cite{konda2013learning} they attempt to address this need by detecting
+synchrony between frames in videos. Was robustly able to classify motions in
+datasets KTH, UCF sports, Hollywood2 and YUPENN in the low to mid 90s classification
+rate. However, training and testing the system varied between 2-3 minutes all
+they way up to days. In this thesis, we not only get very good classification
+rates, but because the system is horizontally scalable, we can train the system
+in a matter of minutes assuming relatively small video segments (videos on the
+order of 1-2 MB).
+
+
 \subsection{\label{section:optical_flow}Optical Flow}
 There are many varieties of algorithms that aid in the analysis of motions in
 videos.  Farneback, Lucas-Kanade and Horn-Schunck \cite{horn1981determining} are
@@ -203,26 +246,29 @@ resources available in the cloud, it is something that can be upgraded, provisio
 and tailored to the developer's desire.
 
 \subsection{\label{subsection:aws}Amazon Web Services}
-Amazon Web Services (AWS) is the most mature cloud solution architecture available
-to the public. A popular streaming service in the United States, Netflix,
-recently moved all of its streaming services to AWS \cite{netflixawsmove}. This is important to note
-because Netflix almost exclusively serves streaming video to hundreds of thousands
-of customers everyday. It's obvious from this move alone that there is a lot
-of potential in AWS for processing videos. Netflix cites many reason as to why
-they moved their monolithic video streaming app to hundreds of micro services
-that are run on the AWS cloud, but a few that truly stand out are \enquote{scalable
-computing and storage needs}, \enquote{service availability}, and \enquote{cost reduction}
-\cite{netflixawsmove}. All of these reasons are enough for any academic institution
-to begin leveraging the power of micro services and cloud infrastructure.
+Amazon Web Services (AWS) is the most mature cloud solution architecture
+available to the public. A popular streaming service in the United States,
+Netflix, recently moved all of its streaming services to AWS
+\cite{netflixawsmove}. This is important to note because Netflix almost
+exclusively serves streaming video to hundreds of thousands of customers
+everyday. It's obvious from this move alone that there is a lot of potential in
+AWS for processing videos. Netflix cites many reason as to why they moved their
+monolithic video streaming app to hundreds of micro services that are run on the
+AWS cloud, but a few that truly stand out are \enquote{scalable computing and
+storage needs}, \enquote{service availability}, and \enquote{cost reduction}
+\cite{netflixawsmove}. All of these reasons are enough for any academic
+institution to begin leveraging the power of micro services and cloud
+infrastructure.
 
 AWS provides a number of services that are important to scaling ViDA
 both horizontally and vertically. Several services that are important to
 our video processing paradigm are:
 \begin{itemize}
-\item Elastic compute cloud (EC2) - These are virtual machines that can be provisioned
-quickly and can be configured a number of ways. They are the work horses for
-operating effectively on the AWS cloud. Furthermore, you can provision one, a thousand,
-or have them created as you begin to saturate existing instances.
+\item Elastic compute cloud (EC2) - These are virtual machines that can be
+provisioned quickly and can be configured a number of ways. They are the work
+horses for operating effectively on the AWS cloud. Furthermore, you can
+provision one, a thousand, or have them created as you begin to saturate
+existing instances.
 \item Simple storage service (S3) - This services provides storage that is enormous,
 durable and distributed over regions in the united states. Petabytes of data can
 be easily accessed from anywhere within an Amazon region and have the advantage

@@ -235,15 +235,16 @@ All of these processes are done using the boto3 \cite{boto3} Python  software
 development kit (SDK). The core implementation of AWS uses a  representational
 state transfer like (RESTful) interface to communicate to all the services that
 Amazon offers in a programatic  way, but they also offer several easy-to-use
-object oriented libraries written  in several languages. The master node
+object oriented libraries written  in several languages to make programming easier
+for the end user. The master node
 need not be any specific operating system as long as the Python language
-can be interpret on it. In this thesis, we use Ubuntu 14.04 to run our master
-node logic.
+can be interpreted on it. In this thesis, we use Ubuntu 14.04 to run our master
+node logic, but it could just as well be OS x or any other flavor of linux.
 
 The master node performs several basic tasks. The first of which is to put
 messages on the SQS queue.  This is orchestrated by reading
 a csv file that consists of an S3 link to a video segment, the classification of
-the segment, the SQS queue to to which to output the features and finally the
+the segment, the SQS queue to which to output the features and finally the
 optical flow method to use. An example of the file is show in Table
  \ref{table:message_queue}.
 
@@ -266,10 +267,43 @@ classification from the video. Having the ability to switch method types allows
 us to easily benchmark using Lucas-Kanade optical flow versus Farneback.
 We also put the output queue in the message so that the slave nodes know to which
 queue to place the results of their calculations. This information is also necessary
-for the master to know which queue to wait on to collect all the results.
+for the master to know which queue to wait on to collect all the results. Additionally,
+if we need more information to be passed to the slave nodes so that they can
+effectively do their job, we can easily put that information in the queue with
+the message trivially.
 
 Once the master node has sent all the messages to the queue, it then polls
 on the queue it placed the messages on to verify that all the messages have been
 remove by the slave nodes. This is an important step to validate that the
-slave nodes are indeed pulling messages off the SQS queue and processing
-the videos that are associated with each message. 
+slave nodes are indeed popping messages off the SQS queue and processing
+the videos that are associated with each message. Once this has been validated,
+the master node begins to poll on the designated output queue for the results output
+from each of the slave nodes. Once all the results have been collected, the master
+node places each of the vectors into a comma separated features file.
+The pseudo code for the operations performed by the master are show in Algorithm
+\ref{alg:master_node}.
+
+\begin{algorithm}
+\caption{Master Node Implementation Pseudo-Code}
+\label{alg:master_node}
+\begin{algorithmic}[1]
+  \State $videos\_to\_process \gets \texttt{ReadInputData(input.csv)}$
+  \For{\texttt{i = 0; i < len(videos\_to\_process); ++i}}
+    \State $sqs\_message \gets \texttt{CreateMessage(videos\_to\_process[i])}$
+    \State $output\_queue\_uri \gets videos\_to\_process[i].output\_queue\_uri$
+    \State$\texttt{SendSqsMessage(}sqs\_message, sqs\_uri \texttt{)}$
+  \EndFor
+
+  \While{$\texttt{MessagesRemainingInQueue(}sqs\_uri \texttt{)} \neq 0$} \Comment{Poll queue every second}
+    \State $\texttt{Sleep(1)}$
+  \EndWhile
+
+  \While{$\texttt{MessagesRemainingInQueue(}output\_queue\_uri\texttt{)} \neq 0$}
+    \State $feature\_vectors \gets \texttt{ReceiveSqsMessage(output\_queue\_uri\texttt{)}}$
+    \State $\texttt{Sleep(1)}$
+  \EndWhile
+
+  \State \texttt{WriteFeaturesToDisk(} $feature\_vectors$ \texttt{)}
+
+\end{algorithmic}
+\end{algorithm}

@@ -8,7 +8,7 @@ vector machines (SVM). Finally, we cover how we designed this system to be
 completely horizontally and vertically scalable on the AWS cloud.
 
 
-\section{\label{section} Implementing Optical Flow in ViDA}
+\section{\label{section:vida_oflow} Implementing Optical Flow in ViDA}
 In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
 and \\
 \texttt{calcOpticalFlowPyrLK} to implement the Lucase-Kanade Pyrmidal optical
@@ -307,3 +307,86 @@ The pseudo code for the operations performed by the master are show in Algorithm
 
 \end{algorithmic}
 \end{algorithm}
+
+As we have shown in this section, very little needs to be configured on the master
+node other than the ability to run Python and the AWS python utilities. This
+makes running our software from almost any type of machine very easy with just a
+few setup steps. The master node plays an important role in sending and receiving
+the data that the user wishes to process and is an enabling part of our system.
+That is to say, it really doesn't matter what software we are running on our
+slave nodes, as long as the slave nodes fulfill the contract that we have
+defined in our messaging format. This means that we don't necessarily have to
+run our C++ extract features program on the slave nodes, but we could be running
+any flavor of algorithm we wish with no configuration changes on the master node.
+Not only is this setup scalable, but it's highly flexible because of this idea.
+
+\subsection{\label{subsection:slave_node}Slave Node Configuration }
+The next very important piece to our innovative architecture is the algorithm
+that is run on all the slave nodes. This algorithm simply polls on a single
+queue, then once a messages is received, it downloads the the small S3 video
+segment, processes it using our feature extraction technique, puts the results
+on a queue that it has discovered on the incoming message, deletes the video
+locally and then begins polling on the queue again. Algorithm \ref{alg:slave_node}
+illustrates this idea clearly.
+
+\begin{algorithm}
+\caption{Slave Node Implementation Pseudo-Code}
+\label{alg:slave_node}
+\begin{algorithmic}[1]
+
+  \While{$True$}
+    \State $sqs\_message \gets \texttt{ReceiveMessages(} queue\_name \texttt{)}$ \Comment{Blocking call}
+    \State $video\_path \gets \texttt{DownloadS3Video(} sqs\_message.video\_path \texttt{)}$
+    \State $features\_cdf \gets \texttt{ExtractFeatures(} video\_path \texttt{)}$ \Comment{Call C++ Code}
+    \State $\texttt{SendS3Message(} sqs\_message.output\_queue, features\_cdf \texttt{)}$
+    \State $\texttt{DeleteSqsMessage(} sqs\_message \texttt{)}$ \Comment{Remove message from queue}
+    \State $\texttt{Sleep(1)}$
+  \EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+We can see that the slave node logic is, like the master node, very simple. We
+simply wait for messages to come in from one queue, process the video, and then
+output the features onto another queue. However, there is a piece missing from
+Algorithm \ref{alg:slave_node} that makes the slave nodes a truly innovative
+part of our overall architecture and that is the orchestration and deployment
+of our highly refined C++ code.
+
+One of the big hurdles in launching applications that run on a cluster is that
+all the nodes on the cluster must be running the same libraries, operating
+system,  and versions of the software so that all the answers are returned from
+the slaves are repeatable and reliable. In traditional systems, this action was
+typically performed by system admin and as a result, you had to rely on third
+party packages and libraries that were deployed with the cluster. So if the
+software under development needed some updates to a package or some bug fixes,
+you were out of luck. You had  to work around those bug fixes and/or write the
+updates by hand to get similar  functionality. This is not so with our system.
+Using ECS, EC2 and Docker \cite{Merkel:2014:DLL:2600239.2600241}, we  have
+developed a system that allows any flavor of linux to be deployed with any
+version of software that is required to run on the slave nodes seamlessly. For
+example, we developed our C++ code using OpenCV 3.0 and g++4.8 all on Ubuntu
+14.04 and built a Docker container that packaged all that software together.
+We were then able to deploy our software to an Amazon machine image (AMI) running
+an Amazon flavor of Linux that was built for running docker and for communicating
+to an ECS cluster. We did all that without configuring a single Linux instance
+by hand. And should we choose to roll back to an earlier version of OpenCV or
+upgrade our compiler to the latest standard, we could do so by changing the
+configuration of our Docker container and our development environment. This
+method in no way hinders either vertical or horizontal scalability. With Docker,
+we can still pass flags that allow the container to take over the host's GPUs
+so that any code written specifically for the GPUs can still be run in a container.
+
+
+\section{\label{section:auto_deployment}Automatic Deployment of Software and
+the Development Process}
+An aspect of this thesis that separates us from many of the techniques proposed
+in the background section, is the way we have developed our system to be repeatable, easy to use
+ and flexible to allow to future improvements. This is especially important to the iVPCL lab so that future
+graduate students can leverage the work done in this thesis to get a head start
+on future developments of the proposed feature extraction algorithm and on ViDA's
+architecture. In this section we cover several topics that demonstrate that we
+have done more than just provide an innovative solution to classifying activities
+in video, but have also created a system after which other projects can model
+themselves. Specifically, we cover how ViDA's underlying C++ code is developed
+and how it is automatically and seamlessly deployed to AWS all the while
+maintaining a vertically and horizontally scalable architecture.

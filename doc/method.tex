@@ -380,13 +380,65 @@ so that any code written specifically for the GPUs can still be run in a contain
 \section{\label{section:auto_deployment}Automatic Deployment of Software and
 the Development Process}
 An aspect of this thesis that separates us from many of the techniques proposed
-in the background section, is the way we have developed our system to be repeatable, easy to use
- and flexible to allow to future improvements. This is especially important to the iVPCL lab so that future
-graduate students can leverage the work done in this thesis to get a head start
-on future developments of the proposed feature extraction algorithm and on ViDA's
-architecture. In this section we cover several topics that demonstrate that we
-have done more than just provide an innovative solution to classifying activities
-in video, but have also created a system after which other projects can model
-themselves. Specifically, we cover how ViDA's underlying C++ code is developed
-and how it is automatically and seamlessly deployed to AWS all the while
-maintaining a vertically and horizontally scalable architecture.
+in the background section, is the way we have developed our system to be readily
+repeatable, easy to use and flexible to allow to future improvements. This is
+especially important to UNM's image and video processing and communication lab
+iVPCL lab so that future graduate students can leverage the work done in this
+thesis to get a head start on future developments of the proposed feature
+extraction algorithm and on ViDA's architecture. In this section we cover
+several topics that demonstrate that we have done more than just provide an
+innovative solution to classifying activities in video, but have also created a
+system after which other projects can model themselves. Specifically, we cover
+how ViDA's underlying C++ code is developed and how it is automatically and
+seamlessly deployed to AWS all the while maintaining a vertically and
+horizontally scalable architecture.
+
+\subsection{\label{subsection:opencv_tapi}Vertical Scalability}
+Since the iVPCL is strongly geared towards vertically scalable solutions using
+FPGAs and GPUs, it is fitting that we should also make the goal of this thesis
+to leverage those technologies. To do so, we have developed our software to take
+advantage of OpenCV's transparent API known as TAPI. The transparent API is an
+enabling technology to be able to seamlessly switch between GPU, CPU and or any
+hardware technologies without the software programmer having to select one at
+compile time or at run time explicitly. TAPI uses Open Computing Language
+(OpenCL) has its underlying technology to achieve significant improvements over
+its base algorithm suite. This fundamental technology allows the programmer to
+write software for a variety of hardware implementations without being burdened
+with implementing the algorithms by hand. For example, the Farneback optical
+flow algorithm that is already provided in the OpenCV library can be run easily
+on either the GPU or the CPU with almost no extra programming on the programmers
+part. This is also a powerful idea for users who want to distribute software to
+wide community, but have hardware accelerations that can be added to speed the
+software up when the hardware is available on the system. So if the programmer
+has attached an accelerated algorithm for computing the discrete radon transform
+as demonstrated in \cite{Cesar2014a}, it is completely possible to plug that
+implementation into OpenCL and in turn program the abstraction layer into the OpenCV
+library. This also means that the horizontally scalable aspect of this thesis
+still holds. Although it is optimal to have a cluster of machines with FPGAs
+hanging from the PCI express bus, implementing the software in OpenCL gives
+users the option to run the code on almost any compute device. This means that
+the code can run on machines in AWS or in a local cluster. Furthermore, machines
+that have the necessary hardware and are accessible in the lab can perform some
+of the heavy lifting before farming out the rest of the data to the slave nodes
+on the AWS cloud. So even though the system was also designed with horizontal
+scalability in mind, the option of going vertically scalable for certain computations
+has been in no way hindered.
+
+\subsection{\label{subsection:cont_integration}Continuous Integration}
+Its all too often that software is written and completely forgot about because
+the build process is forgotten as soon as the software is completed. A goal
+of this thesis was to not let that happen. We accomplish this using a relatively
+new software technique called continuous integration. Continuous integration
+is the idea that software should be constantly giving developers feedback
+about the state of their software to ensure robustness and to have an obvious
+tool for developers to use document the build process of the software.
+
+For this thesis, we chose to use an online tool called Travis-CI for our continuous
+integration. Travis easily hooks into our Github repository and automates the build
+process of our extract features program. Build of our C++ program consists of
+compiling and linking against all third party libraries, running all of our
+google test unit tests, and then deploying the Docker image to AWS to used
+for deployment on the ECS cluster. This tool significantly unburdens the developer
+from having to build, run the unit tests, building the Docker image and then deploying
+the image. Furthermore, this process is performed on every Github commit message
+pushed to the software repository. 

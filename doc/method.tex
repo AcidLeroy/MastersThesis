@@ -426,19 +426,42 @@ has been in no way hindered.
 
 \subsection{\label{subsection:cont_integration}Continuous Integration}
 Its all too often that software is written and completely forgot about because
-the build process is forgotten as soon as the software is completed. A goal
-of this thesis was to not let that happen. We accomplish this using a relatively
-new software technique called continuous integration. Continuous integration
-is the idea that software should be constantly giving developers feedback
-about the state of their software to ensure robustness and to have an obvious
-tool for developers to use document the build process of the software.
+the build process is forgotten as soon as the software is completed. A goal of
+this thesis was to not let that happen. We accomplish this using a relatively
+new software technique called continuous integration. Continuous integration is
+the idea that software should be constantly giving developers feedback about the
+state of their software to ensure robustness and to have an obvious tool for
+developers to use document the build process of the software.
 
-For this thesis, we chose to use an online tool called Travis-CI for our continuous
-integration. Travis easily hooks into our Github repository and automates the build
-process of our extract features program. Build of our C++ program consists of
-compiling and linking against all third party libraries, running all of our
-google test unit tests, and then deploying the Docker image to AWS to used
-for deployment on the ECS cluster. This tool significantly unburdens the developer
-from having to build, run the unit tests, building the Docker image and then deploying
-the image. Furthermore, this process is performed on every Github commit message
-pushed to the software repository. 
+For this thesis, we chose to use an online tool called Travis-CI for our
+continuous integration. Travis easily hooks into our Github repository and
+automates the build process of our extract features program. The build of our
+C++ program consists of compiling and linking against all third party libraries,
+running all of our google test unit tests, and then deploying the Docker image
+to AWS to used for deployment on the ECS cluster. This tool significantly
+unburdens the developer from having to do these steps manually. Continuous
+integration also ensures that the unit tests that have been developed for the
+software work on the deployed environment. In other words, we develop the
+software locally on any flavor of linux,  but there is a chance that any new
+changes that we have made to the software do not work in the deployed system.
+Travis-CI handles ironing out these details for us so that we always know that
+our build is a successful one.
+
+The fact that the continuous integration also pushes our Docker image up to  our
+ECS cluster is also huge advantage. This process  ensures that  our Cluster is
+always running the latest compiled and unit tested version.  So not only have we
+made deployment of our software easy using a Docker  container to package it up,
+we've also automated the entire deployment process of our software simply by
+pushing our code to our Github repo.
+
+Making the deployment and build of our software automated has guaranteed us
+that we will have repeatability in our code and that we have the latest
+functioning version running on our compute cluster. Furthermore, if mistakes are
+made at the local development level and they are not caught until the developer
+has pushed their changes to a Git repo, the automated build system will trigger
+a failure and not deploy the system. A key contribution with using the automated
+build system is that anyone from anywhere will be able to repeat the experiments
+that we have performed in this paper with very little software configuration. We
+have essentially frozen the code in a working state. Even if AWS goes away, the
+core Docker image is available to be run on any *nix type machine with Docker installed.
+So if future users decide that they want to use our extract features

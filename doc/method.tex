@@ -464,4 +464,13 @@ build system is that anyone from anywhere will be able to repeat the experiments
 that we have performed in this paper with very little software configuration. We
 have essentially frozen the code in a working state. Even if AWS goes away, the
 core Docker image is available to be run on any *nix type machine with Docker installed.
-So if future users decide that they want to use our extract features
+So if future users decide that they want to use our extract features algorithm,
+it is ready to run. Figure \ref{fig:continuous_integration} demonstrates the
+general flow of the continuous integration in ViDA.
+
+\begin{figure}[h]
+  \label{fig:continuous_integration}
+  \centering
+  \includegraphics[width=\textwidth]{figures/continuous_integration}
+  \caption{Automated deployment of ViDA to the AWS cloud using continous integration}
+\end{figure}

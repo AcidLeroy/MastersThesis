@@ -1,0 +1,23 @@
+\chapter{\label{ap:google_test}Example of Google Test}
+
+\begin{minted}{cpp}
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "mock_reader.h"
+#include "motion_estimation.h"
+
+TEST(MotionEstimation, OnlyOneFrameInImageSequence) {
+  std::shared_ptr<MockReader> mock(new MockReader{"some_file.mov"});
+  MotionEstimation<MockReader, cv::Mat> me(mock);
+  std::shared_ptr<cv::Mat> a_ =
+      std::make_shared<cv::Mat>(cv::Mat(256, 256, CV_8U));
+  cv::randu(*a_, 0, 256);
+  std::shared_ptr<Image<>> frame1{new Image<>(a_)};
+  EXPECT_CALL(*mock, ReadFrameMat())
+      .WillOnce(Return(frame1))
+      .WillOnce(Return(nullptr));
+
+  std::shared_ptr<MockFlow> mflow{new MockFlow()};
+  ASSERT_THROW(me.EstimateMotion<MockFlow>(mflow), MotionEstimationException);
+}
+\end{minted}

@@ -412,40 +412,46 @@ wide community, but have hardware accelerations that can be added to speed the
 software up when the hardware is available on the system. So if the programmer
 has attached an accelerated algorithm for computing the discrete radon transform
 as demonstrated in \cite{Cesar2014a}, it is completely possible to plug that
-implementation into OpenCL and in turn program the abstraction layer into the OpenCV
-library. This also means that the horizontally scalable aspect of this thesis
-still holds. Although it is optimal to have a cluster of machines with FPGAs
-hanging from the PCI express bus, implementing the software in OpenCL gives
-users the option to run the code on almost any compute device. This means that
-the code can run on machines in AWS or in a local cluster. Furthermore, machines
-that have the necessary hardware and are accessible in the lab can perform some
-of the heavy lifting before farming out the rest of the data to the slave nodes
-on the AWS cloud. So even though the system was also designed with horizontal
-scalability in mind, the option of going vertically scalable for certain computations
-has been in no way hindered.
+implementation into OpenCL and in turn, program the abstraction layer into the
+OpenCV library. This also means that the horizontally scalable aspect of this
+thesis still holds so that we can distribute the same algorithm to nodes with
+less capable hardware. Although it is optimal to have a cluster of machines with
+FPGAs hanging from the PCI express bus, implementing the software in OpenCL
+gives users the option to run the code on almost any compute device. This means
+that the code can run on machines in AWS or in a local cluster. Furthermore,
+machines that have the necessary hardware and are accessible in the lab can
+perform some of the heavy lifting before farming out the rest of the data to the
+slave nodes on the AWS cloud. So even though the system is designed with
+horizontal scalability in mind, the option of going vertically scalable for
+certain computations has been in no way hindered.
 
 \subsection{\label{subsection:cont_integration}Continuous Integration}
-Its all too often that software is written and completely forgot about because
-the build process is forgotten as soon as the software is completed. A goal of
-this thesis was to not let that happen. We accomplish this using a relatively
-new software technique called continuous integration. Continuous integration is
-the idea that software should be constantly giving developers feedback about the
-state of their software to ensure robustness and to have an obvious tool for
-developers to use document the build process of the software.
+Its all too often that software is written and completely forgotten about
+because the build process is too complicated and burdensome on the users of the
+interface.  A goal of this thesis maximize reusability and maintainability. We
+accomplish this using a  popular software technique called continuous
+integration \cite{duvall2007continuous}. Continuous integration is the idea that
+software should be constantly giving developers feedback about the state of
+their software to ensure robustness and to have an obvious tool for developers
+to use document the build process of the software. This is an especially
+important tool for teams of developers so that failures of new commits
+can easily be observed quickly and effectively. This has the advantage of addressing
+errors early on in the software development phase so that errors are addressed
+immediately.
 
 For this thesis, we chose to use an online tool called Travis-CI for our
 continuous integration. Travis easily hooks into our Github repository and
 automates the build process of our extract features program. The build of our
 C++ program consists of compiling and linking against all third party libraries,
 running all of our google test unit tests, and then deploying the Docker image
-to AWS to used for deployment on the ECS cluster. This tool significantly
+to AWS to be used for deployment on the ECS cluster. This tool significantly
 unburdens the developer from having to do these steps manually. Continuous
 integration also ensures that the unit tests that have been developed for the
-software work on the deployed environment. In other words, we develop the
-software locally on any flavor of linux,  but there is a chance that any new
-changes that we have made to the software do not work in the deployed system.
-Travis-CI handles ironing out these details for us so that we always know that
-our build is a successful one.
+software work on the deployed environment specifically in the docker image. In
+other words, we develop the software locally on any flavor of linux,  but there
+is a chance that any new changes that we have made to the software do not work
+in the deployed system. Travis-CI acts as an automated alert that something might
+not be right in the software.
 
 The fact that the continuous integration also pushes our Docker image up to  our
 ECS cluster is also huge advantage. This process  ensures that  our Cluster is
@@ -465,7 +471,7 @@ that we have performed in this paper with very little software configuration. We
 have essentially frozen the code in a working state. Even if AWS goes away, the
 core Docker image is available to be run on any *nix type machine with Docker installed.
 So if future users decide that they want to use our extract features algorithm,
-it is ready to run. Figure \ref{fig:continuous_integration} demonstrates the
+it is ready to run. Figure \ref{fig:continuous_integration} illustrates the
 general flow of the continuous integration in ViDA.
 
 \begin{figure}[h]
@@ -473,4 +479,76 @@ general flow of the continuous integration in ViDA.
   \centering
   \includegraphics[width=\textwidth]{figures/continuous_integration}
   \caption{Automated deployment of ViDA to the AWS cloud using continuous integration}
+\end{figure}
+
+\subsection{\label{subsection:tdd}Test Driven Development}
+For the majority of our C++ development, we used a software engineering technique
+called test driven development (TDD) \cite{beck2003test}. This technique is germane to
+our method's section because repeatability of our experiments and future
+extension of our work depends on well developed, robust software. The main idea is that
+before we ever wrote code to implement a new algorithm, we first design a failing
+test and then write code to make that test pass. This has several advantages over
+not writing tests for code:
+
+\begin{itemize}
+\item It gives developers a predictable way to code. Rather than thinking
+abstractly about what goals a developer is attempting to accomplish, the developer
+writes concrete tests that should validate the behavior that is desired.
+\item It allows for lessons to be learned early on about the implementation details
+of the software. If a developer delves directly into solving a software problem
+with a single mindset about how it should be implemented, then the opportunity
+for a different design pattern to be used is extinguished. The main idea being
+that if test driven development is used for designing an algorithm then the best
+design pattern for the problem will be chosen, not just the one the developer
+is familiar with.
+\item Test driven development forces developers to be accountable. All too often
+code is written with the mindset that its okay to commit hundreds or even
+thousands of lines of code most of which is barely tested. And thus the code
+becomes riddled with bugs and other developers end up having to fix those issues.
+With TDD, this is a less frequent occurrence because developers must write a test
+for every logical unit of code.
+\end{itemize}
+
+For this thesis we use TDD to develop our extract features program and to design
+several programs that we use for experimental purposes. In order to facilitate
+the development, we use google test as our C++ testing framework
+\cite{googletest}. An example of a test we have written to test receiving a
+single video frame from a file is shown in Appendix \ref{ap:google_test}. This
+test uses a concept fro the TDD community known as a mocked object. The
+philosophy behind using a mocked video reader as illustrated in the test, is
+that we don't want to design our tests to be reliant on the state of the current
+system. If we do so, the second we push our code to the repository, our
+continuous integration tool will fail. Mocked objects give us the ability to
+test our algorithms without having to rely on the state of our development
+machine, the network or other variable elements. This is a powerful concept
+because it ensures that our tests run fast and also forces us to program to
+interfaces rather than concrete objects. In order to fully leverage the power of
+mocked objects, we use a design pattern, as shown Appendix \ref{ap:google_test},
+known has dependency injection \cite{gamma1995design}. The idea behind
+dependency injection is that we can inject our dependencies into an algorithm at
+runtime or compile time to have our object get the resources it needs to perform
+a calculation in a variety of ways. For example, in our test in Appendix
+\ref{ap:google_test}, we inject the interface called ``Reader''. ``Reader'' is a
+specific example of high-performance dependency injection because no virtual
+interfaces are used. This concept can only be used at compile time and the
+interfaces cannot be swapped out at runtime. High performance dependency
+injection is achieved by using only templates, which by their nature, can only
+be determined at compile time and not run time. In order to achieve type
+inference at runtime, we would need to use a virtual interface instead which has
+the additional overhead of doing a virtual table lookup. As a result of using
+this reader interface instead of using OpenCV's video reading capabilities, we
+give ourselves the flexibility to read from hierarchical data format (HDF5)
+files, a web interface, or anything as long as we adhere to the contract we have
+defined in the interface code. And thus we can also write a mocked object, which
+is to say, an object that we can easily define the inputs and outputs of on the
+fly so that we can test a variety of scenarios in our motion estimation
+algorithm without having to rely on any external resources. Figure \ref{fig:hiperf_dependency}
+illustrates how dependency injection looks for our MotionEstimation class.
+
+\begin{figure}[h]
+  \label{fig:hiperf_dependency}
+  \centering
+  \includegraphics[width=\textwidth]{figures/dependency_injection}
+  \caption{High performance dependency injection using templates to implement the
+  motion estimation class with different types of video readers.}
 \end{figure}

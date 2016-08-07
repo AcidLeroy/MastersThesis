@@ -183,6 +183,30 @@ CDF, motion orientation CDF and classification. We can then use an SVM to classi
 the features. To validate our results, we use leave-one-out cross validation
 to ensure that we have not overfit the data.
 
+This thesis uses the SVM software that is included in the R language for
+accurate classification. The algorithm is based off the original paper written
+by Vapnik \cite{cortes1995support} but was then much improved for computational
+efficiency by Chang \& Lin in 2011 \cite{chang2011libsvm} with their award
+winning software package known as LIBSVM. This library was originally written
+in C, but many fans of the algorithm have created software bindings for multiple
+languages, including R.
+
+The classification of our feature vectors is very simple since the majority of
+the hard work has already been implemented in the machine learning algorithms
+we use to do the classification. The process is as follows
+
+
+\begin{itemize}
+  \item Load features from CSV file into an R data frame
+  \item Plot statistics about the features
+  \item Loop over data frame using leave one out cross correlation
+  \item Select most accurate results between K nearest neighbors and tuned, non-linear
+  support vector machine.
+\end{itemize}
+
+The R code used to do the classification is shown in Appendix
+\ref{ap:svm_classification}.
+
 \section{\label{section:distributed_processing}Scalable Architecture}
 A core principal for a well designed, horizontally scalable application, is
 to design it such that it does not contain state \cite{awsbestpractices}.
@@ -542,8 +566,9 @@ files, a web interface, or anything as long as we adhere to the contract we have
 defined in the interface code. And thus we can also write a mocked object, which
 is to say, an object that we can easily define the inputs and outputs of on the
 fly so that we can test a variety of scenarios in our motion estimation
-algorithm without having to rely on any external resources. Figure \ref{fig:hiperf_dependency}
-illustrates how dependency injection looks for our MotionEstimation class.
+algorithm without having to rely on any external resources. Figure
+\ref{fig:hiperf_dependency} illustrates how dependency injection looks for our
+MotionEstimation class.
 
 \begin{figure}[h]
   \label{fig:hiperf_dependency}
@@ -551,4 +576,22 @@ illustrates how dependency injection looks for our MotionEstimation class.
   \includegraphics[width=\textwidth]{figures/dependency_injection}
   \caption{High performance dependency injection using templates to implement the
   motion estimation class with different types of video readers.}
+\end{figure}
+
+The appendix example demonstrates how we now have a failing test, and we can then
+begin implementing the code that causes test to pass. As a result, if we
+push our failing test to Github, our current build will not be deployed to the cluster
+until we have our tests passing. Figure \ref{fig:passing} illustrates what a commit
+looks like when it is passing on our Github project and Figure \ref{fig:passing}
+shows what it looks like when the build is failing because of a test, compilation
+issues, or problems pushing to the AWS cloud.
+
+\begin{figure}[h]
+  \label{fig:passing}
+  \centering
+  \includegraphics[width=\textwidth]{figures/passing}
+  \includegraphics[width=\textwidth]{figures/failing}
+  \caption{An example of two commits that were pushed to our repository. The
+  top figure shows how the build is marked as passing with a green check mark,
+  and the bottom shows the build failing with a red x.}
 \end{figure}

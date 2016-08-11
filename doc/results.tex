@@ -93,6 +93,7 @@ vector machine properly classifying the results.
 With those feature vectors, we found that we were able to get the confusion matrix
 shown in Table \ref{table:typing_confusion}
 \begin{table}[h]
+  \begin{centering}
   \label{table:typing_confusion}
   \begin{tabular}{| l | l | l |}
   \hline
@@ -100,9 +101,11 @@ shown in Table \ref{table:typing_confusion}
   \textbf{typing} & 19 & 1 \\ \hline
   \textbf{no typing} & 3 & 17 \\ \hline
   \end{tabular}
-  \caption{Data that is sent to the SQS for calculation on the cluster. The
-  original dataset includes 10-20 for both classifications}
+  \caption{Confusion matrix for classification accuracy for typing}
+\end{centering}
 \end{table}
+
+\FloatBarrier
 
 From Table \ref{table:typing_confusion} we can see that we get 90\% accuracy for
 classifying typing motions on the keyboard. We had difficulty classifying
@@ -111,3 +114,28 @@ we also found that we had trouble classifying the videos where there is was
 not much typing in the videos that were classified as typing. But overall, when the
 scene clearly had typing and when it clearly did not, we found that we had
 90\% accuracy.
+
+Our results for determining writing, however, were not as good as our results
+for classifying typing. Our CDFs for typing are shown in figure
+
+\begin{figure}[h]
+  \label{fig:typing_box_whiskers}
+  \centering
+  \includegraphics[width=\textwidth]{figures/writing_cdfs}
+  \caption{Box and whiskers plot of CDFs for writing. The first column represents the
+  statistics for typing and the second column represents the statistics for no
+  writing.}
+\end{figure}
+
+\begin{table}[h]
+  \begin{centering}
+  \label{table:writing_confusion}
+  \begin{tabular}{| l | l | l |}
+  \hline
+   & \textbf{writing} & \textbf{no writing}\\ \hline
+  \textbf{writing} & 18 & 2 \\ \hline
+  \textbf{no writing} & 11 & 9 \\ \hline
+  \end{tabular}
+  \caption{Confusion matrix for classification accuracy for typing}
+\end{centering}
+\end{table}

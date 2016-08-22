@@ -1,4 +1,4 @@
-\chapter{Results}
+\chapter{Results \& Discussion}
 \section{\label{section:the_data}The AOLME Dataset}
 The AOLME dataset is an enormous repository of over 900 hours of video
 recordings of students. The videos contain students
@@ -150,9 +150,14 @@ we are extracting are highly dependent on the type of scene we are looking at.
 \section{\label{section:scalability}Proof of Scalability}
 In order to show that our system is scalable, we record the time it takes
 for the cluster to perform certain repetitive tasks. For the first experiment,
-we have the cluster operate using only a single EC2 instance, and thens scale
+we have the cluster operate using only a single EC2 instance, and then scale
 the experiment by one instance and compare how long it takes to calculate 10 2.1MB
-videos. The results from this experiment are show in Figure \ref{fig:speed_up}
+videos. For this experiment, we used Amazon's t2.micro instance which contains
+1 virtual CPU running on a high frequency Intel Xeon processor with turbo
+up to 3.3GHz and contains 1GB of memory. This is the instance that is considered
+to be part of the free tier program. Our instance runs a special Amazon Machine
+image
+The results from this experiment are show in Figure \ref{fig:speed_up}
 
 \begin{figure}[h]
   \label{fig:speed_up}
@@ -171,6 +176,19 @@ The size of the videos does matter. The smaller that the videos are, the less
 the overhead is when running the cluster. The reason for this is because not only
 does it take longer to transfer larger videos, but it also takes more time to process
 them. So from our experiments, it looks like keeping the videos under 2MB is optimal.
+We tested how well the t2.micro instances performed against our MacBook Pro 15 inch
+with an Intel Core i7 clocked at 2.7 GHz and has 16GB of RAM. It should also be
+noted that the Macbook Pro contains an AMD Radeon R9 M370X GPU with 2048 GB of
+memory. This allows us to take advantage of the TAPI programming model that
+we leverage as described in the Methods section.  As shown in figure \ref{fig:size_matters},
+we can see that even though we have significant processing power locally, we still
+must receive the message from the queue and then process the videos; therefore
+there is actually little gained in terms of performance even though we are able
+to leverage the onboard GPUs. We can also see the exponential increase in time
+it takes to calculate very large videos (8MB or greater). Hence, the smaller
+we can keep the videos, the quicker each node can process each segment and the
+system can scale with fewer total compute nodes.
+
 Figure \ref{fig:size_matters}.
 
 \begin{figure}[h]
@@ -181,3 +199,35 @@ Figure \ref{fig:size_matters}.
   vs the time it takes a cluster to process 10 videos. Videos vary in size to
   test the efficacy of choosing to send smaller vs larger videos to the cluster.}
 \end{figure}
+
+\section{Discussion}
+ In the previous sections we showed that we can accurately classify typing in
+ small segments of video and demonstrated how to we can horizontally scale our
+ system on the cloud. But this is by no means a full implementation of the system
+ we would like to create for interactive analysis of AOLME videos. Figure
+ \ref{fig:full_system}
+
+ \begin{figure}[h]
+   \label{fig:full_system}
+   \centering
+   \includegraphics[width=\textwidth]{figures/full_system}
+   \caption{Illustration of the end goal of the ViDA system. (a) shows the
+   functions of the master node, and (b) shows the functions of the slave node.
+   For this thesis we have implemented parts of the distribution as well as parts
+   of the compute node.}
+ \end{figure}
+
+ \FloatBarrier
+
+ For this thesis we have essentially shown that it is possible to distribute
+ small parts of the video from the master node to be consumed by the compute nodes
+ and then combined into the CDF features. We have not made the work that we have
+ done in this thesis interactive yet, but future work should be able to leverage
+ what we have done in this thesis to do so. In order to achieve the interactive
+ system that is shown in Figure \ref{fig:full_system}, we would need the master
+ node to break the HEVC videos into small 1-2MB segments to send out to the compute
+ cluster and then have the video results recombined into a single feature vector
+ when the results are collected again back at the master. This modification is
+ imperative to ensure that each one of the compute nodes can handle the workload
+ in a timely fashion. It could mean the difference between hours and minutes
+ as illustrated in Figure \ref{size_matters}.

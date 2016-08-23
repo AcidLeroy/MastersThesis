@@ -38,11 +38,11 @@ In this section we explore how well our results are for both the classification
 of typing and writing videos using the techniques described in methods chapter.
 
 For our first set of results, we ran to classifying typing motions in videos.
-The input messages into the cluster are shown in Table \ref{table:message_queue}.
+The input messages into the cluster are shown in Table \ref{tab:message_queue}.
 The original dataset, however, contains 10-20 for each of the training classifications,
 we have left them out in this table for brevity.
 \begin{table}[h]
-  \label{table:message_queue}
+
   \begin{tabular}{ | l | l | l | l |}
   \hline
   \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{of\_algorithm}\\ \hline
@@ -70,6 +70,7 @@ we have left them out in this table for brevity.
   \end{tabular}
   \caption{Data that is sent to the SQS for calculation on the cluster. The
   original dataset includes 10-20 for both classifications}
+  \label{tab:message_queue}
 \end{table}
 
 Using our R code, we then plot some statistics about the vectors that have come
@@ -92,10 +93,9 @@ vector machine properly classifying the results.
 \end{figure}
 
 With those feature vectors, we found that we were able to get the confusion matrix
-shown in Table \ref{table:typing_confusion}
+shown in Table \ref{tab:typing_confusion}
 \begin{table}[h]
   \begin{centering}
-  \label{table:typing_confusion}
   \begin{tabular}{| l | l | l |}
   \hline
    & \textbf{typing} & \textbf{no typing}\\ \hline
@@ -103,12 +103,13 @@ shown in Table \ref{table:typing_confusion}
   \textbf{no typing} & 3 & 17 \\ \hline
   \end{tabular}
   \caption{Confusion matrix for classification accuracy for typing}
+  \label{tab:typing_confusion}
 \end{centering}
 \end{table}
 
 \FloatBarrier
 
-From Table \ref{table:typing_confusion} we can see that we get 90\% accuracy for
+From Table \ref{tab:typing_confusion} we can see that we get 90\% accuracy for
 classifying typing motions on the keyboard. We had difficulty classifying
 videos that had significant motion in them, but the motion was not typing and
 we also found that we had trouble classifying the videos where there is was
@@ -128,9 +129,10 @@ for classifying typing. Our CDFs for typing are shown in figure
   writing.}
 \end{figure}
 
+\FloatBarrier
+
 \begin{table}[h]
   \begin{centering}
-  \label{table:writing_confusion}
   \begin{tabular}{| l | l | l |}
   \hline
    & \textbf{writing} & \textbf{no writing}\\ \hline
@@ -138,10 +140,11 @@ for classifying typing. Our CDFs for typing are shown in figure
   \textbf{no writing} & 11 & 9 \\ \hline
   \end{tabular}
   \caption{Confusion matrix for classification accuracy for typing}
+  \label{tab:writing_confusion}
 \end{centering}
 \end{table}
 
-As can be seen in Table \ref{table:writing_confusion}, we did not get as good
+As can be seen in Table \ref{tab:writing_confusion}, we did not get as good
 as results for writing, only about 65\% classification. In these results we
 find that our algorithm struggled more with classifying videos that had no
 writing in them as having writing in them. This may mean that the motion vectors
@@ -230,4 +233,7 @@ Figure \ref{fig:size_matters}.
  when the results are collected again back at the master. This modification is
  imperative to ensure that each one of the compute nodes can handle the workload
  in a timely fashion. It could mean the difference between hours and minutes
- as illustrated in Figure \ref{size_matters}.
+ as illustrated in Figure \ref{size_matters}. Furthermore, since the convolutions
+ as show in Figure \ref{fig:full_system} are separable we could easily farm that
+ work out to another cluster that performs just convolutions in parallel with
+ the part of the system that we have created.

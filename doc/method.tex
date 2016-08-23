@@ -22,7 +22,7 @@ program flow for calculating motion vectors in ViDA.
 \begin{algorithm}
 \caption{Calculating Lucas-Optical Flow from Videos}
 \label{alg:lk_flow}
-\begin{algorithmic}[1]
+\begin{algorithmic}
 \Procedure{CalculateVectors}{$frame1$, $frame2$}
   \If{\text{$track\_points\_initialized$}}
   	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
@@ -89,7 +89,6 @@ optical flow vectors with a magnitude greater than 75\% of the max value. The se
 of Equations in \ref{eq:optical_threshold} illustrate this idea.
 
 \begin{align}
-  \label{eq:optical_threshold}
   \begin{split}
   \mathbf{V} &= (\mathbf{V_x}, \mathbf{V_y}) \\
   \mathbf{V_m} &=
@@ -98,6 +97,7 @@ of Equations in \ref{eq:optical_threshold} illustrate this idea.
     0, & \text{otherwise}
   \end{cases}
   \end{split}
+  \label{eq:optical_threshold}
 \end{align}
 
 where $\mathbf{V_x}$ and $\mathbf{V_y}$ are the optical flow vectors in the
@@ -105,7 +105,6 @@ x and y directions respectively. $\mathbf{V_m}$ is the bit mask that is
 then used to extract the subset of data from each of the dense matrices.
 
 \begin{align}
-  \label{eq:subset}
   \begin{split}
   \text{Let: } \\
   \|\mathbf{V\prime}\| &= \|\mathbf{V}\| \circ \mathbf{V_m}\\
@@ -113,6 +112,7 @@ then used to extract the subset of data from each of the dense matrices.
   \mathbf{V_y\prime} &= \mathbf{V_y} \circ \mathbf{V_m}\\
   \mathbf{\Phi\prime} &= \mathbf{\Phi} \circ \mathbf{V_m}
 \end{split}
+\label{eq:subset}
 \end{align}
 
 Using the optical flow bitmask, $\mathbf{V_m}$, we can then extract features
@@ -140,15 +140,16 @@ those blobs using \texttt{findContours} in combination with with
 \texttt{fitEllipse}. The full implementation of this algorithm is outlined in
 Appendix \ref{ap:centroids}. The final step is to then dilate each blob, and
 then retrieve the magnitude of the optical flow in this region. Appendix
-\ref{ap:dilate}. Figure \ref{fig:orient_cent} illustrates the idea of acquiring
+\ref{ap:dilate} gives the C++ code that was used for these calculations.
+Figure \ref{fig:orient_cent} illustrates the idea of acquiring
 the centroid and orientation of the blobs from $\mathbf{V_m}$.
 
 \begin{figure}[h]
-  \label{fig:orient_cent}
   \centering
   \includegraphics[width=8cm]{figures/cent_and_orient}
   \caption{Example of orientation measurement on the left, and the centroid
   calculation on the right.}
+  \label{fig:orient_cent}
 \end{figure}
 
 When the previous optical flow features have been generated, their values are
@@ -162,12 +163,12 @@ magnitude, motion vector orientation and background motion vector magnitude.
 Figure \ref{fig:extract_flow} clearly illustrates this concept.
 
 \begin{figure}[h]
-  \label{fig:extract_flow}
   \centering
   \includegraphics[width=14cm]{figures/extract_features_flow}
   \caption{Flow of the extract features program. For every input video, it will
   return a CDF with 25 bins for each of the extracted features from the motion
   vectors}
+  \label{fig:extract_flow}
 \end{figure}
 
 Ultimately, these are the features that are then accumulated for multiple AOLME
@@ -228,11 +229,13 @@ node using Amazon's simple queue service (SQS). Figure \ref{fig:dataflow} illust
 the basic distributed system design.
 
 \begin{figure}[h]
-  \label{fig:dataflow}
   \centering
   \includegraphics[width=\textwidth]{figures/extract_features_dataflow}
   \caption{Dataflow of the distributed video system using AWS components}
+  \label{fig:dataflow}
 \end{figure}
+
+\FloatBarrier
 
 From Figure \ref{fig:dataflow} we see that the first step is to upload
 the videos to S3. We keep the videos very small, because as we show in our experiments
@@ -270,10 +273,9 @@ messages on the SQS queue.  This is orchestrated by reading
 a csv file that consists of an S3 link to a video segment, the classification of
 the segment, the SQS queue to which to output the features and finally the
 optical flow method to use. An example of the file is show in Table
- \ref{table:message_queue}.
+ \ref{tab:message_queue}.
 
 \begin{table}[h]
-  \label{table:message_queue}
   \begin{tabular}{ | l | l | l | p{3cm} |}
   \hline
   \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{of\_algorithm}\\ \hline
@@ -283,9 +285,12 @@ optical flow method to use. An example of the file is show in Table
   \end{tabular}
   \caption{Example of data file that use by the master node to place messages on
   the SQS queue. }
+  \label{tab:message_queue}
 \end{table}
 
-From the example data shown in Table \ref{table:message_queue}, we can see that
+\FloatBarrier
+
+From the example data shown in Table \ref{tab:message_queue}, we can see that
 the nodes have the ability to switch the algorithm as well as associate a
 classification from the video. Having the ability to switch method types allows
 us to easily benchmark using Lucas-Kanade optical flow versus Farneback.

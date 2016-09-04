@@ -16,41 +16,41 @@ flow. The first function is used to find features that can be easily tracked
 from one frame to the other using the Shi-Tomasi algorithm \cite{shi1994good}.
 The next method then calculates the optical flow between the good points using
 the pyramidal implementation of the Lucas-Kanade algorithm
-\cite{bouguet2001pyramidal}. Algorithm \ref{alg:lk_flow} outlines the general
+\cite{bouguet2001pyramidal}. Figure \ref{alg:lk_flow} outlines the general
 program flow for calculating motion vectors in ViDA.
 
-\begin{algorithm}
-\caption{Calculating Lucas-Optical Flow from Videos}
-\label{alg:lk_flow}
-\begin{algorithmic}
+\begin{figure}[h]
+\begin{algorithmic}[1]
 \Procedure{CalculateVectors}{$frame1$, $frame2$}
   \If{\text{$track\_points\_initialized$}}
   	\State $opticalflow \gets \texttt{calcOpticalFlowPyrLK}(track\_points, frame1, frame2)$
   \Else
   	\State $track\_points \gets \texttt{goodFeaturesToTrack}(frame1)$
-	\State $track\_points\_initialized \gets True$
-	\State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
+	  \State $track\_points\_initialized \gets True$
+	  \State $optical\_flow \gets  \texttt{CalculateVectors}(frame1, frame2)$
   \EndIf
   \Return $optical\_flow$
 \EndProcedure
 \end{algorithmic}
-\end{algorithm}
+\caption{Calculating Lucas-Optical Flow from Videos}
+\label{alg:lk_flow}
+\end{figure}
 
-The algorithm used in ViDA is similar to Algorithm \ref{alg:lk_flow} but
+The algorithm used in ViDA is similar to Figure \ref{alg:lk_flow} but
 contains fewer steps since there is no need to get good features to track.
 In the C++ software, we also implemented Farneback method. The
-Farneback implementation is shown in Algorithm \ref{alg:farneback}.
+Farneback implementation is shown in Figure \ref{alg:farneback}.
 
-\begin{algorithm}
-\caption{Calculating Farneback Flow from Videos}
-\label{alg:farneback}
+\begin{figure}[h]
 \begin{algorithmic}[1]
 \Procedure{CalculateVectors}{$frame1$, $frame2$}
   \State $optical\_flow \gets \texttt{calcOpticalFlowFarneback}(frame1, frame2)$\\
   \Return $optical\_flow$
 \EndProcedure
 \end{algorithmic}
-\end{algorithm}
+\caption{Calculating Farneback Flow from Videos}
+\label{alg:farneback}
+\end{figure}
 
 As can be seen in \ref{alg:farneback}, we don't need any good features to track
 because we are calculating the optical flow globally between frames, rather than
@@ -69,7 +69,7 @@ did using the Farneback method. Hence most of the results in this thesis
 have been calculated with Farneback optical flow unless otherwise specified.
 
 \section{\label{section:feature_extraction}Feature Extraction from Optical Flow}
-The \texttt{CalculateVectors} function in both Algorithm \ref{alg:lk_flow} and
+The \texttt{CalculateVectors} function in both Figure \ref{alg:lk_flow} and
 \ref{alg:farneback} returns several dense matrices that represent the features
 that we can extract from the optical flow output. These features are magnitude,
 orientation, x direction and y direction of the optical flow features. These are
@@ -82,7 +82,7 @@ feature space significantly.
 In the case of typing and writing, we know we can expect there to be motion from
 one frame to the next. We don't know by how much, but we do know that it is not
 zero. Using this knowledge, we can then threshold the optical flow vectors that
-we get back from Algorithms \ref{alg:lk_flow} and \ref{alg:farneback}. The
+we get back from Figure \ref{alg:lk_flow} and \ref{alg:farneback}. The
 threshold value used was empirically calculated from doing multiple runs on the
 AOLME videos. We found we got the best results by only retrieving
 optical flow vectors with a magnitude greater than 75\% of the max value. The set
@@ -226,7 +226,8 @@ video processing system. We use S3 storage to put small video clips that
 have been extracted from our AOLME dataset. These clips are made available to
 to all of the processing nodes. The processing nodes communicate with the master
 node using Amazon's simple queue service (SQS). Figure \ref{fig:dataflow} illustrates
-the basic distributed system design.
+the basic distributed system design and the psuedo-code for the entire system
+is shown in Figure \ref{alg:vida_pseudo_code}.
 
 \begin{figure}[h]
   \centering
@@ -235,11 +236,68 @@ the basic distributed system design.
   \label{fig:dataflow}
 \end{figure}
 
+\begin{figure}[h]
+\begin{algorithmic}[1]
+
+  \For{each \textit{video} in pre-segmented videos}
+    \State $\texttt{UploadToS3(}\textit{video}\texttt{)}$
+  \EndFor
+  \State $\texttt{AddVideosToSqsQueue(}\textit{video\_list.txt}\texttt{)}$
+  \State $\textit{video\_uri} = \texttt{PopVideoFromQueue()}$
+  \State $\textit{segmented\_video} = \texttt{DownloadS3Video(}\textit{video\_uri}\texttt{)}$
+  \State $\textit{cdf\_features} = \texttt{ExtractFeatures(}\textit{segmented\_video}\texttt{)}$
+  \State $\textit{previous\_frame} = nullptr$
+  \For{each \textit{frame} in \textit{segmented\_video}}
+    \State $\textit{current\_frame} = \textit{frame}$
+    \If {\textit{previous\_frame} == nullptr}
+      \State $continue$
+    \EndIf
+    \State $\textit{optical\_flow} = \texttt{CalculateOpticalFlow(}\textit{current\_frame, previous\_frame}$
+    \Statex $\textit{, method} \texttt{)}$
+    \State $\textit{mag} = \textit{optical\_flow}.\texttt{GetMagnitude()}$
+    \State $\textit{max\_mag} = \texttt{Max(} \textit{mag} \texttt{)}$
+    \State $\textit{magnitude} = \textit{mag} > \textit{max\_mag} \times 0.25$
+    \State $\textit{orientation\_vectors} = \textit{optical\_flow}.\texttt{GetOrientations()}$
+    \State $\textit{blobs} = \texttt{GetBlobs(} \textit{magnitude}\texttt{)}$
+    \For{each \textit{blob} in \textit{blobs}}
+      \State $\textit{centroid\_x, centroid\_y} = \texttt{GetCentroids(} \textit{blob} \texttt{)}$
+      \State $\textit{blob\_orientations} = \texttt{GetBlobOrientations(} \textit{blob} \texttt{)}$
+      \State $\textit{background\_mag} = \texttt{GetMotionAround(} \textit{mag, blob} \texttt{)}$
+    \EndFor
+    \State $\textit{num\_bins} = 25$
+
+    \State $\textit{pdfs} = \texttt{GetPdfs(} \textit{magnitude, orientation\_vectors} $
+    \Statex $\textit{centroid\_x, centroid\_y, blob\_orientations, background\_mag, 25} \texttt{)}$
+  \EndFor
+  \State $\textit{cdf\_features} = \texttt{Normalize(}\textit{pdfs}\texttt{)}$
+  \State $\texttt{PushToSqsQueue(}\textit{cdf\_features}, \textit{output\_queue\_name} \texttt{)}$
+  \While{videos in \textit{video\_list.txt} are still in processing}
+    \State $\texttt{Sleep(1)}$
+  \EndWhile
+
+  \State $\textit{output.txt} = \texttt{WriteCdfsToFile(PopAllCdfsFromQueue(}\textit{output\_queue\_name} \texttt{))}$
+
+  \State $\textit{dataframe} = \texttt{ReadCsv(} \textit{output.txt} \texttt{)}$
+
+  \For{\textit{sample\_index} in 1 to len(\textit{dataframe})}
+    \State $\textit{train\_data} = \textit{dataframe[-sample\_index]}$
+    \State $\textit{test\_data} = \textit{dataframe[sample\_index]}$
+    \State $\textit{knn\_result} = \texttt{knn(}\textit{train\_data, test\_data, k=3} \texttt{)}$
+    \State $\textit{svm\_model} = \texttt{svm(}\textit{train\_data, kernel=linear, cost = 0.001...10000} \textit{)}$
+    \State $\textit{svm\_result} = \texttt{predict(} \textit{svm\_model, test\_data} \texttt{)}$
+  \EndFor
+  \State $\texttt{WriteExperimentResults(} \textit{knn\_result, svm\_result} \texttt{)}$
+
+\end{algorithmic}
+\caption{Pseudocode for ViDA}
+\label{alg:vida_pseudo_code}
+\end{figure}
+
 \FloatBarrier
 
 From Figure \ref{fig:dataflow} we see that the first step is to upload
 the videos to S3. We keep the videos very small, because as we show in our experiments
-section, it takes quit a long time to process large videos therefore there is a
+section, it takes quite a long time to process large videos therefore there is a
 significant benefit to keeping the video chunks relatively small so that many
 machines could potentially work on the feature extraction process. The next step
 is to place a message on the SQS queue specifying which video to process and
@@ -309,12 +367,10 @@ the videos that are associated with each message. Once this has been validated,
 the master node begins to poll on the designated output queue for the results output
 from each of the slave nodes. Once all the results have been collected, the master
 node places each of the vectors into a comma separated features file.
-The pseudo code for the operations performed by the master are show in Algorithm
+The pseudo code for the operations performed by the master are show in Figure
 \ref{alg:master_node}.
 
-\begin{algorithm}
-\caption{Master Node Implementation Pseudo-Code}
-\label{alg:master_node}
+\begin{figure}[h]
 \begin{algorithmic}[1]
   \State $videos\_to\_process \gets \texttt{ReadInputData(input.csv)}$
   \For{\texttt{i = 0; i < len(videos\_to\_process); ++i}}
@@ -335,7 +391,9 @@ The pseudo code for the operations performed by the master are show in Algorithm
   \State \texttt{WriteFeaturesToDisk(} $feature\_vectors$ \texttt{)}
 
 \end{algorithmic}
-\end{algorithm}
+\caption{Master Node Implementation Pseudo-Code}
+\label{alg:master_node}
+\end{figure}
 
 As we have shown in this section, very little needs to be configured on the master
 node other than the ability to run Python and the AWS python utilities. This
@@ -355,12 +413,11 @@ that is run on all the slave nodes. This algorithm simply polls on a single
 queue, then once a messages is received, it downloads the the small S3 video
 segment, processes it using our feature extraction technique, puts the results
 on a queue that it has discovered on the incoming message, deletes the video
-locally and then begins polling on the queue again. Algorithm \ref{alg:slave_node}
+locally and then begins polling on the queue again. Figure \ref{alg:slave_node}
 illustrates this idea clearly.
 
-\begin{algorithm}
-\caption{Slave Node Implementation Pseudo-Code}
-\label{alg:slave_node}
+\begin{figure}[h]
+
 \begin{algorithmic}[1]
 
   \While{$True$}
@@ -372,12 +429,14 @@ illustrates this idea clearly.
     \State $\texttt{Sleep(1)}$
   \EndWhile
 \end{algorithmic}
-\end{algorithm}
+\caption{Slave Node Implementation Pseudo-Code}
+\label{alg:slave_node}
+\end{figure}
 
 We can see that the slave node logic is, like the master node, very simple. We
 simply wait for messages to come in from one queue, process the video, and then
 output the features onto another queue. However, there is a piece missing from
-Algorithm \ref{alg:slave_node} that makes the slave nodes a truly innovative
+Figure \ref{alg:slave_node} that makes the slave nodes a truly innovative
 part of our overall architecture and that is the orchestration and deployment
 of our highly refined C++ code.
 

@@ -24,6 +24,9 @@
 \usepackage{csquotes}
 \usepackage{placeins}
 
+\usepackage{datetime}
+\newdateformat{monthyeardate}{
+  \monthname[\THEMONTH], \THEYEAR}
 
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
@@ -47,7 +50,7 @@
   \degree{Master of Science \\ Computer Engineering}
   \documenttype{Thesis}
   \previousdegrees{B.S., University of New Mexico, 2010}
-  \date{July, \thisyear}
+  \date{\monthyeardate\today}
 
   \maketitle
 

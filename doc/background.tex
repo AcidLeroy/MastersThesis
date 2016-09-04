@@ -74,13 +74,30 @@ Encoding videos as succinct datasets that can easily be classified and are
 representative of the underlying features is another area that this thesis
 attempts to address. In \textit{Learning to encode motion using spatio-temporal
 synchrony} \cite{konda2013learning} they attempt to address this need by detecting
-synchrony between frames in videos. Was robustly able to classify motions in
+synchrony between frames in videos. They were robustly able to classify motions in
 datasets KTH, UCF sports, Hollywood2 and YUPENN in the low to mid 90s classification
 rate. However, training and testing the system varied between 2-3 minutes all
 they way up to days. In this thesis, we not only get very good classification
 rates, but because the system is horizontally scalable, we can train the system
 in a matter of minutes assuming relatively small video segments (videos on the
 order of 1-2 MB).
+
+More modern approaches use various compound techniques in an attempt to solve
+human activity recognition such as \cite{wang2016action}. In this paper they
+proved to classify many of the existing datasets very well using a combination
+of optical flow histograms, edge trajectories, and support vector machines  for
+classification. In this thesis, we do not attempt to beat the results in this
+paper, we strive to provide a method for activity classification that can
+distributed on a cloud like infrastructure and that can be used in real time.
+Furthermore, the datasets that they use are not from videos in the wild. Our
+AOLME dataset contains thousands of hours of video that are not ideal for
+training and testing activity recognition algorithms. This makes tuning and
+tweaking the parameters for any algorithm, edge trajectories or not, very
+difficult. Like them though, we are using optical flow which is well studied and
+robust for video activity recognition. An other contribution of this thesis
+that is not provided in \cite{wang2016action} is that we openly provide our software
+as open source so that other studies can be easily conducted.
+
 
 
 \subsection{\label{section:optical_flow}Optical Flow}
@@ -304,6 +321,28 @@ services providers that does provide access to instances with GPUs, which is
 extremely important for video processing algorithms that leverage efficient
 GPU algorithms written in CUDA and/or OpenCL. Thus applications can be scaled
 vertically and horizontally using these EC2 instances.
+
+\subsection{\label{subsection:activity_in_the_cloud}Activity Recognition Using the Cloud}
+Until this point, we have only presented the basics of how the cloud can be used
+to perform computationally heavy tasks. In this subsection, we investigate how
+other research has leveraged the cloud to perform similar video processing tasks.
+One of the latest works is ``A Cloud-Based Large-Scale Distributed Video Analysis
+System'' \cite{wang2016cloud}. In this paper, the authors attempt to make a
+robust, scalable and secure platform for performing video analysis using the
+Google cloud computing infrastructure. Their system proposes video analysis
+modules that are pluggable and therefore could perform a multitude of tasks and
+they also detail the data model for processing videos. However, their infrastructure
+lacks the continuous deployment and ease of deployment that the architecture
+in this thesis provides and they do not provide the software they wrote as a
+deliverable as we do. Many of the same concepts are shared between our thesis
+and this paper in terms of architecture, but they are not automatically
+orchestrating their services from software development to deployment. Our proposal
+not only supports a cloud like infrastructure for analyzing videos, but also proposes
+a delivery system that is not only convenient for the end users of our video analysis
+package, but is also convenient for developers wishing to plug their particular
+application into our architecture. Furthermore this thesis provides all the
+software openly to the public so that experiments can easily be redone and leveraged
+for future work. 
 
 \subsection{\label{subsection:docker}Docker}
 Over the last two years, Docker has gained significant traction amongst software

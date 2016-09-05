@@ -38,7 +38,7 @@ In this section we explore how well our results are for both the classification
 of typing and writing videos using the techniques described in methods chapter.
 
 For our first set of results, we ran to classifying typing motions in videos.
-The input messages into the cluster are shown in Table \ref{tab:message_queue}.
+The input messages into the cluster are shown in Table \ref{tab:message_list}.
 The original dataset, however, contains 10-20 for each of the training classifications,
 we have left them out in this table for brevity.
 \begin{table}[h]
@@ -70,7 +70,7 @@ we have left them out in this table for brevity.
   \end{tabular}
   \caption{Data that is sent to the SQS for calculation on the cluster. The
   original dataset includes 10-20 for both classifications}
-  \label{tab:message_queue}
+  \label{tab:message_list}
 \end{table}
 
 Using our R code, we then plot some statistics about the vectors that have come
@@ -121,7 +121,7 @@ Our results for determining writing, however, were not as good as our results
 for classifying typing. Our CDFs for typing are shown in figure
 
 \begin{figure}[h]
-  \label{fig:typing_box_whiskers}
+  \label{fig:typing_box_whiskers_1}
   \centering
   \includegraphics[width=\textwidth]{figures/writing_cdfs}
   \caption{Box and whiskers plot of CDFs for writing. The first column represents the
@@ -195,12 +195,12 @@ system can scale with fewer total compute nodes.
 Figure \ref{fig:size_matters}.
 
 \begin{figure}[h]
-  \label{fig:size_matters}
   \centering
   \includegraphics[width=\textwidth]{figures/size_matters}
   \caption{Comparison of the time it takes for a single node to process 1 video
   vs the time it takes a cluster to process 10 videos. Videos vary in size to
   test the efficacy of choosing to send smaller vs larger videos to the cluster.}
+  \label{fig:size_matters}
 \end{figure}
 
 \section{Discussion}
@@ -233,7 +233,7 @@ Figure \ref{fig:size_matters}.
  when the results are collected again back at the master. This modification is
  imperative to ensure that each one of the compute nodes can handle the workload
  in a timely fashion. It could mean the difference between hours and minutes
- as illustrated in Figure \ref{size_matters}. Furthermore, since the convolutions
+ as illustrated in Figure \ref{fig:size_matters}. Furthermore, since the convolutions
  as show in Figure \ref{fig:full_system} are separable we could easily farm that
  work out to another cluster that performs just convolutions in parallel with
  the part of the system that we have created.

@@ -42,15 +42,16 @@ utilized to create a flexible and scalable architecture.
 \section{\label{section:activity_classification}Human Activity Classification in Videos}
 Human activity classification in video is an unsolved problem and has attracted
 a variety of different image and video processing techniques. One of the main
-contributing factors to its difficulty is the sheer size of the data, videos tend
-to be very large and pose a very interesting problem to the big data community. Another contributing factor in
-making videos difficult to classify is the scale and frequency in which activities
-appear in the videos. In other words, if the activity we are searching for
-is typing, then it is difficult to find that activity when the action
-could be taking up the entire frame or only tens of pixels. Furthermore, we must
-also account for the speed of the action. Depending on the frame rate, the
-actions in the video could appear to be slower in some scenarios than in others,
-therefore any algorithm must account for time-varying activities.
+contributing factors to its difficulty is the sheer size of the data, videos
+tend to be very large and pose a very interesting problem to the big data
+community. Another contributing factor in making videos difficult to classify is
+the scale and frequency in which activities appear in the videos. In other
+words, if the activity we are searching for is typing, then it is difficult to
+find that activity when the action could be taking up the entire frame or only
+tens of pixels. Furthermore, we must also account for the speed of the action.
+Depending on the frame rate, the actions in the video could appear to be slower
+in some scenarios than in others, therefore any algorithm must account for
+time-varying activities.
 
 In current big data processing techniques, a method that is employed to reduce
 the data size to discover important features about data is known as map-reduce
@@ -342,7 +343,7 @@ a delivery system that is not only convenient for the end users of our video ana
 package, but is also convenient for developers wishing to plug their particular
 application into our architecture. Furthermore this thesis provides all the
 software openly to the public so that experiments can easily be redone and leveraged
-for future work. 
+for future work.
 
 \subsection{\label{subsection:docker}Docker}
 Over the last two years, Docker has gained significant traction amongst software
@@ -365,3 +366,95 @@ your Docker container to thousands of instances with only a few commands. With
 ECS you can start and stop services, orchestrate varieties of instances and
 also perform load balancing to ensure that your application is being run at
 top performance and not costing exorbitant amounts of money.
+
+\section{\label{section:bkg_summary}Summary}
+In this section, summarize some of the work that has been done in the area
+of activity recognition and video analysis in the cloud. Table \ref{tab:paper_summary}
+lists several studies that are used as the literature review for this thesis.
+Many of these papers present exceptional work in both human activity classification
+as well as video analysis using distributed systems. However, none of them
+fully address the problem presented in this thesis. From Table \ref{tab:paper_summary},
+it is evident that human activity classification as well as distributed video
+analysis is an unsolved problem and many researchers are publishing in this area.
+Further more, it is obvious that many of these studies either address activity
+classification or distributed video systems, but none effectively combine both
+ideas.
+
+\begin{singlespace}
+  \begin{table}[h]
+  \begin{centering}
+    \begin{tabular}{ | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth}| }
+    \hline
+    \textbf{Study} & \textbf{Features} & \textbf{Classification} & \textbf{Comments} \\
+    \hline
+    Human activity recognition \cite{wang2016action}&
+    edge trajectories, optical flow histograms, Fisher Vector & multi-class SVM
+    & Accurate classification of various
+    human activities using edge trajectories in combination with optical flow \\
+    \hline
+    Large-scale video analysis \cite{wang2016cloud} & N/A & N/A & Using google cloud to analyze videos in a secure and robust way \\
+    \hline
+    Video segmentation and activity recognition \cite{kuehne2016end} & Fisher Vectors, structured
+    temporal models and Gaussian mixed models & SVM and PCA & Classification of activities as
+    well as attempting to automatically parse out activities in the videos \\
+    \hline
+    Action recognition \cite{cai2016towards} & Dynamic trajectory and static deep features
+    & Linear SVM & Combining deep learning techniques with trajectory features. \\
+    \hline
+    Cloud resource management \cite{kaseb2015cloud} & N/A & N/A & Scaling resources effectively
+    on the cloud to minimize cost and maximize performance.\\
+    \hline
+    Large-scale video classification \cite{karpathy2014large} & N/A &
+    Convolution Neural Networks & 1 million youtube videos with 487 classes,
+    not implemented on a distributed framework \\
+    \hline
+    Activity classification \cite{niebles2010modeling} & spatio-temporal synchrony
+    & synchrony auto-encoder & Quick motion estimation using local features
+    and high classification rate. \\
+    \hline
+    \end{tabular}
+    \caption{Latest work in video analysis in the cloud and human activity classification}
+    \label{tab:paper_summary}
+  \end{centering}
+\end{table}
+\end{singlespace}
+
+Furthermore, Table \ref{tab:common_datasets} illustrates some of the common datasets
+that are used in benchmarking how well a given classification algorithm works in
+comparison with other methods. Our dataset for AOLME is much bigger and is considered
+to be truly a dataset that is ``in the wild''. Additionally, the common datasets
+that are currently being used do not include learning activities that we are interested
+in automatically analyzing and thus are not a good fit for this thesis. Though
+for this thesis we  use a subset of our entire AOLME video database, we can in the future
+leverage the nearly terabyte sized dataset as soon as we begin manually classifying
+and segmenting the videos for validation of our methods.
+
+\begin{singlespace}
+  \begin{table}[h]
+  \begin{centering}
+    \begin{tabular}{ | p{0.3\linewidth} | p{0.3\linewidth} | p{0.3\linewidth} |  }
+      \hline
+      \textbf{Title} & \textbf{Description} & \textbf{URL} \\
+      \hline
+      UCF101 \cite{soomro2012ucf101}& A dataset of 101 human actions (13,320 videos) &
+      \url{http://www.thumos.info/download.html} \\
+      \hline
+      KTH & Six types of human activity (2391 sequences) & \url{http://www.nada.kth.se/cvap/actions/} \\
+      \hline
+      Olympic \cite{niebles2010modeling} & 16 olympic sports gathered from youtube &
+       \url{http://vision.stanford.edu/Datasets/OlympicSports/} \\
+      \hline
+      Toy Assembly \cite{vo2014stochastic} & 29 sequences of 2-3 minute long sequences
+      of a human assembling a toy from five different bins & \url{http://www.cc.gatech.edu/~nvo9/sin/} \\
+      \hline
+      CMU-MMAC \cite{spriggs2009temporal} & Database that contains multimodal measures of activities such as
+      cooking and food preparation & \url{http://kitchen.cs.cmu.edu/main.php} \\
+      \hline
+      MPIICooking \cite{rohrbach2012database} & Database of 65 cooking activities (8.7GB of AVI formatted video),
+      continuously recorded in a realistic setting & \url{http://tinyurl.com/nvcoh6w}
+    \end{tabular}
+    \caption{Common datasets used for activity recognition}
+    \label{tab:common_datasets}
+  \end{centering}
+\end{table}
+\end{singlespace}

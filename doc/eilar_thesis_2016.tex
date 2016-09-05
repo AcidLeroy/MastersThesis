@@ -32,6 +32,12 @@
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
+\newenvironment{tolerant}[1]{%
+  \par\tolerance=#1\relax
+}{%
+  \par
+}
+
 \begin{document}
 
   \frontmatter

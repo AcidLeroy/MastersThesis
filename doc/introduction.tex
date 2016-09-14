@@ -35,9 +35,19 @@ automation and those in big data analysis in video processing.
 \section{\label{section:thesis_statement}Thesis Statement}
 The thesis of this research is that it is possible to scale, accurately
 classify and process videos using ViDA. Through the use of a handful of algorithms,
-such as Farneback and Lucas-Kanade optical flow and SVMs powered by a highly scalable
+such as Farneback, Lucas-Kanade optical flow and SVMs powered by a highly scalable
 computing architecture, we show that large amounts of video data can be
-accurately classified.
+accurately classified and that our technique is scalable. Figure \ref{fig:typing_writing}
+illustrates the types of pre-cropped videos that we are attempting to classify.
+
+\begin{figure}[h]
+  \label{fig:typing_writing}
+  \centering
+  \includegraphics[width=\textwidth]{figures/typing_writing_clip}
+  \caption{Example of features that have been manually extracted from the dataset
+  for training and testing. For the above example, we need to classifiers for each
+  activity to determine if the activity is being performed, or it is not.}
+\end{figure}
 
 \section{\label{section:contributions}Contributions}
 This thesis contributes to the computer engineering community by providing both

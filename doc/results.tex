@@ -33,9 +33,9 @@ The original dataset, however, contains 10-20 for each of the training classific
 we have left them out in this table for brevity.
 \begin{table}[h]
 
-  \begin{tabular}{ | l | l | l | l |}
+  \begin{tabular}{ | l | l | l | p{2cm} |}
   \hline
-  \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{of\_algorithm}\\ \hline
+  \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{algorithm}\\ \hline
   aolme/data/typing/seg\_1.mp4 & 1 & feature\_queue & farneback \\\hline
   aolme/data/typing/seg\_2.mp4 & 1 & feature\_queue & farneback \\\hline
   aolme/data/typing/seg\_3.mp4 & 1 & feature\_queue & farneback\\\hline
@@ -73,14 +73,14 @@ vector machine properly classifying the results.
 
 \FloatBarrier
 
-\begin{figure}[h]
-  \label{fig:typing_box_whiskers}
-  \centering
-  \includegraphics[width=\textwidth]{figures/typing_box_whiskers}
-  \caption{Box and whiskers plot of CDFs for typing. The first column represents the
-  statistics for typing and the second column represents the statistics for no
-  writing.}
-\end{figure}
+% \begin{figure}[h]
+%   \label{fig:typing_box_whiskers}
+%   \centering
+%   \includegraphics[width=\textwidth]{figures/typing_box_whiskers}
+%   \caption{Box and whiskers plot of CDFs for typing. The first column represents the
+%   statistics for typing and the second column represents the statistics for no
+%   writing.}
+% \end{figure}
 
 With those feature vectors, we found that we were able to get the confusion matrix
 shown in Table \ref{tab:typing_confusion}
@@ -110,14 +110,14 @@ scene clearly had typing and when it clearly did not, we found that we had
 Our results for determining writing, however, were not as good as our results
 for classifying typing. Our CDFs for typing are shown in figure
 
-\begin{figure}[h]
-  \label{fig:typing_box_whiskers_1}
-  \centering
-  \includegraphics[width=\textwidth]{figures/writing_cdfs}
-  \caption{Box and whiskers plot of CDFs for writing. The first column represents the
-  statistics for typing and the second column represents the statistics for no
-  writing.}
-\end{figure}
+% \begin{figure}[h]
+%   \label{fig:typing_box_whiskers_1}
+%   \centering
+%   \includegraphics[width=\textwidth]{figures/writing_cdfs}
+%   \caption{Box and whiskers plot of CDFs for writing. The first column represents the
+%   statistics for typing and the second column represents the statistics for no
+%   writing.}
+% \end{figure}
 
 \FloatBarrier
 

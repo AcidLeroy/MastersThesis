@@ -168,7 +168,8 @@ get a linear increase in speed. In other words, we get 10x speed up when using
 The size of the videos does matter. The smaller that the videos are, the less
 the overhead is when running the cluster. The reason for this is because not only
 does it take longer to transfer larger videos, but it also takes more time to process
-them. So from our experiments, it looks like keeping the videos under 2MB is optimal.
+them. So from our experiments, it looks like keeping the videos under 2MB is optimal
+for distributing and processing the videos.
 We tested how well the t2.micro instances performed against our MacBook Pro 15 inch
 with an Intel Core i7 clocked at 2.7 GHz and has 16GB of RAM. It should also be
 noted that the Macbook Pro contains an AMD Radeon R9 M370X GPU with 2048 GB of
@@ -177,12 +178,8 @@ we leverage as described in the Methods section.  As shown in figure \ref{fig:si
 we can see that even though we have significant processing power locally, we still
 must receive the message from the queue and then process the videos; therefore
 there is actually little gained in terms of performance even though we are able
-to leverage the onboard GPUs. We can also see the exponential increase in time
-it takes to calculate very large videos (8MB or greater). Hence, the smaller
-we can keep the videos, the quicker each node can process each segment and the
-system can scale with fewer total compute nodes.
+to leverage the onboard GPUs.
 
-Figure \ref{fig:size_matters}.
 
 \begin{figure}[h]
   \centering
@@ -192,6 +189,32 @@ Figure \ref{fig:size_matters}.
   test the efficacy of choosing to send smaller vs larger videos to the cluster.}
   \label{fig:size_matters}
 \end{figure}
+
+Additionally, we can see that the performance of S3 has a linear download and upload
+speed from an EC2 instance. We have collected data that calculates the mean of 10
+sample download-upload pairs of a given file size. The results of this are shown
+in Figures \ref{fig:s3_upload_speed} and \ref{fig:s3_download_speed}. So as expected,
+we can rely on S3 to give us a linearly predictable download and upload rate.
+Because though, it can take a significant time to download, process, and upload videos,
+it is more beneficial for the distributed system to break videos into smaller
+pieces so that no one node is occupied for a long period of time. If this
+notion is followed, it is much easier to scale the feature extractions horizontally.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/s3_upload_speed}
+  \caption{Average time to upload varying file sizes in S3 using an EC2 instance. }
+  \label{fig:s3_upload_speed}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{figures/s3_download_speed}
+  \caption{Average time to download varying file sizes in S3 using an EC2 instance. }
+  \label{fig:s3_download_speed}
+\end{figure}
+
+\FloatBarrier
 
 \section{Discussion}
  In the previous sections we showed that we can accurately classify typing in

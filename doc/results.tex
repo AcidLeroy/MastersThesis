@@ -183,7 +183,7 @@ to leverage the onboard GPUs.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{figures/size_matters}
+  \includegraphics[width=.9\textwidth]{figures/aws_vs_local.png}
   \caption{Comparison of the time it takes for a single node to process 1 video
   vs the time it takes a cluster to process 10 videos. Videos vary in size to
   test the efficacy of choosing to send smaller vs larger videos to the cluster.}
@@ -207,12 +207,62 @@ notion is followed, it is much easier to scale the feature extractions horizonta
   \label{fig:s3_upload_speed}
 \end{figure}
 
+
+The upload times can be seen in Table \ref{tab:upload_speed}
+\begin{table}[h]
+  \begin{tabular}{lr}
+\toprule
+{File Size} &         Seconds \\
+\midrule
+Upload 1MB (s)   &  0.135685 \\
+Upload 2MB (s)   &  0.152184 \\
+Upload 4MB (s)   &  0.231676 \\
+Upload 8MB (s)   &  0.336037 \\
+Upload 16MB (s)  &  0.732164 \\
+Upload 32MB (s)  &  0.963004 \\
+Upload 64MB (s)  &  1.269231 \\
+Upload 128MB (s) &  1.989168 \\
+Upload 256MB (s) &  3.567965 \\
+Upload 512MB (s) &  7.608010 \\
+\bottomrule
+\end{tabular}
+\caption{Average upload speeds in seconds on an EC2 instance to an S3 bucket}
+\label{tab:upload_speed}
+\end{table}
+
+
 \begin{figure}[h]
   \centering
   \includegraphics[width=.8\textwidth]{figures/s3_download_speed}
   \caption{Average time to download varying file sizes in S3 using an EC2 instance. }
   \label{fig:s3_download_speed}
 \end{figure}
+
+The download times can be seen in Table \ref{tab:download_speed}
+\begin{table}[h]
+  \begin{tabular}{lr}
+  \toprule
+  {File Size} &         Seconds \\
+  \midrule
+  Download 1MB (s)   &  0.078182 \\
+  Download 2MB (s)   &  0.082242 \\
+  Download 4MB (s)   &  0.181033 \\
+  Download 8MB (s)   &  0.186510 \\
+  Download 16MB (s)  &  0.263108 \\
+  Download 32MB (s)  &  0.661547 \\
+  Download 64MB (s)  &  1.542783 \\
+  Download 128MB (s) &  2.976941 \\
+  Download 256MB (s) &  4.990264 \\
+  Download 512MB (s) &  9.406564 \\
+  \bottomrule
+  \end{tabular}
+\caption{Average Download speeds in seconds on an EC2 instance from S3}
+\label{tab:download_speed}
+\end{table}
+
+
+When we consolidate the numbers above, we find that we end up with an average
+upload speed of 37.0486495118 MB/s and an average download speed of 40.149124154 MB/s.
 
 \FloatBarrier
 

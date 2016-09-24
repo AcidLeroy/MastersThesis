@@ -1,22 +1,33 @@
 \chapter{Introduction}
-The advancing out of school learning in mathematics and engineering (AOLME)
-project contains thousands of hours of high quality video data of children
-learning how to program the Raspberry Pi. These videos are valuable to educators
-to help guide the construction of well formed curricula to improve education to
-children, especially in under represented communities \cite{LopezLeiva2016}. In
-order to analyze these videos, researches in the education department at UNM
-manually annotate these videos which is an extremely tedious and unsustainable
-method for such a large dataset. Because of these inhibitory factors, most of
-these encoded videos are left untouched and unanalyzed, potentially leaving
-thousands of hours of valuable information about the learning process unexplored
-and  underutilized. Clearly there is a need for a tool to aid researchers in
-properly exploring these video datasets efficiently.
+There is currently strong interest in the development of distributed video
+   analysis systems that can be used to analyze large video databases.
+Unfortunately, the overwhelming majority of computer systems
+   have not been designed and will not efficiently handle
+   the basic problem of scalable and distributed video analysis.
+   
+An example of a large-scale video database is 
+   provided by the
+   advancing out of school learning in mathematics and engineering (AOLME)
+   project.
+AOLME contains over a thousand hours of high quality video
+   data that need to be analyzed so as to understand how
+   middle-student acquire basic programming skills.
+Currently, most of this analysis is done manually \cite{LopezLeiva2016}. 
+
+Manual video annotation and transcription
+   is extremely tedious and unsustainable for large datasets.    
+Because of these inhibitory factors, most of
+   these encoded videos are left untouched and unanalyzed, potentially leaving
+   thousands of hours of valuable information about the learning process unexplored
+   and  underutilized. 
+Clearly there is a need for a tool to aid researchers in
+   properly analyzing these video datasets efficiently.
 
 \section{\label{section:motivation}Motivation}
 
-Current methods in video analysis systems that attempt to solve the problem  as
-presented in AOLME are extremely application dependent and are inadequate
-computationally and in scalability to sufficiently investigate video datasets at such
+Current methods in video analysis systems 
+   are extremely application dependent and are inadequate
+  computationally and in scalability to sufficiently investigate video datasets at such
 a large scale. As such, there is a propensity for a system that is accurate,
 scalable and flexible in nature to handle a variety of problems currently faced
 with automated video analysis.
@@ -28,13 +39,20 @@ to leverage heterogenous computer hardware greatly increases the efficiency and
 speed of certain, heavily used, video processing algorithms such as 2D
 convolutions. Furthermore, having this system exist in a distributed environment
 will greatly speed up ephemeral operations and makes it possible to scale up
-future versions of ViDA seamlessly. Thus this thesis is motivated
-by addressing deficiencies in both current analysis techniques used in AOLME sans
-automation and those in big data analysis in video processing.
+to address larger scale problems.
+Thus this thesis is motivated
+   by the challenges associated with analyzing large scale video databases.
 
 \section{\label{section:thesis_statement}Thesis Statement}
 The thesis of this research is that it is possible to scale, accurately
-classify and process videos using ViDA. Through the use of a handful of algorithms,
+  classify and process videos using
+  the video interactively and distributively analyzed (ViDA) system.
+The basic idea is to effectively distribute the computation among
+  compute nodes and collect the results in the master node.
+The focus will be to pre-compute the computationally intensive
+  feature-extraction
+   
+  
 such as Farneback, Lucas-Kanade optical flow and SVMs powered by a highly scalable
 computing architecture, we show that large amounts of video data can be
 accurately classified and that our technique is scalable. Figure \ref{fig:typing_writing}

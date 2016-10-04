@@ -138,7 +138,10 @@ As can be seen in Table \ref{tab:writing_confusion}, we did not get as good
 as results for writing, only about 65\% classification. In these results we
 find that our algorithm struggled more with classifying videos that had no
 writing in them as having writing in them. This may mean that the motion vectors
-we are extracting are highly dependent on the type of scene we are looking at.
+we are extracting are highly dependent on the type of scene we are looking at. Furthermore,
+the original algorithm was developed in Matlab and then ported to C++ for this thesis. We
+saw differences in the feature vectors between the two implementations; however,
+classification results proved to be very similar.
 
 \section{\label{section:scalability}Proof of Scalability}
 In order to show that our system is scalable, we record the time it takes
@@ -277,7 +280,7 @@ upload speed of 37.0486495118 MB/s and an average download speed of 40.149124154
    \label{fig:full_system}
    \centering
    \includegraphics[width=\textwidth]{figures/full_system}
-   \caption{Illustration of the end goal of the ViDA system. (a) shows the
+   \caption{Illustration of the end goal of the VIDA system. (a) shows the
    functions of the master node, and (b) shows the functions of the slave node.
    For this thesis we have implemented parts of the distribution as well as parts
    of the compute node.}

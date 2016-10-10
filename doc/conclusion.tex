@@ -1,1 +1,14 @@
 \chapter{Conclusion}
+We presented a novel video processing architecture and algorithm for human
+activity classification in large video databases such as the AOLME dataset. Our
+method is both horizontally and vertically scalable thanks to enabling
+technologies in the cloud as well as convenient APIs provided by OpenCV for easy
+switching between CPU and GPU implementations of Lucas-Kanade and Farneback
+optical flow methods. In addition to the scalability of our system, we also
+presented an accurate method for detecting typing in video segments extracted
+from the AOLME dataset. Our algorithm greatly reduced the original feature space
+of megabytes down to just a few kilobytes, which makes the bandwidth limit on
+the cloud very manageable. Because the output feature space is quite small
+compared with the original size of the videos input into the system, training
+and testing can be done very rapidly and in turn automatic classification can be
+done once the system has been trained at near real-time rates.

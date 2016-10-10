@@ -84,21 +84,33 @@
   \color{red}
   ??? We will come back and fill in when done.
   \color{black}
-    This thesis introduces a distributed processing system for analyzing videos
-    acquired through the advancing out of school learning in mathematics and
-    engineering \\ (AOLME)
-     project. The proposed architecture is demonstrated by
-    detecting writing and typing activities based on the Video Analysis (VIDA)
-    system. VIDA leverages Amazon Web Services (AWS) to optimally distribute
-    segments of video to a heterogenous compute cloud consisting of machines
-    that have both CPU and GPU processing hardware onboard. The master node is
-    responsible for distributing the videos and the slave nodes perform feature
-    reduction on the videos by calculating a handful of cumulative distribution
-    functions (CDF) to then be returned to the master for classification using a
-    support vector machine (SVM). This thesis will demonstrate the accuracy,
-    scalability and flexibility of VIDA for videos collected through AOLME.
-    Furthermore, this thesis delves into the architectural details essential to
-    distributed video processing on cloud infrastructures.
+    % This thesis introduces a distributed processing system for analyzing videos
+    % acquired through the advancing out of school learning in mathematics and
+    % engineering \\ (AOLME)
+    %  project. The proposed architecture is demonstrated by
+    % detecting writing and typing activities based on the Video Analysis (VIDA)
+    % system. VIDA leverages Amazon Web Services (AWS) to optimally distribute
+    % segments of video to a heterogenous compute cloud consisting of machines
+    % that have both CPU and GPU processing hardware onboard. The master node is
+    % responsible for distributing the videos and the slave nodes perform feature
+    % reduction on the videos by calculating a handful of cumulative distribution
+    % functions (CDF) to then be returned to the master for classification using a
+    % support vector machine (SVM). This thesis will demonstrate the accuracy,
+    % scalability and flexibility of VIDA for videos collected through AOLME.
+    % Furthermore, this thesis delves into the architectural details essential to
+    % distributed video processing on cloud infrastructures.
+
+    This thesis proposes a novel human activity recognition in video architecture that
+    attempts to solve the challenges associated with processing large video datasets
+    in a scalable, maintainable, and accurate way. Using a subset of video data obtained
+    by the UNM College of Education through the Advancing Out of School Learning
+    in Mathematics and Engineering (AOLME) project, we demonstrate that the
+    proposed architecture is both vertically and horizontally scalable using
+    Amazon's web services (AWS), and can accurately classify children typing on
+    a computer keyboard at 90\%. Furthermore, the software that accompanies this
+    thesis is completely open source and was developed with robustness in mind
+    to facilitate reproducibility and extensibility for future research.
+
 
     \clearpage %(required for 1-page abstract)
   \end{abstract}

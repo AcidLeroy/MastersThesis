@@ -1,36 +1,31 @@
 \chapter{Introduction}
-There is currently strong interest in the development of distributed video
-   analysis systems that can be used to analyze large video databases.
-Unfortunately, the overwhelming majority of computer systems
-   have not been designed and will not efficiently handle
-   the basic problem of scalable and distributed video analysis.
-   
-An example of a large-scale video database is 
-   provided by the
-   advancing out of school learning in mathematics and engineering (AOLME)
-   project.
-AOLME contains over a thousand hours of high quality video
-   data that need to be analyzed so as to understand how
-   middle-student acquire basic programming skills.
-Currently, most of this analysis is done manually \cite{LopezLeiva2016}. 
+There is strong interest in the development of distributed video analysis
+systems that can be used to analyze large video databases. Unfortunately, the
+overwhelming majority of software packages for automated video analysis, are not
+necessarily designed to scale in order to handle processing on vast video
+databases.
 
-Manual video annotation and transcription
-   is extremely tedious and unsustainable for large datasets.    
-Because of these inhibitory factors, most of
-   these encoded videos are left untouched and unanalyzed, potentially leaving
-   thousands of hours of valuable information about the learning process unexplored
-   and  underutilized. 
-Clearly there is a need for a tool to aid researchers in
-   properly analyzing these video datasets efficiently.
+An example of a large-scale video database is  provided by the advancing out of
+school learning in mathematics and engineering (AOLME) project. AOLME contains
+over a thousand hours of high quality video data that need to be analyzed so as
+to understand how middle school students acquire basic programming skills.
+Currently, most of this analysis is done manually \cite{LopezLeiva2016} to
+extract pertinent features for researchers to analyze.
+
+Manual video annotation and transcription is extremely tedious and unsustainable
+for large datasets. Because of these inhibitory factors, most of these
+encoded videos are left untouched and unanalyzed, potentially leaving thousands
+of hours of valuable information about the learning process unexplored and
+underutilized.  Clearly there is a need for a tool to aid researchers in
+properly analyzing these video datasets efficiently.
 
 \section{\label{section:motivation}Motivation}
 
-Current methods in video analysis systems 
-   are extremely application dependent and are inadequate
-  computationally and in scalability to sufficiently investigate video datasets at such
-a large scale. As such, there is a propensity for a system that is accurate,
-scalable and flexible in nature to handle a variety of problems currently faced
-with automated video analysis.
+Current methods in video analysis systems are extremely application dependent
+and are inadequate computationally to sufficiently
+investigate video datasets at such a large scale. As such, there is a propensity
+for a system that is accurate, scalable and flexible in nature to handle a
+variety of challenges in automated video analysis.
 
 Computationally, there is clearly a need for video analysis methods that can be
 efficiently implemented in heterogenous compute hardware (such as GPUS and
@@ -38,25 +33,22 @@ CPUS), and have said hardware function in a distributed environment. Being able
 to leverage heterogenous computer hardware greatly increases the efficiency and
 speed of certain, heavily used, video processing algorithms such as 2D
 convolutions. Furthermore, having this system exist in a distributed environment
-will greatly speed up ephemeral operations and makes it possible to scale up
-to address larger scale problems.
-Thus this thesis is motivated
-   by the challenges associated with analyzing large scale video databases.
+will greatly speed up ephemeral operations and makes it possible to scale up to
+address large scale problems. Thus this thesis is motivated by the challenges
+associated with analyzing large scale video databases.
 
-\section{\label{section:thesis_statement}Thesis Statement}
-The thesis of this research is that it is possible to scale, accurately
-  classify and process videos using
-  the video interactively and distributively analyzed (VIDA) system.
-The basic idea is to effectively distribute the computation among
-  compute nodes and collect the results in the master node.
-The focus will be to pre-compute the computationally intensive
-  feature-extraction
-   
-  
-such as Farneback, Lucas-Kanade optical flow and SVMs powered by a highly scalable
-computing architecture, we show that large amounts of video data can be
-accurately classified and that our technique is scalable. Figure \ref{fig:typing_writing}
-illustrates the types of pre-cropped videos that we are attempting to classify.
+\section{\label{section:thesis_statement}Thesis Statement} The thesis of this
+research is that it is possible to scale, accurately classify and process videos
+using our proposed video analysis architecture for human activity recognition.
+The basic idea is to effectively distribute the computation among compute nodes
+and collect the results in the master node. The focus is to pre-compute the
+computationally intensive feature extractions such as Farneback, Lucas-Kanade
+optical flow and SVMs powered by a highly scalable computing architecture, and
+exposing those features to researchers so that classification algorithms can  be
+developed much quicker and in an interactive way. We show that large amounts of
+video data can be accurately classified and that our technique is scalable.
+Figure \ref{fig:typing_writing} illustrates the types of pre-cropped videos that
+we are attempting to classify.
 
 \begin{figure}[h]
   \label{fig:typing_writing}
@@ -70,9 +62,17 @@ illustrates the types of pre-cropped videos that we are attempting to classify.
 \section{\label{section:contributions}Contributions}
 This thesis contributes to the computer engineering community by providing both
 algorithms and an architecture for efficient, scalable and rapid processing of
-extremely large video datasets. The intent of this work is to also benefit
-the research being done at the UNM College of Education by providing a useful
-tool for automated assistance in reviewing the large video datasets provided
-by AOLME.
+extremely large video datasets in a cloud environment. Additionally, all
+the code written for this thesis is distributed under the MIT open source license
+so that the software can be used freely in the community and will thus facilitate
+reproducibility and extensibility in this field of research.
 
 \section{\label{section:summary}Summary}
+In this thesis, we show that it is possible to reduce the feature set of
+videos on the order of Megabytes down to tens of Kilobytes, and then accurately
+classify those features at 90\% as a particular human activity. We also create
+an architecture that is capable of scaling to dozens of compute notes, and
+potentially hundreds thus making the heavy lifting operations, such as computing
+optical flow vectors, a trivial task that can be efficiently performed in the
+AWS cloud, thus enabling researchers to extract germane features from videos in a
+matter of minutes instead of hours.

@@ -93,7 +93,7 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
   \State $\texttt{WriteExperimentResults(} \textit{knn\_result, svm\_result} \texttt{)}$
 
 \end{algorithmic}
-\caption{Pseudocode for VIDA}
+\caption{Pseudocode for proposed method}
 \label{alg:vida_pseudo_code}
 \end{figure}
 
@@ -277,13 +277,13 @@ repeatable, easy to use and flexible to allow to future improvements. This is
 especially important to UNM's image and video processing and communication lab
 ivPCL lab so that future graduate students can leverage the work done in this
 thesis to get a head start on future developments of the proposed feature
-extraction algorithm and on VIDA's architecture. In this section we cover
-several topics that demonstrate that we have done more than just provide an
-innovative solution to classifying activities in video, but have also created a
-system after which other projects can model themselves. Specifically, we cover
-how VIDA's underlying C++ code is developed and how it is automatically and
-seamlessly deployed to AWS all the while maintaining a vertically and
-horizontally scalable architecture.
+extraction algorithm. In this section we cover several topics that demonstrate
+that we have done more than just provide an innovative solution to classifying
+activities in video, but have also created a system after which other projects
+can model themselves. Specifically, we cover how the proposed architecture's
+underlying C++ code is developed and how it is automatically and seamlessly
+deployed to AWS all the while maintaining a vertically and horizontally scalable
+architecture.
 
 \subsection{\label{subsection:opencv_tapi}Vertical Scalability}
 Since the ivPCL is strongly geared towards vertically scalable solutions using
@@ -364,13 +364,14 @@ have essentially frozen the code in a working state. Even if AWS goes away, the
 core Docker image is available to be run on any *nix type machine with Docker installed.
 So if future users decide that they want to use our extract features algorithm,
 it is ready to run. Figure \ref{fig:continuous_integration} illustrates the
-general flow of the continuous integration in VIDA.
+general flow of the continuous integration.
 
 \begin{figure}[h]
   \label{fig:continuous_integration}
   \centering
   \includegraphics[width=\textwidth]{figures/continuous_integration}
-  \caption{Automated deployment of VIDA to the AWS cloud using continuous integration}
+  \caption{Automated deployment of the proposed feature extraction method to
+  the AWS cloud using continuous integration}
 \end{figure}
 
 \subsection{\label{subsection:tdd}Test Driven Development}
@@ -465,7 +466,7 @@ issues, or problems pushing to the AWS cloud.
 \end{figure}
 
 
-\section{\label{section:vida_oflow} Implementing Optical Flow in VIDA}
+\section{\label{section:vida_oflow} Implementing Optical Flow }
 In our software, we use two OpenCV library calls, \texttt{goodFeaturesToTrack}
 and \\
 \texttt{calcOpticalFlowPyrLK} to implement the Lucase-Kanade Pyrmidal optical
@@ -474,7 +475,7 @@ from one frame to the other using the Shi-Tomasi algorithm \cite{shi1994good}.
 The next method then calculates the optical flow between the good points using
 the pyramidal implementation of the Lucas-Kanade algorithm
 \cite{bouguet2001pyramidal}. Figure \ref{alg:lk_flow} outlines the general
-program flow for calculating motion vectors in VIDA.
+program flow for calculating motion vectors in the proposed feature extraction method.
 
 \begin{figure}[h]
 \begin{algorithmic}[1]
@@ -493,7 +494,7 @@ program flow for calculating motion vectors in VIDA.
 \label{alg:lk_flow}
 \end{figure}
 
-The algorithm used in VIDA is similar to Figure \ref{alg:lk_flow} but
+The algorithm used in our proposed architecture is similar to Figure \ref{alg:lk_flow} but
 contains fewer steps since there is no need to get good features to track.
 In the C++ software, we also implemented Farneback method. The
 Farneback implementation is shown in Figure \ref{alg:farneback}.
@@ -621,7 +622,7 @@ Figure \ref{fig:extract_flow} clearly illustrates this concept.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=14cm]{figures/extract_features_flow}
+  \includegraphics[width=\textwidth]{figures/extract_features_flow}
   \caption{Flow of the extract features program. For every input video, it will
   return a CDF with 25 bins for each of the extracted features from the motion
   vectors}

@@ -181,7 +181,11 @@ we leverage as described in the Methods section.  As shown in figure \ref{fig:si
 we can see that even though we have significant processing power locally, we still
 must receive the message from the queue and then process the videos; therefore
 there is actually little gained in terms of performance even though we are able
-to leverage the onboard GPUs.
+to leverage the onboard GPUs. Figure \ref{fig:size_matters} also demonstrates
+that 10 instances run at exactly the same speed as a single instance. So from this
+graph we can also infer that even though we have a higher power CPU technically
+on the t2.micro instance, we are able to leverage OpenCV's transparent API and
+take advantage of the local GPU on the Macbook Pro.
 
 
 \begin{figure}[h]
@@ -189,9 +193,13 @@ to leverage the onboard GPUs.
   \includegraphics[width=.9\textwidth]{figures/aws_vs_local.png}
   \caption{Comparison of the time it takes for a single node to process 1 video
   vs the time it takes a cluster to process 10 videos. Videos vary in size to
-  test the efficacy of choosing to send smaller vs larger videos to the cluster.}
+  test the efficacy of choosing to send smaller vs larger videos to the cluster.
+  A single t2.mirco instance was included to show that a single instance takes
+  just as long as 10 instances.}
   \label{fig:size_matters}
 \end{figure}
+
+\FloatBarrier
 
 Additionally, we can see that the performance of S3 has a linear download and upload
 speed from an EC2 instance. We have collected data that calculates the mean of 10
@@ -343,7 +351,7 @@ it would be interesting to precompute and train the machine learning algorithms
 on multiple human actions and then interactively searching through the feature
 space to then observe the videos that matched the classification. Work in this
 area would greatly aid with the manual analysis of the AOLME videos that is
-currently being done. 
+currently being done.
 
 Finally, we found that we didn't get very good results for classifying writing.
 Investigation into this would be interesting to see why the results here varied

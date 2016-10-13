@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Cloud Human Activity Recognition</title>
+
+	<link rel="stylesheet" href="reveal.js/css/reveal.css">
+	<link rel="stylesheet" href="reveal.js/css/theme/night.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+	var link = document.createElement( 'link' );
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+	document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+</head>
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section><h2>Distributed and Scalable Video Analysis Architecture for
+				Human Activity Recognition Using Cloud Services </h2>
+				<hr>
+				<br>
+				Cody W. Eilar
+				<br> <br>University of New Mexico
+			</br>
+		</section>
+
+
+		<!--
+		*
+		*	INTRODUCTION
+		*
+	-->
+	<section>
+		<section>
+			<h2> Introduction </h2>
+		</section>
+		<section>
+			<h3> Current Methods in Video Feature Reduction for Classification </h3>
+			<ul>
+				<li> Edge trajectories + optical flow histogram + Fisher Vectors </li>
+				<li> Fisher Vectors + structured temporal models + Gaussian mixed Models </li>
+				<li> Dynamic trajectory + static deep features</li>
+				<li> Spatio-Temporal Synchrony </li>
+			</ul>
+		</section>
+
+		<section>
+			<h3> Techniques for Classifying Reduced Feature Space</h3>
+			<ul>
+				<li>Linear Support Vector Machines</li>
+				<li>Multi Class Support Vector Machines</li>
+				<li>Support Vector Machines + Principal Component Analysis</li>
+				<li>Convolutional Neural Networks</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Video Databases Currently Being Used for Method Validation</h3>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><a href='http://www.thumos.info/download.html'>UCF101</a></td>
+						<td>A dataset of 101 human actions (13,320 videos)</td>
+					</tr>
+					<tr>
+						<td><a href='http://www.nada.kth.se/cvap/actions/'>KTH</a></td>
+						<td>Six types of human activity (2391 sequences)</td>
+					</tr>
+					<tr>
+						<td><a href='http://vision.stanford.edu/Datasets/OlympicSports/'>Olympic</a></td>
+						<td>16 olympic sports gathered from youtube</td>
+					</tr>
+					<tr>
+						<td><a href='http://www.cc.gatech.edu/~nvo9/sin/'>Toy Assembly</a></td>
+						<td>29 sequences of 2-3 minute long sequences of a human assembling a toy from five different bins</td>
+					</tr>
+
+					<tr>
+						<td><a href='http://kitchen.cs.cmu.edu/main.php'>CMU-MMAC</a></td>
+						<td>Database that contains multimodal measures of activities such
+							as cooking and food preparation</td>
+						</tr>
+
+						<tr>
+							<td><a href='http://tinurl.com/nvcoh6w'>MPIICooking</a></td>
+							<td>Database of 65 cooking activities (8.7GB of AVI formatted video),
+								continuously recorded in a realistic setting</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h3>Accuracy of Provided Methods</h3>
+					Most of the methods proved to be highly accurate with provided databases,
+					usually within in the range of 75-95%
+				</section>
+
+			</section>
+		</div>
+	</div>
+
+	<script src="reveal.js/lib/js/head.min.js"></script>
+	<script src="reveal.js/js/reveal.js"></script>
+
+	<script>
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		history: true,
+
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{ src: 'reveal.js/plugin/markdown/marked.js' },
+			{ src: 'reveal.js/plugin/markdown/markdown.js' },
+			{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+			{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+		]
+	});
+	</script>
+</body>
+</html>

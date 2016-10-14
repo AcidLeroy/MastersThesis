@@ -215,7 +215,7 @@
 					</ul>
 
 					<img src='https://pbs.twimg.com/profile_images/1252505253/elephant_rgb_sq.png' height=200/>
-					<img src='http://www.hops.io/sites/default/files/styles/portfolio_detail/public/spark_0.png?itok=ClgaSoQj' height=200 style="background-color:white;"/>
+					<img src='http://www.hops.io/sites/default/files/styles/portfolio_detail/public/spark_0.png?itok=ClgaSoQj' height=200 style="background-color:#a5a5a5;"/>
 					<img src='http://hortonworks.com/wp-content/uploads/2016/03/storm_logo.png' height=200/>
 				</section>
 
@@ -272,7 +272,7 @@
 
 			<section>
 				<h3>Architecture Design</h3>
-				<img src='figures/extract_features_dataflow.png' height=600 style="background-color:white;"/>
+				<img src='figures/extract_features_dataflow.png' height=600 style="background-color:#a5a5a5;"/>
 			</section>
 
 			<section>
@@ -297,7 +297,7 @@
 
 			<section>
 				<h3>Continuous Integration </h3>
-				<img src='figures/continuous_integration.png' height=600 style="background-color:white;"/>
+				<img src='figures/continuous_integration.png' height=600 style="background-color:#a5a5a5;"/>
 			</section>
 
 
@@ -312,7 +312,7 @@
 				Developed using OpenCV functions but with generic interface that leverages
 				high performance dependency injection. Easily swap out algorithms, TAPI, and
 				video readers
-				<img src='figures/dependency_injection.png' style="background-color:white;"/>
+				<img src='figures/dependency_injection.png' style="background-color:#a5a5a5;"/>
 			</section>
 
 			<section>
@@ -330,11 +330,35 @@
 
 				<section>
 					<h3> Feature Extraction From Optical Flow </h3>
+					<ul>
+						<li> Large video datasets are broken into small 1-5MB videos to be processed by each node </li>
+						<li> Videos are then broken into a handful of CDFs </img>
+					</ul>
+					<img src='figures/extract_features_flow.png' style="background-color:#a5a5a5;"/>
 				</section>
+
 
 				<section>
 					<h3>Classifying the Reduced Feature Space </h3>
+					<ul>
+						<li>Linear Support Vector Machines</li>
+						<li>K Nearest Neighbors </li>
+						<li>Train and testing on 40 typing/no typing and 40 writing/no writing video segments
+					</ul>
 				</section>
+
+				<section>
+					<h3> Challenges </h3>
+					<ul>
+						<li>Matching C++ real-time code to prototype MATLAB code </li>
+						<li>GPU pass through in a Docker container </li> 
+						<li>Results looked good for a small subset of writing data (around 8 videos),
+							but proved to be inadequate as more data points were added </li>
+						<li>Making compute cluster easy to deploy required serious software engineering </li>
+					</ul>
+
+				</section>
+
 			</section>
 
 			<section>
@@ -412,19 +436,26 @@
 					<li>Investigate low accuracy with writing </li>
 					<li>Create larger AOLME ground truth dataset for more generalizable results </li>
 					<li>Investigate real-time interaction with extracting and classifying features </li>
+					<li>Expand work to autoscale based on size of video list queue</li>
 				</ul>
 			</section>
 
 			<section>
 				<h3>Conclusion</h3>
-				We have shown that we have created a scalable architecture video analysis.
-				Furthermore, we have developed a novel technique that is accurate for
-				classifying typing, but not so for writing.
+				<ul>
+					<li>In this thesis we have accomplished: </li>
+					<ul>
+						<li> Horizontally and vertically scalable video analysis architecture </li>
+						<li> A novel feature extraction algorithm that greatly reduces feature space </li>
+						<li> A free and open source software package that is continuous deployed and tested </li>
+						<li> An novel and accurate algorithm for detecting typing in videos </li>
+					</ul>
+				</ul>
 			</section>
 		</section>
 
 		<section>
-			<h2> Questions? </h2> 
+			<h2> Questions? </h2>
 		</section>
 
 

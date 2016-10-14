@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+	<link rel="icon" href="http://www.freeiconspng.com/uploads/cloud-icon-17.png">
 	<title>Cloud Human Activity Recognition</title>
 
 	<link rel="stylesheet" href="reveal.js/css/reveal.css">
@@ -36,83 +36,398 @@
 
 		<!--
 		*
-		*	INTRODUCTION
+		* INTRODUCTION
 		*
 	-->
 	<section>
 		<section>
 			<h2> Introduction </h2>
+			<img src='https://media.giphy.com/media/hcwIm2NdTYhva/giphy.gif' height='300'/>
 		</section>
+
 		<section>
-			<h3> Current Methods in Video Feature Reduction for Classification </h3>
+			<h3>Manual Video Analysis and Segmentation</h3>
 			<ul>
-				<li> Edge trajectories + optical flow histogram + Fisher Vectors </li>
-				<li> Fisher Vectors + structured temporal models + Gaussian mixed Models </li>
-				<li> Dynamic trajectory + static deep features</li>
-				<li> Spatio-Temporal Synchrony </li>
+				<li>UNM College of Education Assessing quantifiable metrics for human learning in the classroom</li>
+				<li>All videos currently manually annotated</li>
+				<li>Trends in data difficult to find with manual methods</li>
 			</ul>
 		</section>
 
 		<section>
-			<h3> Techniques for Classifying Reduced Feature Space</h3>
+			<h3>Extremely large video datasets</h3>
 			<ul>
-				<li>Linear Support Vector Machines</li>
-				<li>Multi Class Support Vector Machines</li>
-				<li>Support Vector Machines + Principal Component Analysis</li>
-				<li>Convolutional Neural Networks</li>
+				<li>Large video datasets are extremely hard to analyze because of sheer size</li>
+				<li>UNM has collection of nearly 900GB of video data that can be used for analysis (AOLME dataset) </li>
 			</ul>
 		</section>
 
 		<section>
-			<h3>Video Databases Currently Being Used for Method Validation</h3>
+			<h3>Vertically and Horizontally Scalable Solutions</h3>
+			<ul>
+				<li>Need solution that can take advantage of: </li>
+				<ul>
+					<li>Embarrassingly parallel problems </li>
+					<li>Multiple compute nodes</li>
+					<li>Heterogeneous compute nodes</li>
+				</ul>
+			</ul>
+		</section>
 
-			<table>
-				<thead>
-					<tr>
-						<th>Title</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><a href='http://www.thumos.info/download.html'>UCF101</a></td>
-						<td>A dataset of 101 human actions (13,320 videos)</td>
-					</tr>
-					<tr>
-						<td><a href='http://www.nada.kth.se/cvap/actions/'>KTH</a></td>
-						<td>Six types of human activity (2391 sequences)</td>
-					</tr>
-					<tr>
-						<td><a href='http://vision.stanford.edu/Datasets/OlympicSports/'>Olympic</a></td>
-						<td>16 olympic sports gathered from youtube</td>
-					</tr>
-					<tr>
-						<td><a href='http://www.cc.gatech.edu/~nvo9/sin/'>Toy Assembly</a></td>
-						<td>29 sequences of 2-3 minute long sequences of a human assembling a toy from five different bins</td>
+		<section>
+			<h3>Reduction of Feature Space for quick classification</h3>
+			<ul>
+				<li>Distilling three-dimensional video cubes of MBs to KBs </li>
+				<li>Quick Training</li>
+				<li>Quick Classification</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Open Source Software</h3>
+			<ul>
+				<li> Facilitation of future research </li>
+				<li> Robust reliable software that can be reused and improved </li>
+				<li> Enable repeatability of results by anyone </li>
+			</ul>
+			<img src='http://www.geant.org/News_and_Events/PublishingImages/Pages/Green-light-for-open-source-software-Greenhouse-Special-Interest-Group/greenhouse-sig.jpg'/ height=300>
+
+		</section>
+
+		<section>
+			<h3>Affordable Solution for University Research </h3>
+			Reduce the cost of doing human activity research by choosing a
+			flexible and affordable solution
+		</section>
+
+		<section>
+			<h3>Thesis Objectives</h3>
+			<ul>
+				<li>Reduce feature space for quick training and classification of videos</li>
+				<li>Design software that can scale horizontally and vertically to maximize efficacy of processing </li>
+				<li>Accurately classify a subset of activities that are of interest to the UNM College of Education </li>
+				<ul>
+					<li> Typing </li>
+					<li> Writing </li>
+				</ul>
+				<li>Provide core software with Open Source License</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3> Sample Videos </h3>
+			<img src='figures/typing.gif'/ height=200>
+			<img src='figures/writing.gif'/ height=200>
+		</section>
+
+	</section>
+
+
+	<!--
+	*
+	*	BACKGROUND
+	*
+-->
+<section>
+	<section>
+		<h2> Background</h2>
+		<img src='https://media.giphy.com/media/14xSZmhnD4Fjyw/giphy.gif' height='300'/>
+	</section>
+	<section>
+		<h3> Current Methods in Video Feature Reduction for Classification </h3>
+		<ul>
+			<li> Edge trajectories + optical flow histogram + Fisher Vectors </li>
+			<li> Fisher Vectors + structured temporal models + Gaussian mixed Models </li>
+			<li> Dynamic trajectory + static deep features</li>
+			<li> Spatio-Temporal Synchrony </li>
+		</ul>
+	</section>
+
+	<section>
+		<h3> Techniques for Classifying Reduced Feature Space</h3>
+		<ul>
+			<li>Linear Support Vector Machines</li>
+			<li>Multi Class Support Vector Machines</li>
+			<li>Support Vector Machines + Principal Component Analysis</li>
+			<li>Convolutional Neural Networks</li>
+		</ul>
+	</section>
+
+	<section>
+		<h3>Video Databases Currently Being Used for Method Validation</h3>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><a href='http://www.thumos.info/download.html'>UCF101</a></td>
+					<td>A dataset of 101 human actions (13,320 videos)</td>
+				</tr>
+				<tr>
+					<td><a href='http://www.nada.kth.se/cvap/actions/'>KTH</a></td>
+					<td>Six types of human activity (2391 sequences)</td>
+				</tr>
+				<tr>
+					<td><a href='http://vision.stanford.edu/Datasets/OlympicSports/'>Olympic</a></td>
+					<td>16 olympic sports gathered from youtube</td>
+				</tr>
+				<tr>
+					<td><a href='http://www.cc.gatech.edu/~nvo9/sin/'>Toy Assembly</a></td>
+					<td>29 sequences of 2-3 minute long sequences of a human assembling a toy from five different bins</td>
+				</tr>
+
+				<tr>
+					<td><a href='http://kitchen.cs.cmu.edu/main.php'>CMU-MMAC</a></td>
+					<td>Database that contains multimodal measures of activities such
+						as cooking and food preparation</td>
 					</tr>
 
 					<tr>
-						<td><a href='http://kitchen.cs.cmu.edu/main.php'>CMU-MMAC</a></td>
-						<td>Database that contains multimodal measures of activities such
-							as cooking and food preparation</td>
+						<td><a href='http://tinurl.com/nvcoh6w'>MPIICooking</a></td>
+						<td>Database of 65 cooking activities (8.7GB of AVI formatted video),
+							continuously recorded in a realistic setting</td>
 						</tr>
+					</tbody>
+				</table>
+			</section>
 
-						<tr>
-							<td><a href='http://tinurl.com/nvcoh6w'>MPIICooking</a></td>
-							<td>Database of 65 cooking activities (8.7GB of AVI formatted video),
-								continuously recorded in a realistic setting</td>
-							</tr>
-						</tbody>
-					</table>
+			<section>
+				<h3>Accuracy of Provided Methods</h3>
+				Most of the methods proved to be highly accurate with provided databases,
+				usually within in the range of 70-90%.
+				<figure>
+					<img src='figures/current_accuracy.png'/>
+					<figcaption>Results acquired using edge trajectories with multi-class SVM</figcaption>
+				</figure>
+			</section>
+
+			<section>
+				<h3>Current methods for distributed video analysis </h3>
+				<ul>
+					<li>Distributed video analysis for toy tasks (i.e. copying and decryption) </li>
+					<li>Proprietary software used by Netflix, Amazon, Google and other internet giants
+						<li>MapReduce Frameworks for image and text analysis </li>
+					</ul>
+
+					<img src='https://pbs.twimg.com/profile_images/1252505253/elephant_rgb_sq.png' height=200/>
+					<img src='http://www.hops.io/sites/default/files/styles/portfolio_detail/public/spark_0.png?itok=ClgaSoQj' height=200 style="background-color:white;"/>
+					<img src='http://hortonworks.com/wp-content/uploads/2016/03/storm_logo.png' height=200/>
 				</section>
 
 				<section>
-					<h3>Accuracy of Provided Methods</h3>
-					Most of the methods proved to be highly accurate with provided databases,
-					usually within in the range of 75-95%
+					<h3> Analysis of Current Methods</h3>
+					<ul>
+						<li> Human activity recognition methods are great but there are some limitations
+							<ul>
+								<li>Long training times</li>
+								<li>Little proof of scalability</li>
+								<li>CNN methods require significant training data</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h3> Analysis of Current Methods </h3>
+					<ul>
+						<li>Database limitations
+							<ul>
+								<li> Many of the videos used do not constitute videos in the wild </li>
+								<li> Some video datasets are very limited in the activities that they attempt to classify </li>
+								<li> Some of the datasets are relatively small </li>
+								<li> Some datasets contain more than just video data, such as trajectory analysis using gyroscopes etc.</li>
+							</ul>
+						</li>
+					</ul>
 				</section>
 
+				<section>
+					<h3>Analysis of Current Methods</h3>
+					<ul>
+						<li>Distributed and Scalable Processing Limitations</li>
+						<ul>
+							<li>Most MapReduce frameworks do not contain out-of-the box functionality for video analysis</li>
+							<li>Many distributed systems rely only on vertical scalabilty </li>
+							<li>Previously proposed architectures only accomplish trivial tasks, e.g. copying and decryption </li>
+						</ul>
+					</ul>
+				</section>
 			</section>
+
+			<!--
+			*
+			* Methods
+			*
+		-->
+		<section>
+
+			<section>
+				<h2> Methods </h2>
+				<img src='https://media.giphy.com/media/LeLNh9qaUBb7a/giphy.gif' height=400/>
+			</section>
+
+			<section>
+				<h3>Architecture Design</h3>
+				<img src='figures/extract_features_dataflow.png' height=600 style="background-color:white;"/>
+			</section>
+
+			<section>
+				<h3> Master node configuration </h3>
+				Role is to populate video queue with videos from which to extract features
+				and then retrieve CDFs from results queue.
+			</section>
+
+			<section>
+				<h3> Slave node configuration </h3>
+				Responsible for popping videos off of video queue, extracting features from
+				videos and then pushing results onto the results queue.
+			</section>
+
+			<section>
+				<h3>Software Deployment</h3>
+				<ul>
+					<li>Continuous Integration </li>
+					<li>Test Driven Development</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>Continuous Integration </h3>
+				<img src='figures/continuous_integration.png' height=600 style="background-color:white;"/>
+			</section>
+
+
+			<section>
+				<h3>Vertical Scalability</h3>
+				OpenCL in combination with OpenCV's transparent API to enable vertically
+				scalable algorithms. We leverage these idea heavily for optical flow calculations.
+			</section>
+
+			<section>
+				<h3> Optical Flow Implementation </h3>
+				Developed using OpenCV functions but with generic interface that leverages
+				high performance dependency injection. Easily swap out algorithms, TAPI, and
+				video readers
+				<img src='figures/dependency_injection.png' style="background-color:white;"/>
+			</section>
+
+			<section>
+				<h3> Comparison of Methods </h3>
+				<ul>
+					<li> Though Lucas-Kanade was faster at calculating motion estimation,
+						machine learning proved to not classify them well
+					</li>
+					<li> Farneback method, or dense optical flow, proved to provide better features
+						for machine learning to shatter the class with a hyperplane </li>
+					</ul>
+					<img src='http://docs.opencv.org/trunk/opticalflow_lk.jpg' height=300/>
+					<img src='http://docs.opencv.org/trunk/opticalfb.jpg' height=300/>
+				</section>
+
+				<section>
+					<h3> Feature Extraction From Optical Flow </h3>
+				</section>
+
+				<section>
+					<h3>Classifying the Reduced Feature Space </h3>
+				</section>
+			</section>
+
+			<section>
+				<section>
+					<h2> Results & Discussion </h2>
+					<img src='https://media.giphy.com/media/3oEjI6hkw6nbYNQkz6/giphy.gif'/>
+				</section>
+
+				<section>
+					<h3> Classification Results </h3>
+					<table>
+							<tr>
+								<th> </th>
+								<th>Typing</th>
+								<th>No Typing</th>
+							</tr>
+							<tr>
+								<td> <b>Typing</b> </td>
+								<td> 19 </td>
+								<td>1 </td>
+							</tr>
+							<tr>
+								<td> <b>No Typing</b> </td>
+								<td> 3 </td>
+								<td>17 </td>
+							</tr>
+					</table> <br>
+					Accuracy: 90%<br>
+					<img src='figures/typing.gif' width=300/>
+				</section>
+
+				<section>
+					<h3> Classification Results </h3>
+					<table>
+							<tr>
+								<th> </th>
+								<th>Writing</th>
+								<th>No Writing</th>
+							</tr>
+							<tr>
+								<td> <b>Writing</b> </td>
+								<td> 18 </td>
+								<td>2 </td>
+							</tr>
+							<tr>
+								<td> <b>No Writing</b> </td>
+								<td> 11 </td>
+								<td>9 </td>
+							</tr>
+					</table> <br>
+					Accuracy: 65%<br>
+					<img src='figures/writing.gif' width=300/>
+				</section>
+
+				<section>
+					<h3>Proof of Scalability </h3>
+					<img src='figures/speed_up.png'/>
+				</section>
+
+				<section>
+					<h3>High Performance Local Node vs Cloud </h3>
+					<img src='figures/aws_vs_local.png'/>
+				</section>
+
+				<section>
+					<h3> S3 Performance for Downloading and Uploading Video Segments </h3>
+					<img src='figures/s3_download_speed.png' width=400/>
+					<img src='figures/s3_upload_speed.png' width=400
+				</section>
+			</section>
+
+			<section>
+				<h3> Future Work </h3>
+				<ul>
+					<li>Investigate low accuracy with writing </li>
+					<li>Create larger AOLME ground truth dataset for more generalizable results </li>
+					<li>Investigate real-time interaction with extracting and classifying features </li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>Conclusion</h3>
+				We have shown that we have created a scalable architecture video analysis.
+				Furthermore, we have developed a novel technique that is accurate for
+				classifying typing, but not so for writing.
+			</section>
+		</section>
+
+		<section>
+			<h2> Questions? </h2> 
+		</section>
+
+
 		</div>
 	</div>
 
@@ -128,6 +443,7 @@
 		dependencies: [
 			{ src: 'reveal.js/plugin/markdown/marked.js' },
 			{ src: 'reveal.js/plugin/markdown/markdown.js' },
+			{ src: 'reveal.js/plugin/math/math.js', async: true },
 			{ src: 'reveal.js/plugin/notes/notes.js', async: true },
 			{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
 		]

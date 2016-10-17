@@ -15,20 +15,26 @@ algorithms such as K-nearest neighbors and support vector machines (SVM).
 \section{\label{section:distributed_processing}Scalable Architecture}
 A core principal for a well designed, horizontally scalable application, is
 to design it such that it does not contain state \cite{awsbestpractices}.
-When state is required, it the software complexity increases substantially and
+When state is required, the software complexity increases substantially and
 makes it difficult to distribute the system over a scalable amount of nodes.
 However, if the software was designed such that each service can operate and
 stand on its own, it is the perfect embarrassingly parallel computing task to
 tackle. For this thesis we focus on ensuring that our feature extractor,
 as described in Section \ref{section:feature_extraction}, is completely stateless.
 This is a design feature that has allowed us the flexibility to scale our
-system over as many nodes as are available on the AWS cloud.
+system over as many nodes as are available on the AWS cloud. A stateless architecture
+greatly increases the chances of any program to be turned into a micro service
+on the cloud. As a result, more and more parts of any application can  be horizontally scaled
+across any number of compute nodes. So unless access to stateful services are
+necessary, such as database accesses, it is almost always best to design
+software stateless to create scalable services. This also has the added advantage
+
 
 \subsection{\label{subsection:architecture_overview}Architecture Overview}
 Our system builds upon AWS to create an easy-to-maintain and easy-to-scale
 video processing system. We use S3 storage to put small video clips that
 have been extracted from our AOLME dataset. These clips are made available to
-to all of the processing nodes. The processing nodes communicate with the master
+to all processing nodes. The processing nodes communicate with the master
 node using Amazon's simple queue service (SQS). Figure \ref{fig:dataflow} illustrates
 the basic distributed system design and the psuedo-code for the entire system
 is shown in Figure \ref{alg:vida_pseudo_code}.
@@ -83,7 +89,8 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
 
   \State $\textit{dataframe} = \texttt{ReadCsv(} \textit{output.txt} \texttt{)}$
 
-  \For{\textit{sample\_index} in 1 to len(\textit{dataframe})}
+
+  \For{\textit{sample\_index} in 1 to len(\textit{dataframe})} \Comment{Leave-one out algorithm for training and testing}
     \State $\textit{train\_data} = \textit{dataframe[-sample\_index]}$
     \State $\textit{test\_data} = \textit{dataframe[sample\_index]}$
     \State $\textit{knn\_result} = \texttt{knn(}\textit{train\_data, test\_data, k=3} \texttt{)}$
@@ -93,8 +100,14 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
   \State $\texttt{WriteExperimentResults(} \textit{knn\_result, svm\_result} \texttt{)}$
 
 \end{algorithmic}
-\caption{Pseudocode for proposed method}
+
+\caption{Pseudocode for proposed method. In the above pseudo-code, indentation
+indicates the beginning and end of a block of code, in other words when the
+indentation ends in a for loop, it means that is the end of the for loop. Additionally,
+all function names represent the same function names that were created in the actual
+code.}
 \label{alg:vida_pseudo_code}
+
 \end{figure}
 
 \FloatBarrier
@@ -134,7 +147,7 @@ The master node performs several basic tasks. The first of which is to put
 messages on the SQS queue.  This is orchestrated by reading
 a csv file that consists of an S3 link to a video segment, the classification of
 the segment, the SQS queue to which to output the features and finally the
-optical flow method to use. An example of the file is show in Table
+optical flow method to use. An example of the file is shown in Table
  \ref{tab:message_queue}.
 
 \begin{table}[h]
@@ -145,7 +158,7 @@ optical flow method to use. An example of the file is show in Table
   aolme/data/notyping/seg\_1.mp4 & 2 & feature\_queue & farneback \\
   \hline
   \end{tabular}
-  \caption{Example of data file that use by the master node to place messages on
+  \caption{Example of data file that is used by the master node to place messages on
   the SQS queue. }
   \label{tab:message_queue}
 \end{table}
@@ -171,7 +184,7 @@ the videos that are associated with each message. Once this has been validated,
 the master node begins to poll on the designated output queue for the results output
 from each of the slave nodes. Once all the results have been collected, the master
 node places each of the vectors into a comma separated features file.
-The pseudo code for the operations performed by the master are show in Figure
+The pseudo code for the operations performed by the master are shown in Figure
 \ref{alg:master_node}.
 
 \begin{figure}[h]
@@ -320,8 +333,8 @@ certain computations has been in no way hindered.
 \subsection{\label{subsection:cont_integration}Continuous Integration}
 Its all too often that software is written and completely forgotten about
 because the build process is too complicated and burdensome on the users of the
-interface.  A goal of this thesis maximize reusability and maintainability. We
-accomplish this using a  popular software technique called continuous
+interface.  A goal of this thesis is to maximize reusability and maintainability. We
+accomplish this using a popular software technique called continuous
 integration \cite{duvall2007continuous}. Continuous integration is the idea that
 software should be constantly giving developers feedback about the state of
 their software to ensure robustness and to have an obvious tool for developers
@@ -407,7 +420,7 @@ several programs that we use for experimental purposes. In order to facilitate
 the development, we use google test as our C++ testing framework
 \cite{googletest}. An example of a test we have written to test receiving a
 single video frame from a file is shown in Appendix \ref{ap:google_test}. This
-test uses a concept fro the TDD community known as a mocked object. The
+test uses a concept from the TDD community known as a mocked object. The
 philosophy behind using a mocked video reader as illustrated in the test, is
 that we don't want to design our tests to be reliant on the state of the current
 system. If we do so, the second we push our code to the repository, our
@@ -527,15 +540,21 @@ did using the Farneback method. Hence most of the results in this thesis
 have been calculated with Farneback optical flow unless otherwise specified.
 
 \section{\label{section:feature_extraction}Feature Extraction from Optical Flow}
-The \texttt{CalculateVectors} function in both Figure \ref{alg:lk_flow} and
-\ref{alg:farneback} returns several dense matrices that represent the features
-that we can extract from the optical flow output. These features are magnitude,
-orientation, x direction and y direction of the optical flow features. These are
-ultimately the features that we use to train and classify using an SVM. However,
-if we had two $N \times M$ video frames as the input, we now have $4 \times N
-\times M$ features. Clearly we have not yet reduced the input feature space.
-Thus, based on information that we know \textit{a-priori}, we can reduce our
-feature space significantly.
+The first step that needs to be done in our software is to open a video file.
+All of the videos that are used in this thesis are compressed before reaching an
+S3 bucket, and then are later decompressed  within each compute node. This is
+important to note because bandwidth is a limiting factor when transferring
+videos from an S3 bucket to the compute node.  Therefore the first step is to
+have OpenCV read the file in and decompress it before  reducing the feature
+space. The \texttt{CalculateVectors} function in both Figure \ref{alg:lk_flow}
+and \ref{alg:farneback} returns several dense matrices that represent the
+features that we can extract from the optical flow output. These features are
+magnitude, orientation, x direction and y direction of the optical flow
+features. These are ultimately the features that we use to train and classify
+using an SVM. However, if we had two $N \times M$ video frames as the input, we
+now have $4 \times N \times M$ features. Clearly we have not yet reduced the
+input feature space. Thus, based on information that we know \textit{a-priori},
+we can reduce our feature space significantly.
 
 In the case of typing and writing, we know we can expect there to be motion from
 one frame to the next. We don't know by how much, but we do know that it is not

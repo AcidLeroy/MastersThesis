@@ -177,26 +177,26 @@ synchrony} \cite{konda2013learning} they attempt to address this need by detecti
 synchrony between frames in videos. They were robustly able to classify motions in
 datasets KTH, UCF sports, Hollywood2 and YUPENN in the low to mid 90s classification
 rate. However, training and testing the system varied between 2-3 minutes all
-they way up to days. In this thesis, we not only get very good classification
+the way up to days. In this thesis, we not only get very good classification
 rates, but because the system is horizontally scalable, we can train the system
 in a matter of minutes assuming relatively small video segments (videos on the
 order of 1-2 MB).
 
 More modern approaches use various compound techniques in an attempt to solve
-human activity recognition such as \cite{wang2016action}. In this paper they
-proved to classify many of the existing datasets very well using a combination
-of optical flow histograms, edge trajectories, and support vector machines  for
-classification. In this thesis, we do not attempt to beat the results in this
-paper, we strive to provide a method for activity classification that can
-distributed on a cloud like infrastructure and that can be used in real time.
-Furthermore, the datasets that they use are not from videos in the wild. Our
-AOLME dataset contains thousands of hours of video that are not ideal for
-training and testing activity recognition algorithms. This makes tuning and
-tweaking the parameters for any algorithm, edge trajectories or not, very
-difficult. Like them though, we are using optical flow which is well studied and
-robust for video activity recognition. An other contribution of this thesis
-that is not provided in \cite{wang2016action} is that we openly provide our software
-as open source so that other studies can be easily conducted.
+human activity recognition such as \cite{wang2016action}. In this paper the
+authors showed that they can classify many of the existing datasets very well
+using a combination of optical flow histograms, edge trajectories, and support
+vector machines for classification. In this thesis, we do not attempt to beat
+the results in this paper, we strive to provide a method for activity
+classification that can distributed on a cloud like infrastructure and that can
+be used in real time. Furthermore, the datasets that they use are not from
+videos in the wild. Our AOLME dataset contains thousands of hours of video that
+are not ideal for training and testing activity recognition algorithms. This
+makes tuning and tweaking the parameters for any algorithm, edge trajectories or
+not, very difficult. Like them though, we are using optical flow which is well
+studied and robust for video activity recognition. An other contribution of this
+thesis that is not provided in \cite{wang2016action} is that we openly provide
+our software as open source so that other studies can be easily conducted.
 
 
 
@@ -318,10 +318,12 @@ server to perform computations \cite{awsbestpractices}. That model must be
 broken in order to efficiently develop applications for the cloud. Clearly, not
 all applications can be stateless, but the keys is to eliminate as many stateful
 components as possible and replace them with stateless ones. When this paradigm
-is followed, along with designing software with well defined interface, list
-RESTful, it makes creating a scalable, flexible application easy using cloud
+is followed, along with designing software with well defined interfaces, it makes creating a scalable, flexible application easy using cloud
 service providers \cite{awsbestpractices} and how to make auto deployment a snap
 for rapid testing and distribution using container technologies such as docker.
+An example of a well defined interface is a representational state transfer (RESTful) one,
+ which is an interface that provides easy interoperability between compute nodes
+ on a network. Typically an interface like this communicates over http or https.
 
 In the following subsections we explore the current state of cloud computing and
 what types of applications can leverage a cloud like infrastructure, a high
@@ -335,7 +337,7 @@ compute power to database solutions. However, the resources that are often
 most important are access to compute resources, highly available networks and
 redundant and durable storage. With these three resources available, its possible
 to create almost any kind of application in a cloud architecture. The idea is
-to eliminate servers, and instead replace it with services. Buzzwords
+to eliminate servers, and instead replace them services. Buzzwords
 that emerge from this context are software as a service (SaaS), hardware as a service
 (HaaS), and X as a service (XaaS) where X can refer to any number common IT
 processes.
@@ -447,7 +449,7 @@ for future work.
 \subsection{\label{subsection:docker}Docker}
 Over the last two years, Docker has gained significant traction amongst software
 developers for application deployment. Docker is a software package that allows
-a variety of *nix type machines to run applications developed on a different
+a variety of *nix type machines to run applications developed on different
 platforms to be run natively. For example, if an application was developed to run
 on Ubuntu 14.04, a user who has Docker installed on Cent OS 7 will be able to
 run that same byte code. This has a significant impact on the way that software

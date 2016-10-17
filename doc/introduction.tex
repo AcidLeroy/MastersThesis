@@ -55,26 +55,25 @@ reconfigurable architectures \cite{Carranza2016} \cite{llamocca2014dynamic}
 
 
 
-\section{\label{section:thesis_statement}Thesis Statement} The thesis of this
-research is that it is possible to scale, accurately classify and process videos
-using our proposed video analysis architecture for human activity recognition.
-The basic idea is to effectively distribute the computation among compute nodes
-and collect the results in the master node. The focus is to pre-compute the
-computationally intensive feature extractions such as Farneback, Lucas-Kanade
-optical flow and SVMs powered by a highly scalable computing architecture, and
-exposing those features to researchers so that classification algorithms can  be
-developed much quicker and in an interactive way. We show that large amounts of
-video data can be accurately classified and that our technique is scalable.
-Figure \ref{fig:typing_writing} illustrates the types of pre-cropped videos that
-we are attempting to classify.
+\section{\label{section:thesis_statement}Thesis Statement}
+The thesis of this research is that it is possible to scale, accurately classify
+and process videos using a carefully designed video analysis system for human
+activity recognition. The basic idea is to distribute video segments and
+computational tasks among compute nodes so as to enable scalable computation.
+The focus of the thesis is to identify computationally intensive feature
+extraction methods that can be pre-computed and have their reduced feature space
+processed by the master node. Furthermore, the system should be highly scalable
+so as to support future extensions.
+
 
 \begin{figure}[h]
-  \label{fig:typing_writing}
+
   \centering
   \includegraphics[width=\textwidth]{figures/typing_writing_clip}
   \caption{Example of features that have been manually extracted from the dataset
   for training and testing. For the above example, we need to classifiers for each
   activity to determine if the activity is being performed, or it is not.}
+  \label{fig:typing_writing}
 \end{figure}
 
 \section{\label{section:contributions}Contributions}
@@ -86,11 +85,11 @@ so that the software can be used freely in the community and will thus facilitat
 reproducibility and extensibility in this field of research.
 
 \section{\label{section:summary}Summary}
-In this thesis, we show that it is possible to reduce the feature set of
-videos on the order of Megabytes down to tens of Kilobytes, and then accurately
-classify those features at 90\% as a particular human activity. We also create
-an architecture that is capable of scaling to dozens of compute notes, and
-potentially hundreds thus making the heavy lifting operations, such as computing
-optical flow vectors, a trivial task that can be efficiently performed in the
-AWS cloud, thus enabling researchers to extract germane features from videos in a
-matter of minutes instead of hours.
+In this thesis, we show that it is possible to reduce the feature set of videos
+on the order of Megabytes down to tens of Kilobytes, and then accurately
+classify those features at very high accuracy as a particular human activity. We
+also create an architecture that is capable of scaling to dozens of compute
+notes, and potentially hundreds thus making the heavy lifting operations, such
+as computing optical flow vectors, a trivial task that can be efficiently
+performed in the AWS cloud, thus enabling researchers to extract germane
+features from videos in a matter of minutes instead of hours.

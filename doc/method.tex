@@ -49,15 +49,16 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
 \begin{figure}[h]
 \begin{algorithmic}[1]
 
-  \For{each \textit{video} in pre-segmented videos}
+  \For{each \textit{video} in pre-segmented videos} \Comment{The following code occurs in the master node}
     \State $\texttt{UploadToS3(}\textit{video}\texttt{)}$
   \EndFor
   \State $\texttt{AddVideosToSqsQueue(}\textit{video\_list.txt}\texttt{)}$
+
+  \Comment{The following code occurs in the compute nodes}
   \State $\textit{video\_uri} = \texttt{PopVideoFromQueue()}$
   \State $\textit{segmented\_video} = \texttt{DownloadS3Video(}\textit{video\_uri}\texttt{)}$
-  \State $\textit{cdf\_features} = \texttt{ExtractFeatures(}\textit{segmented\_video}\texttt{)}$
   \State $\textit{previous\_frame} = nullptr$
-  \For{each \textit{frame} in \textit{segmented\_video}}
+  \For{each \textit{frame} in \textit{segmented\_video}} \Comment{Block  extracts features from video frames}
     \State $\textit{current\_frame} = \textit{frame}$
     \If {\textit{previous\_frame} == nullptr}
       \State $continue$
@@ -81,6 +82,8 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
   \EndFor
   \State $\textit{cdf\_features} = \texttt{Normalize(}\textit{pdfs}\texttt{)}$
   \State $\texttt{PushToSqsQueue(}\textit{cdf\_features}, \textit{output\_queue\_name} \texttt{)}$
+
+  \Comment{The remainder of the actions occur on the master node}
   \While{videos in \textit{video\_list.txt} are still in processing}
     \State $\texttt{Sleep(1)}$
   \EndWhile
@@ -380,11 +383,12 @@ it is ready to run. Figure \ref{fig:continuous_integration} illustrates the
 general flow of the continuous integration.
 
 \begin{figure}[h]
-  \label{fig:continuous_integration}
+
   \centering
   \includegraphics[width=\textwidth]{figures/continuous_integration}
   \caption{Automated deployment of the proposed feature extraction method to
   the AWS cloud using continuous integration}
+  \label{fig:continuous_integration}
 \end{figure}
 
 \subsection{\label{subsection:tdd}Test Driven Development}
@@ -453,11 +457,12 @@ algorithm without having to rely on any external resources. Figure
 MotionEstimation class.
 
 \begin{figure}[h]
-  \label{fig:hiperf_dependency}
+
   \centering
   \includegraphics[width=\textwidth]{figures/dependency_injection}
   \caption{High performance dependency injection using templates to implement the
   motion estimation class with different types of video readers.}
+  \label{fig:hiperf_dependency}
 \end{figure}
 
 The appendix example demonstrates how we now have a failing test, and we can then
@@ -469,13 +474,14 @@ shows what it looks like when the build is failing because of a test, compilatio
 issues, or problems pushing to the AWS cloud.
 
 \begin{figure}[h]
-  \label{fig:passing}
+
   \centering
   \includegraphics[width=\textwidth]{figures/passing}
   \includegraphics[width=\textwidth]{figures/failing}
   \caption{An example of two commits that were pushed to our repository. The
   top figure shows how the build is marked as passing with a green check mark,
   and the bottom shows the build failing with a red x.}
+  \label{fig:passing}
 \end{figure}
 
 
@@ -546,15 +552,27 @@ S3 bucket, and then are later decompressed  within each compute node. This is
 important to note because bandwidth is a limiting factor when transferring
 videos from an S3 bucket to the compute node.  Therefore the first step is to
 have OpenCV read the file in and decompress it before  reducing the feature
-space. The \texttt{CalculateVectors} function in both Figure \ref{alg:lk_flow}
-and \ref{alg:farneback} returns several dense matrices that represent the
-features that we can extract from the optical flow output. These features are
-magnitude, orientation, x direction and y direction of the optical flow
-features. These are ultimately the features that we use to train and classify
-using an SVM. However, if we had two $N \times M$ video frames as the input, we
-now have $4 \times N \times M$ features. Clearly we have not yet reduced the
-input feature space. Thus, based on information that we know \textit{a-priori},
-we can reduce our feature space significantly.
+space. Figure \ref{fig:life_of_video} illustrates how a video is first read in
+to extracting the features from each of the cropped videos producced. The
+\texttt{CalculateVectors} function in both Figure \ref{alg:lk_flow} and
+\ref{alg:farneback} returns several dense matrices that represent the features
+that we can extract from the optical flow output. These features are magnitude,
+orientation, x direction and y direction of the optical flow features. These are
+ultimately the features that we use to train and classify using an SVM. However,
+if we had two $N \times M$ video frames as the input, we now have $4 \times N
+\times M$ features. Clearly we have not yet reduced the input feature space.
+Thus, based on information that we know \textit{a-priori}, we can reduce our
+feature space significantly.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{figures/life_of_video}
+  \caption{Processing of a single raw video to feature extraction as implemented
+  in the proposed architecture.}
+  \label{fig:life_of_video}
+\end{figure}
+
+\FloatBarrier
 
 In the case of typing and writing, we know we can expect there to be motion from
 one frame to the next. We don't know by how much, but we do know that it is not

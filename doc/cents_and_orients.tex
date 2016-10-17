@@ -1,4 +1,8 @@
 \chapter{\label{ap:centroids}Retrieving Centroids and Orientations from Blobs}
+This is a snippet of code that illustrates how we retrieve orientations and
+centroids from blobs of grouped motion vectors. This code is used to extract
+additional features from each video frame pair as described in the methods
+section. 
 \begin{minted}{cpp}
 void UpdateCentroidAndOrientation(const cv::Mat& thresholded_image,
                                   cv::Mat* orientations, cv::Mat* centroids) {

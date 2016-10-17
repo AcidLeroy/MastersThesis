@@ -144,16 +144,24 @@ saw differences in the feature vectors between the two implementations; however,
 classification results proved to be very similar.
 
 \section{\label{section:scalability}Proof of Scalability}
-In order to show that our system is scalable, we record the time it takes
-for the cluster to perform certain repetitive tasks. For the first experiment,
-we have the cluster operate using only a single EC2 instance, and then scale
-the experiment by one instance and compare how long it takes to calculate 10 2.1MB
-videos. For this experiment, we used Amazon's t2.micro instance which contains
-1 virtual CPU running on a high frequency Intel Xeon processor with turbo
-up to 3.3GHz and contains 1GB of memory. This is the instance that is considered
-to be part of the free tier program. Our instance runs a special Amazon Machine
-image
-The results from this experiment are show in Figure \ref{fig:speed_up}
+In order to show that our system is scalable, we record the time it takes for
+the cluster to perform certain repetitive tasks. For the first experiment, we
+have the cluster operate using only a single EC2 instance, and then scale the
+experiment by one instance and compare how long it takes to calculate 10 2.1MB
+videos. For this experiment, we used Amazon's t2.micro instance which contains 1
+virtual CPU running on a high frequency Intel Xeon processor with turbo up to
+3.3GHz and contains 1GB of memory. Because t2 instances are designed to  have
+burstable performance, it is difficult to tell from Amazon's documentation what
+type of hardware the instances could be using at any one time. Amazon designed
+these instances like this so that the user is not consistently charged  for using
+high performance CPUS, but rather only when they need the performance are  they
+charged for those compute cycles. So for this reason, we cannot give an  exact
+chip type that was used when performing these computations because it is possible
+that the virtual CPU that we were initially assigned, is not the same CPU that
+we received later on in the experiment. This is the instance
+that is considered to be part of the free tier program. Our instance runs a
+special Amazon Machine image The results from this experiment are show in Figure
+\ref{fig:speed_up}
 
 \begin{figure}[h]
   \label{fig:speed_up}
@@ -331,35 +339,7 @@ classify typing against writing. In other words, the paper doesn't investigate
 classification of typing from writing, it only investigates whether we classify
 a video as having typing in it, or not having typing in it.
 
-\subsection{Future Work}
-This thesis investigates the basic idea how to efficiently distribute and classify
-human activity in the AOLME dataset and as a result there a few areas where the
-research can be greatly improved. The first suggestion to improve the in the field
-of this research is to greatly increase the size of truth data for more
-statistically significant data. The research done in this paper consists of 40 video
-subsets, many of which contained clips from the same footage but at varying times.
-Increasing this database to several hundred would improve research here.
 
-We also didn't investigate whether we could accurately classify typing vs writing.
-This would be an extension of this research that would be important so that we
-could investigate if our algorithm could determine the difference between the two
-activities.
-
-In other aspect that would be worth investigating for extending this thesis,
-is to attempt to add an interactive aspect to training and testing. In other words,
-it would be interesting to precompute and train the machine learning algorithms
-on multiple human actions and then interactively searching through the feature
-space to then observe the videos that matched the classification. Work in this
-area would greatly aid with the manual analysis of the AOLME videos that is
-currently being done.
-
-Finally, we found that we didn't get very good results for classifying writing.
-Investigation into this would be interesting to see why the results here varied
-so much from the results we obtained from typing classification. It's still unknown
-why the bag of features failed to classify writing accurately as it did for typing.
-As a suspicion, with no supporting evidence, it may have something to do that
-general hand movement around paper is similar to that of writing, therefore the
-algorithm may struggle for this reason.
 
  % But this is by no means a full implementation of the system
  % we would like to create for interactive analysis of AOLME videos. Figure

@@ -1,5 +1,8 @@
 \chapter{\label{ap:svm_classification}R Code for SVM Classification}
-
+This sample code is the same code that was used in the master node for
+classification of the features. It uses the leave one out strategy for
+training and testing the optimal solution. This is referenced from the
+Methods chapter in this thesis. 
 \begin{minted}{r}
   ClassifyFeatures <- function(VideoHists){
     NoOfSamples <- length(VideoHists$Classification)

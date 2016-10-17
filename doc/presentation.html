@@ -48,38 +48,81 @@
 		<section>
 			<h3>Manual Video Analysis and Segmentation</h3>
 			<ul>
-				<li>UNM College of Education Assessing quantifiable metrics for human learning in the classroom</li>
+				<li>UNM College of Education in collaboration with ivPCL assessing quantifiable metrics for human learning in the classroom</li>
 				<li>All videos currently manually annotated</li>
-				<li>Trends in data difficult to find with manual methods</li>
+				<li>Videos manually analyzed</li>
+				<li>Completely manual process is <b> extremely </b> time consuming
 			</ul>
 		</section>
 
-		<section>
-			<h3>Extremely large video datasets</h3>
+		<section data-math=false>
+			<h3>Extremely Large Video Datasets</h3>
 			<ul>
-				<li>Large video datasets are extremely hard to analyze because of sheer size</li>
-				<li>UNM has collection of nearly 900GB of video data that can be used for analysis (AOLME dataset) </li>
-			</ul>
-		</section>
-
-		<section>
-			<h3>Vertically and Horizontally Scalable Solutions</h3>
-			<ul>
-				<li>Need solution that can take advantage of: </li>
+				<li>Huge AOLME dataset:</li>
 				<ul>
-					<li>Embarrassingly parallel problems </li>
-					<li>Multiple compute nodes</li>
-					<li>Heterogeneous compute nodes</li>
+					<li>Over 3 years of data collected</li>
+					<li>2500 hours of high quality video</li>
+					<li>High estimate of cost (dollars) to analyze: 250,000.000 @ 10/hour</li>
+					<li>Low estimate of cost (dollars) to analyze: 31,250.00 @ 10/hour</li>
 				</ul>
 			</ul>
 		</section>
 
 		<section>
-			<h3>Reduction of Feature Space for quick classification</h3>
+			<h3>Extremely Large Video Datasets</h3>
+			<style type="text/css">
+			#videos {
+				height: 300;
+			}
+			</style>
+			<table id="videos">
+				<tr>
+					<th><img src='figures/gifs/typing_seg_18.mp4.gif'/></th>
+					<th><img src='figures/gifs/typing_seg_2.mp4.gif'/></th>
+					<th><img src='figures/gifs/writing_seg_3.mp4.gif'/></th>
+					<th><img src='figures/gifs/typing_seg_4.mp4.gif'/></th>
+					<th><img src='figures/gifs/typing_seg_5.mp4.gif'/></th>
+				</tr>
+				<tr>
+					<td ><img src='figures/gifs/typing_seg_6.mp4.gif'/></td>
+					<td><img src='figures/gifs/typing_seg_7.mp4.gif'/></td>
+					<td ><img src='figures/gifs/writing_seg_8.mp4.gif'/></td>
+					<td ><img src='figures/gifs/typing_seg_9.mp4.gif'/></td>
+					<td ><img src='figures/gifs/writing_seg_10.mp4.gif'/></td>
+				</tr>
+				<tr>
+					<td><img src='figures/gifs/writing_seg_11.mp4.gif'/></td>
+					<td><img src='figures/gifs/writing_seg_12.mp4.gif'/></td>
+					<td ><img src='figures/gifs/typing_seg_13.mp4.gif'/></td>
+					<td><img src='figures/gifs/typing_seg_14.mp4.gif'/></td>
+					<td><img src='figures/gifs/typing_seg_15.mp4.gif'/></td>
+				</tr>
+				<tr>
+					<td><img src='figures/gifs/typing_seg_11.mp4.gif'/></td>
+					<td><img src='figures/gifs/typing_seg_12.mp4.gif'/></td>
+					<td ><img src='figures/gifs/writing_seg_13.mp4.gif'/></td>
+					<td><img src='figures/gifs/typing_seg_14.mp4.gif'/></td>
+					<td><img src='figures/gifs/writing_seg_15.mp4.gif'/></td>
+				</tr>
+			</table>
+
+		</section>
+
+		<section>
+			<h3>Vertically and Horizontally Scalable Solutions</h3>
 			<ul>
-				<li>Distilling three-dimensional video cubes of MBs to KBs </li>
-				<li>Quick Training</li>
-				<li>Quick Classification</li>
+				<li>Vertical: using resources on a single node such as memory, GPUs, CPUs etc.</li>
+				<li>Horizontal: use hundreds of compute nodes if necessary</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Data Reduction</h3>
+			<ul>
+				<li>Distilling three-dimensional video cubes of GBs to KBs </li>
+				<li>Extremely computationally expensive</li>
+				<li>Minimize training time</li>
+				<li>Minimize classification time</li>
 			</ul>
 		</section>
 
@@ -103,8 +146,12 @@
 		<section>
 			<h3>Thesis Objectives</h3>
 			<ul>
-				<li>Reduce feature space for quick training and classification of videos</li>
-				<li>Design software that can scale horizontally and vertically to maximize efficacy of processing </li>
+				<li>Reduce feature space of videos to:</li>
+				<ul>
+					<li>Minimize training time</li>
+					<li>Minimize classification time</li>
+				</ul>
+				<li>Design software that can scale horizontally and vertically to maximize efficacy of processing since feature reduction is a computationally expensive operation </li>
 				<li>Accurately classify a subset of activities that are of interest to the UNM College of Education </li>
 				<ul>
 					<li> Typing </li>
@@ -113,13 +160,6 @@
 				<li>Provide core software with Open Source License</li>
 			</ul>
 		</section>
-
-		<section>
-			<h3> Sample Videos </h3>
-			<img src='figures/typing.gif'/ height=200>
-			<img src='figures/writing.gif'/ height=200>
-		</section>
-
 	</section>
 
 
@@ -131,7 +171,7 @@
 <section>
 	<section>
 		<h2> Background</h2>
-		<img src='https://media.giphy.com/media/14xSZmhnD4Fjyw/giphy.gif' height='300'/>
+		<img src='https://media.giphy.com/media/emHjwEglsOYDe/giphy.gif' height='300'/>
 	</section>
 	<section>
 		<h3> Current Methods in Video Feature Reduction for Classification </h3>
@@ -149,8 +189,12 @@
 			<li>Linear Support Vector Machines</li>
 			<li>Multi Class Support Vector Machines</li>
 			<li>Support Vector Machines + Principal Component Analysis</li>
-			<li>Convolutional Neural Networks</li>
 		</ul>
+	</section>
+
+	<section>
+		<h3> Techniques That Don't Need Reduced Feature Space </h3>
+		Convolutional Neural Networks
 	</section>
 
 	<section>
@@ -251,7 +295,6 @@
 						<li>Distributed and Scalable Processing Limitations</li>
 						<ul>
 							<li>Most MapReduce frameworks do not contain out-of-the box functionality for video analysis</li>
-							<li>Many distributed systems rely only on vertical scalabilty </li>
 							<li>Previously proposed architectures only accomplish trivial tasks, e.g. copying and decryption </li>
 						</ul>
 					</ul>
@@ -267,12 +310,17 @@
 
 			<section>
 				<h2> Methods </h2>
-				<img src='https://media.giphy.com/media/LeLNh9qaUBb7a/giphy.gif' height=400/>
+				<img src='https://media.giphy.com/media/ROx3xm65zntC0/giphy.gif' height=400/>
 			</section>
 
 			<section>
 				<h3>Architecture Design</h3>
 				<img src='figures/extract_features_dataflow.png' height=600 style="background-color:#a5a5a5;"/>
+			</section>
+
+			<section>
+				<h3> Life of a Video </h3>
+				<img src='figures/life_of_video.png' height=600 style="background-color:#a5a5a5;"/>
 			</section>
 
 			<section>
@@ -333,152 +381,152 @@
 					<ul>
 						<li> Large video datasets are broken into small 1-5MB videos to be processed by each node </li>
 						<li> Videos are then broken into a handful of CDFs </img>
-					</ul>
-					<img src='figures/extract_features_flow.png' style="background-color:#a5a5a5;"/>
-				</section>
+						</ul>
+						<img src='figures/extract_features_flow.png' style="background-color:#a5a5a5;"/>
+					</section>
 
 
-				<section>
-					<h3>Classifying the Reduced Feature Space </h3>
-					<ul>
-						<li>Linear Support Vector Machines</li>
-						<li>K Nearest Neighbors </li>
-						<li>Train and testing on 40 typing/no typing and 40 writing/no writing video segments
-					</ul>
-				</section>
+					<section>
+						<h3>Classifying the Reduced Feature Space </h3>
+						<ul>
+							<li>Linear Support Vector Machines</li>
+							<li>K Nearest Neighbors </li>
+							<li>Train and testing on 40 typing/no typing and 40 writing/no writing video segments
+							</ul>
+						</section>
 
-				<section>
-					<h3> Challenges </h3>
-					<ul>
-						<li>Matching C++ real-time code to prototype MATLAB code </li>
-						<li>GPU pass through in a Docker container </li> 
-						<li>Results looked good for a small subset of writing data (around 8 videos),
-							but proved to be inadequate as more data points were added </li>
-						<li>Making compute cluster easy to deploy required serious software engineering </li>
-					</ul>
+						<section>
+							<h3> Challenges </h3>
+							<ul>
+								<li>Matching C++ real-time code to prototype MATLAB code </li>
+								<li>GPU pass through in a Docker container </li>
+								<li>Results looked good for a small subset of writing data (around 8 videos),
+									but proved to be inadequate as more data points were added </li>
+									<li>Making compute cluster easy to deploy required serious software engineering </li>
+								</ul>
 
-				</section>
+							</section>
 
-			</section>
+						</section>
 
-			<section>
-				<section>
-					<h2> Results & Discussion </h2>
-					<img src='https://media.giphy.com/media/3oEjI6hkw6nbYNQkz6/giphy.gif'/>
-				</section>
+						<section>
+							<section>
+								<h2> Results & Discussion </h2>
+								<img src='https://media.giphy.com/media/3oEjI6hkw6nbYNQkz6/giphy.gif'/>
+							</section>
 
-				<section>
-					<h3> Classification Results </h3>
-					<table>
-							<tr>
-								<th> </th>
-								<th>Typing</th>
-								<th>No Typing</th>
-							</tr>
-							<tr>
-								<td> <b>Typing</b> </td>
-								<td> 19 </td>
-								<td>1 </td>
-							</tr>
-							<tr>
-								<td> <b>No Typing</b> </td>
-								<td> 3 </td>
-								<td>17 </td>
-							</tr>
-					</table> <br>
-					Accuracy: 90%<br>
-					<img src='figures/typing.gif' width=300/>
-				</section>
+							<section>
+								<h3> Classification Results </h3>
+								<table>
+									<tr>
+										<th> </th>
+										<th>Typing</th>
+										<th>No Typing</th>
+									</tr>
+									<tr>
+										<td> <b>Typing</b> </td>
+										<td> 19 </td>
+										<td>1 </td>
+									</tr>
+									<tr>
+										<td> <b>No Typing</b> </td>
+										<td> 3 </td>
+										<td>17 </td>
+									</tr>
+								</table> <br>
+								Accuracy: 90%<br>
+								<img src='figures/typing.gif' width=300/>
+							</section>
 
-				<section>
-					<h3> Classification Results </h3>
-					<table>
-							<tr>
-								<th> </th>
-								<th>Writing</th>
-								<th>No Writing</th>
-							</tr>
-							<tr>
-								<td> <b>Writing</b> </td>
-								<td> 18 </td>
-								<td>2 </td>
-							</tr>
-							<tr>
-								<td> <b>No Writing</b> </td>
-								<td> 11 </td>
-								<td>9 </td>
-							</tr>
-					</table> <br>
-					Accuracy: 65%<br>
-					<img src='figures/writing.gif' width=300/>
-				</section>
+							<section>
+								<h3> Classification Results </h3>
+								<table>
+									<tr>
+										<th> </th>
+										<th>Writing</th>
+										<th>No Writing</th>
+									</tr>
+									<tr>
+										<td> <b>Writing</b> </td>
+										<td> 18 </td>
+										<td>2 </td>
+									</tr>
+									<tr>
+										<td> <b>No Writing</b> </td>
+										<td> 11 </td>
+										<td>9 </td>
+									</tr>
+								</table> <br>
+								Accuracy: 65%<br>
+								<img src='figures/writing.gif' width=300/>
+							</section>
 
-				<section>
-					<h3>Proof of Scalability </h3>
-					<img src='figures/speed_up.png'/>
-				</section>
+							<section>
+								<h3>Proof of Scalability </h3>
+								<img src='figures/speed_up.png'/>
+							</section>
 
-				<section>
-					<h3>High Performance Local Node vs Cloud </h3>
-					<img src='figures/aws_vs_local.png'/>
-				</section>
+							<section>
+								<h3>High Performance Local Node vs Cloud </h3>
+								<img src='figures/aws_vs_local.png'/>
+							</section>
 
-				<section>
-					<h3> S3 Performance for Downloading and Uploading Video Segments </h3>
-					<img src='figures/s3_download_speed.png' width=400/>
-					<img src='figures/s3_upload_speed.png' width=400
-				</section>
-			</section>
+							<section>
+								<h3> S3 Performance for Downloading and Uploading Video Segments </h3>
+								<img src='figures/s3_download_speed.png' width=400/>
+								<img src='figures/s3_upload_speed.png' width=400
+							</section>
+						</section>
 
-			<section>
-				<h3> Future Work </h3>
-				<ul>
-					<li>Investigate low accuracy with writing </li>
-					<li>Create larger AOLME ground truth dataset for more generalizable results </li>
-					<li>Investigate real-time interaction with extracting and classifying features </li>
-					<li>Expand work to autoscale based on size of video list queue</li>
-				</ul>
-			</section>
+						<section>
+							<h3> Future Work </h3>
+							<ul>
+								<li>Investigate low accuracy with writing </li>
+								<li>Create larger AOLME ground truth dataset for more generalizable results </li>
+								<li>Investigate real-time interaction with extracting and classifying features </li>
+								<li>Expand work to autoscale based on size of video list queue</li>
+							</ul>
+						</section>
 
-			<section>
-				<h3>Conclusion</h3>
-				<ul>
-					<li>In this thesis we have accomplished: </li>
-					<ul>
-						<li> Horizontally and vertically scalable video analysis architecture </li>
-						<li> A novel feature extraction algorithm that greatly reduces feature space </li>
-						<li> A free and open source software package that is continuous deployed and tested </li>
-						<li> An novel and accurate algorithm for detecting typing in videos </li>
-					</ul>
-				</ul>
-			</section>
-		</section>
+						<section>
+							<h3>Conclusion</h3>
+							<ul>
+								<li>In this thesis we have accomplished: </li>
+								<ul>
+									<li> Horizontally and vertically scalable video analysis architecture </li>
+									<li> A novel feature extraction algorithm that greatly reduces feature space </li>
+									<li> A free and open source software package that is continuous deployed and tested </li>
+									<li> An novel and accurate algorithm for detecting typing in videos </li>
+								</ul>
+							</ul>
+						</section>
+					</section>
 
-		<section>
-			<h2> Questions? </h2>
-		</section>
+					<section>
+						<h2> Questions? </h2>
+					</section>
 
 
-		</div>
-	</div>
+				</div>
+			</div>
 
-	<script src="reveal.js/lib/js/head.min.js"></script>
-	<script src="reveal.js/js/reveal.js"></script>
+			<script src="reveal.js/lib/js/head.min.js"></script>
+			<script src="reveal.js/js/reveal.js"></script>
 
-	<script>
-	// More info https://github.com/hakimel/reveal.js#configuration
-	Reveal.initialize({
-		history: true,
+			<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
 
-		// More info https://github.com/hakimel/reveal.js#dependencies
-		dependencies: [
-			{ src: 'reveal.js/plugin/markdown/marked.js' },
-			{ src: 'reveal.js/plugin/markdown/markdown.js' },
-			{ src: 'reveal.js/plugin/math/math.js', async: true },
-			{ src: 'reveal.js/plugin/notes/notes.js', async: true },
-			{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-		]
-	});
-	</script>
-</body>
-</html>
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal.js/plugin/markdown/marked.js' },
+					{ src: 'reveal.js/plugin/markdown/markdown.js' },
+					{ src: 'reveal.js/plugin/math/math.js', async: true },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+			</script>
+		</body>
+		</html>

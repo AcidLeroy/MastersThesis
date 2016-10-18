@@ -37,7 +37,7 @@ have been extracted from our AOLME dataset. These clips are made available to
 to all processing nodes. The processing nodes communicate with the master
 node using Amazon's simple queue service (SQS). Figure \ref{fig:dataflow} illustrates
 the basic distributed system design and the psuedo-code for the entire system
-is shown in Figure \ref{alg:vida_pseudo_code}.
+is shown in Figure \ref{alg:pseudo_master_node} and Figure \ref{alg:pseudo_compute_node}.
 
 \begin{figure}[h]
   \centering
@@ -49,22 +49,53 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
 \begin{figure}[h]
 \begin{algorithmic}[1]
 
-  \For{each \textit{video} in pre-segmented videos} \Comment{The following code occurs in the master node}
+  \For{each \textit{video} in pre-segmented videos}
     \State $\texttt{UploadToS3(}\textit{video}\texttt{)}$
   \EndFor
   \State $\texttt{AddVideosToSqsQueue(}\textit{video\_list.txt}\texttt{)}$
 
-  \Comment{The following code occurs in the compute nodes}
+  \While{videos in \textit{video\_list.txt} are still in processing}
+    \State $\texttt{Sleep(1)}$
+  \EndWhile
+
+  \State $\textit{output.txt} = \texttt{WriteCdfsToFile(PopAllCdfsFromQueue(}\textit{output\_queue\_name} \texttt{))}$
+
+  \State $\textit{dataframe} = \texttt{ReadCsv(} \textit{output.txt} \texttt{)}$
+
+  \For{\textit{sample\_index} in 1 to len(\textit{dataframe})} \Comment{Leave-one out algorithm for training and testing}
+    \State $\textit{train\_data} = \textit{dataframe[-sample\_index]}$
+    \State $\textit{test\_data} = \textit{dataframe[sample\_index]}$
+    \State $\textit{knn\_result} = \texttt{knn(}\textit{train\_data, test\_data, k=3} \texttt{)}$
+    \State $\textit{svm\_model} = \texttt{svm(}\textit{train\_data, kernel=linear, cost = 0.001...10000} \textit{)}$
+    \State $\textit{svm\_result} = \texttt{predict(} \textit{svm\_model, test\_data} \texttt{)}$
+  \EndFor
+  \State $\texttt{WriteExperimentResults(} \textit{knn\_result, svm\_result} \texttt{)}$
+
+\end{algorithmic}
+
+\caption{Pseudocode for proposed method in the master node. In the above pseudo-code, indentation
+indicates the beginning and end of a block of code, in other words when the
+indentation ends in a for loop, it means that is the end of the for loop. Additionally,
+all function names represent the same function names that were created in the actual
+code.}
+\label{alg:pseudo_master_node}
+
+\end{figure}
+
+\FloatBarrier
+
+\begin{figure}[h]
+\begin{algorithmic}[1]
   \State $\textit{video\_uri} = \texttt{PopVideoFromQueue()}$
   \State $\textit{segmented\_video} = \texttt{DownloadS3Video(}\textit{video\_uri}\texttt{)}$
   \State $\textit{previous\_frame} = nullptr$
+
   \For{each \textit{frame} in \textit{segmented\_video}} \Comment{Block  extracts features from video frames}
     \State $\textit{current\_frame} = \textit{frame}$
     \If {\textit{previous\_frame} == nullptr}
       \State $continue$
     \EndIf
-    \State $\textit{optical\_flow} = \texttt{CalculateOpticalFlow(}\textit{current\_frame, previous\_frame}$
-    \Statex $\textit{, method} \texttt{)}$
+    \State $\textit{optical\_flow} = \texttt{CalculateOpticalFlow(}\textit{current\_frame, previous\_frame} \texttt{)}$
     \State $\textit{mag} = \textit{optical\_flow}.\texttt{GetMagnitude()}$
     \State $\textit{max\_mag} = \texttt{Max(} \textit{mag} \texttt{)}$
     \State $\textit{magnitude} = \textit{mag} > \textit{max\_mag} \times 0.25$
@@ -83,25 +114,6 @@ is shown in Figure \ref{alg:vida_pseudo_code}.
   \State $\textit{cdf\_features} = \texttt{Normalize(}\textit{pdfs}\texttt{)}$
   \State $\texttt{PushToSqsQueue(}\textit{cdf\_features}, \textit{output\_queue\_name} \texttt{)}$
 
-  \Comment{The remainder of the actions occur on the master node}
-  \While{videos in \textit{video\_list.txt} are still in processing}
-    \State $\texttt{Sleep(1)}$
-  \EndWhile
-
-  \State $\textit{output.txt} = \texttt{WriteCdfsToFile(PopAllCdfsFromQueue(}\textit{output\_queue\_name} \texttt{))}$
-
-  \State $\textit{dataframe} = \texttt{ReadCsv(} \textit{output.txt} \texttt{)}$
-
-
-  \For{\textit{sample\_index} in 1 to len(\textit{dataframe})} \Comment{Leave-one out algorithm for training and testing}
-    \State $\textit{train\_data} = \textit{dataframe[-sample\_index]}$
-    \State $\textit{test\_data} = \textit{dataframe[sample\_index]}$
-    \State $\textit{knn\_result} = \texttt{knn(}\textit{train\_data, test\_data, k=3} \texttt{)}$
-    \State $\textit{svm\_model} = \texttt{svm(}\textit{train\_data, kernel=linear, cost = 0.001...10000} \textit{)}$
-    \State $\textit{svm\_result} = \texttt{predict(} \textit{svm\_model, test\_data} \texttt{)}$
-  \EndFor
-  \State $\texttt{WriteExperimentResults(} \textit{knn\_result, svm\_result} \texttt{)}$
-
 \end{algorithmic}
 
 \caption{Pseudocode for proposed method. In the above pseudo-code, indentation
@@ -109,11 +121,9 @@ indicates the beginning and end of a block of code, in other words when the
 indentation ends in a for loop, it means that is the end of the for loop. Additionally,
 all function names represent the same function names that were created in the actual
 code.}
-\label{alg:vida_pseudo_code}
+\label{alg:pseudo_compute_node}
 
 \end{figure}
-
-\FloatBarrier
 
 From Figure \ref{fig:dataflow} we see that the first step is to upload
 the videos to S3. We keep the videos very small, because as we show in our experiments
@@ -211,7 +221,7 @@ The pseudo code for the operations performed by the master are shown in Figure
   \State \texttt{WriteFeaturesToDisk(} $feature\_vectors$ \texttt{)}
 
 \end{algorithmic}
-\caption{Master Node Implementation Pseudo-Code}
+\caption{Pseudo code for collecting the features in the master node}
 \label{alg:master_node}
 \end{figure}
 

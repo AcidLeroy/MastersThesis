@@ -240,7 +240,7 @@ Not only is this setup scalable, but it's highly flexible because of this idea.
 \subsection{\label{subsection:slave_node}Slave Node Configuration }
 The next very important piece to our innovative architecture is the algorithm
 that is run on all the slave nodes. This algorithm simply polls on a single
-queue, then once a messages is received, it downloads the the small S3 video
+queue, then once a messages is received, it downloads the small S3 video
 segment, processes it using our feature extraction technique, puts the results
 on a queue that it has discovered on the incoming message, deletes the video
 locally and then begins polling on the queue again. Figure \ref{alg:slave_node}

@@ -24,6 +24,7 @@
 \usepackage{csquotes}
 \usepackage{placeins}
 \usepackage{booktabs,siunitx}
+\usepackage[final]{pdfpages}
 
 \usepackage{datetime}
 
@@ -44,6 +45,14 @@
 
 \begin{document}
 
+  % \mbox{}
+  % %\thispagestyle{empty}
+  % \newpage
+
+  \begin{figure}
+ \centering
+ \includepdf[pages=-]{approval.pdf}
+\end{figure}
   \frontmatter
 
   % Uncomment the next command if you see weird paragraph spacing:
@@ -60,12 +69,17 @@
   \degree{Master of Science \\ Computer Engineering}
   \documenttype{Thesis}
   \previousdegrees{B.S., University of New Mexico, 2010}
-  \date{\monthyeardate\today}
+  \date{December, 2016}
 
   \maketitle
 
   %\makecopyright
   %Copyright page is no longer necessary D. Murrell
+
+  \begin{dedication}
+    To my family and friends who have supported my academic adventures and
+    have inspired me to stay curious. 
+  \end{dedication}
 
 
   \begin{acknowledgments}

@@ -1,17 +1,16 @@
-\chapter{Results \& Discussion}
 \section{\label{section:the_data}The AOLME Dataset}
-The AOLME dataset is an enormous repository of over 900 hours of video
+The AOLME dataset is a large repository of over 900 hours of video
 recordings of students. The videos contain students
 interacting with facilitators, their peers and computers to write code in
 Python on the Raspberry Pi.  The dataset is wealth of information but difficult
-to exploit in its current state.  The data used for this thesis is a subset of
+to exploit in its current state.  The data used for this paper is a subset of
 the entire AOLME dataset. By hand, we have selected several videos and extracted
 typing and writing clips from the original dataset and are using these as ground
 truth for measuring the accuracy of our methods.
 
 As Figure \ref{fig:typing_writing} suggests, we are only using a cropped version
 of the video. The reason for this is that we are not attempting to solve the tracking
-problem in this thesis, only the classification problem. Hence, we assume that
+problem in this paper, only the classification problem. Hence, we assume that
 the videos entering into our software have already been clipped and cropped with
 the target activities inside of them and the corresponding lack of the activity.
 Our subset of the AOLME database consists of the following:
@@ -28,40 +27,39 @@ In this section we explore how well our results are for both the classification
 of typing and writing videos using the techniques described in methods chapter.
 
 For our first set of results, we ran to classifying typing motions in videos.
-The input messages into the cluster are shown in Table \ref{tab:message_list}.
-The original dataset, however, contains 10-20 for each of the training classifications,
-we have left them out in this table for brevity.
-\begin{table}[h]
-
-  \begin{tabular}{ | l | l | l | p{2cm} |}
-  \hline
-  \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{algorithm}\\ \hline
-  aolme/data/typing/seg\_1.mp4 & 1 & feature\_queue & farneback \\\hline
-  aolme/data/typing/seg\_2.mp4 & 1 & feature\_queue & farneback \\\hline
-  aolme/data/typing/seg\_3.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_4.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_5.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_6.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_7.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_8.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_9.mp4 & 1 & feature\_queue & farneback\\\hline
-  aolme/data/typing/seg\_10.mp4 & 1 & feature\_queue & farneback\\\hline
-  \ldots & \ldots & \ldots & \ldots\\\hline
-  aolme/data/notyping/seg\_1.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_2.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_3.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_4.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_5.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_6.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_7.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_8.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_9.mp4 & 2 & feature\_queue & farneback\\\hline
-  aolme/data/notyping/seg\_10.mp4 & 2 & feature\_queue & farneback\\\hline
-  \end{tabular}
-  \caption{Data that is sent to the SQS for calculation on the cluster. The
-  original dataset includes 10-20 for both classifications}
-  \label{tab:message_list}
-\end{table}
+The input messages into the cluster include 20 video snippets of the action
+occurring and 20 video snippets of the action not occurring.
+% \begin{table}[h]
+%
+%   \begin{tabular}{ | l | l | l | p{2cm} |}
+%   \hline
+%   \textbf{path} & \textbf{classification} & \textbf{sqs\_queue} & \textbf{algorithm}\\ \hline
+%   aolme/data/typing/seg\_1.mp4 & 1 & feature\_queue & farneback \\\hline
+%   aolme/data/typing/seg\_2.mp4 & 1 & feature\_queue & farneback \\\hline
+%   aolme/data/typing/seg\_3.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_4.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_5.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_6.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_7.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_8.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_9.mp4 & 1 & feature\_queue & farneback\\\hline
+%   aolme/data/typing/seg\_10.mp4 & 1 & feature\_queue & farneback\\\hline
+%   \ldots & \ldots & \ldots & \ldots\\\hline
+%   aolme/data/notyping/seg\_1.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_2.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_3.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_4.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_5.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_6.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_7.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_8.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_9.mp4 & 2 & feature\_queue & farneback\\\hline
+%   aolme/data/notyping/seg\_10.mp4 & 2 & feature\_queue & farneback\\\hline
+%   \end{tabular}
+%   \caption{Data that is sent to the SQS for calculation on the cluster. The
+%   original dataset includes 10-20 for both classifications}
+%   \label{tab:message_list}
+% \end{table}
 
 Using our R code, we then plot some statistics about the vectors that have come
 back from the cluster.
@@ -71,7 +69,7 @@ back from the cluster.
 % statistics, which means that we should have very good luck with our support
 % vector machine properly classifying the results.
 
-\FloatBarrier
+%\FloatBarrier
 
 % \begin{figure}[h]
 %   \label{fig:typing_box_whiskers}
@@ -139,7 +137,7 @@ as results for writing, only about 65\% classification. In these results we
 find that our algorithm struggled more with classifying videos that had no
 writing in them as having writing in them. This may mean that the motion vectors
 we are extracting are highly dependent on the type of scene we are looking at. Furthermore,
-the original algorithm was developed in Matlab and then ported to C++ for this thesis. We
+the original algorithm was developed in Matlab and then ported to C++ for this paper. We
 saw differences in the feature vectors between the two implementations; however,
 classification results proved to be very similar.
 
@@ -151,8 +149,8 @@ experiment by one instance and compare how long it takes to calculate 10 2.1MB
 videos. For this experiment, we used Amazon's t2.micro instance which contains 1
 virtual CPU running on a high frequency Intel Xeon processor with turbo up to
 3.3GHz and contains 1GB of memory. Because t2 instances are designed to  have
-burstable performance, Amazon does not list any specific processor on their webpage
-as can be seen in Figure \ref{fig:instance_table}. Amazon designed
+burstable performance, Amazon does not list any specific processor on their.
+Amazon designed
 these instances like this so that the user is not consistently charged  for using
 high performance CPUS, but rather only when they need the performance are  they
 charged for those compute cycles. As a result, T2 instances can take
@@ -167,19 +165,19 @@ runs a special Amazon Machine image The results from this experiment are show in
 Figure
 \ref{fig:speed_up}
 
-\begin{figure}[h]
-  \label{fig:instance_table}
-  \centering
-  \includegraphics[width=\textwidth]{figures/instance_table}
-  \caption{A subset of instances that can be used for processing on the cloud.
-  Notice how t2 instances are not associated with any specific processor, only
-  the processor family.}
-\end{figure}
+% \begin{figure}[h]
+%   \label{fig:instance_table}
+%   \centering
+%   \includegraphics[width=\textwidth]{figures/instance_table}
+%   \caption{A subset of instances that can be used for processing on the cloud.
+%   Notice how t2 instances are not associated with any specific processor, only
+%   the processor family.}
+% \end{figure}
 
 \begin{figure}[h]
   \label{fig:speed_up}
   \centering
-  \includegraphics[width=.8\textwidth]{figures/speed_up}
+  \includegraphics[width=\columnwidth]{figures/speed_up}
   \caption{Leaving the number of videos to process the same, we increase the
   number of EC2 instances to illustrate the speed up.}
 \end{figure}
@@ -211,7 +209,7 @@ take advantage of the local GPU on the Macbook Pro.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.9\textwidth]{figures/aws_vs_local.png}
+  \includegraphics[width=\columnwidth]{figures/aws_vs_local.png}
   \caption{Comparison of the time it takes for a single node to process 1 video
   vs the time it takes a cluster to process 10 videos. Videos vary in size to
   test the efficacy of choosing to send smaller vs larger videos to the cluster.
@@ -220,83 +218,85 @@ take advantage of the local GPU on the Macbook Pro.
   \label{fig:size_matters}
 \end{figure}
 
-\FloatBarrier
+Using several small experiments, we were able to isolate the speed of how
+quickly we could upload and download video segments in S3. We validated that we
+could achieve approximately 37 MB/s for both uploading and download videos.
 
-Additionally, we can see that the performance of S3 has a linear download and upload
-speed from an EC2 instance. We have collected data that calculates the mean of 10
-sample download-upload pairs of a given file size. The results of this are shown
-in Figures \ref{fig:s3_upload_speed} and \ref{fig:s3_download_speed}. So as expected,
-we can rely on S3 to give us a linearly predictable download and upload rate.
-Because though, it can take a significant time to download, process, and upload videos,
-it is more beneficial for the distributed system to break videos into smaller
-pieces so that no one node is occupied for a long period of time. If this
-notion is followed, it is much easier to scale the feature extractions horizontally.
+% Additionally, we can see that the performance of S3 has a linear download and upload
+% speed from an EC2 instance. We have collected data that calculates the mean of 10
+% sample download-upload pairs of a given file size. The results of this are shown
+% in Figures \ref{fig:s3_upload_speed} and \ref{fig:s3_download_speed}. So as expected,
+% we can rely on S3 to give us a linearly predictable download and upload rate.
+% Because though, it can take a significant time to download, process, and upload videos,
+% it is more beneficial for the distributed system to break videos into smaller
+% pieces so that no one node is occupied for a long period of time. If this
+% notion is followed, it is much easier to scale the feature extractions horizontally.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.8\textwidth]{figures/s3_upload_speed}
-  \caption{Average time to upload varying file sizes in S3 using an EC2 instance. }
-  \label{fig:s3_upload_speed}
-\end{figure}
-
-
-The upload times can be seen in Table \ref{tab:upload_speed}
-\begin{table}[h]
-  \begin{tabular}{lr}
-\toprule
-{File Size} &         Seconds \\
-\midrule
-Upload 1MB (s)   &  0.135685 \\
-Upload 2MB (s)   &  0.152184 \\
-Upload 4MB (s)   &  0.231676 \\
-Upload 8MB (s)   &  0.336037 \\
-Upload 16MB (s)  &  0.732164 \\
-Upload 32MB (s)  &  0.963004 \\
-Upload 64MB (s)  &  1.269231 \\
-Upload 128MB (s) &  1.989168 \\
-Upload 256MB (s) &  3.567965 \\
-Upload 512MB (s) &  7.608010 \\
-\bottomrule
-\end{tabular}
-\caption{Average upload speeds in seconds on an EC2 instance to an S3 bucket}
-\label{tab:upload_speed}
-\end{table}
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=\columnwidth]{figures/s3_upload_speed}
+%   \caption{Average time to upload varying file sizes in S3 using an EC2 instance. }
+%   \label{fig:s3_upload_speed}
+% \end{figure}
 
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.8\textwidth]{figures/s3_download_speed}
-  \caption{Average time to download varying file sizes in S3 using an EC2 instance. }
-  \label{fig:s3_download_speed}
-\end{figure}
-
-The download times can be seen in Table \ref{tab:download_speed}
-\begin{table}[h]
-  \begin{tabular}{lr}
-  \toprule
-  {File Size} &         Seconds \\
-  \midrule
-  Download 1MB (s)   &  0.078182 \\
-  Download 2MB (s)   &  0.082242 \\
-  Download 4MB (s)   &  0.181033 \\
-  Download 8MB (s)   &  0.186510 \\
-  Download 16MB (s)  &  0.263108 \\
-  Download 32MB (s)  &  0.661547 \\
-  Download 64MB (s)  &  1.542783 \\
-  Download 128MB (s) &  2.976941 \\
-  Download 256MB (s) &  4.990264 \\
-  Download 512MB (s) &  9.406564 \\
-  \bottomrule
-  \end{tabular}
-\caption{Average Download speeds in seconds on an EC2 instance from S3}
-\label{tab:download_speed}
-\end{table}
+% The upload times can be seen in Table \ref{tab:upload_speed}
+% \begin{table}[h]
+%   \begin{tabular}{lr}
+% \toprule
+% {File Size} &         Seconds \\
+% \midrule
+% Upload 1MB (s)   &  0.135685 \\
+% Upload 2MB (s)   &  0.152184 \\
+% Upload 4MB (s)   &  0.231676 \\
+% Upload 8MB (s)   &  0.336037 \\
+% Upload 16MB (s)  &  0.732164 \\
+% Upload 32MB (s)  &  0.963004 \\
+% Upload 64MB (s)  &  1.269231 \\
+% Upload 128MB (s) &  1.989168 \\
+% Upload 256MB (s) &  3.567965 \\
+% Upload 512MB (s) &  7.608010 \\
+% \bottomrule
+% \end{tabular}
+% \caption{Average upload speeds in seconds on an EC2 instance to an S3 bucket}
+% \label{tab:upload_speed}
+% \end{table}
 
 
-When we consolidate the numbers above, we find that we end up with an average
-upload speed of 37.0486495118 MB/s and an average download speed of 40.149124154 MB/s.
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=\columnwidth]{figures/s3_download_speed}
+%   \caption{Average time to download varying file sizes in S3 using an EC2 instance. }
+%   \label{fig:s3_download_speed}
+% \end{figure}
 
-\FloatBarrier
+% The download times can be seen in Table \ref{tab:download_speed}
+% \begin{table}[h]
+%   \begin{tabular}{lr}
+%   \toprule
+%   {File Size} &         Seconds \\
+%   \midrule
+%   Download 1MB (s)   &  0.078182 \\
+%   Download 2MB (s)   &  0.082242 \\
+%   Download 4MB (s)   &  0.181033 \\
+%   Download 8MB (s)   &  0.186510 \\
+%   Download 16MB (s)  &  0.263108 \\
+%   Download 32MB (s)  &  0.661547 \\
+%   Download 64MB (s)  &  1.542783 \\
+%   Download 128MB (s) &  2.976941 \\
+%   Download 256MB (s) &  4.990264 \\
+%   Download 512MB (s) &  9.406564 \\
+%   \bottomrule
+%   \end{tabular}
+% \caption{Average Download speeds in seconds on an EC2 instance from S3}
+% \label{tab:download_speed}
+% \end{table}
+
+%
+% When we consolidate the numbers above, we find that we end up with an average
+% upload speed of 37.0486495118 MB/s and an average download speed of 40.149124154 MB/s.
+
+%\FloatBarrier
 
 \section{Discussion}
 In the previous sections we showed that we can accurately classify typing in
@@ -313,9 +313,9 @@ videos, and then could quickly classify features being output from the system
 in microseconds.
 
 Based on the plot in Figure \ref{fig:speed_up}, we showed that the system
-we have proposed in this thesis is horizontally scalable to at least 10 nodes.
+we have proposed in this paper is horizontally scalable to at least 10 nodes.
 More nodes could have easily been selected, but in an attempt to keep the cost
-of this thesis low, we decided to only use what is available by default in the
+of this paper low, we decided to only use what is available by default in the
 AWS cloud. However, based on the success of other applications, such as
 Netflix that have used cloud technologies to scale their system to hundreds
 or even thousands of nodes, there is no reason to believe that this system
@@ -364,17 +364,17 @@ a video as having typing in it, or not having typing in it.
  %   \includegraphics[width=\textwidth]{figures/full_system}
  %   \caption{Illustration of the end goal of the VIDA system. (a) shows the
  %   functions of the master node, and (b) shows the functions of the slave node.
- %   For this thesis we have implemented parts of the distribution as well as parts
+ %   For this paper we have implemented parts of the distribution as well as parts
  %   of the compute node.}
  % \end{figure}
  %
  % \FloatBarrier
 
- % For this thesis we have essentially shown that it is possible to distribute
+ % For this paper we have essentially shown that it is possible to distribute
  % small parts of the video from the master node to be consumed by the compute nodes
  % and then combined into the CDF features. We have not made the work that we have
- % done in this thesis interactive yet, but future work should be able to leverage
- % what we have done in this thesis to do so. In order to achieve the interactive
+ % done in this paper interactive yet, but future work should be able to leverage
+ % what we have done in this paper to do so. In order to achieve the interactive
  % system that is shown in Figure \ref{fig:full_system}, we would need the master
  % node to break the HEVC videos into small 1-2MB segments to send out to the compute
  % cluster and then have the video results recombined into a single feature vector

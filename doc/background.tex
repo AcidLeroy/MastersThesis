@@ -1,5 +1,5 @@
-\chapter{Background}
-Human activity classification in videos is not only a difficult problem to solve
+%\chapter{Background}
+\PARstart Human activity classification in videos is not only a difficult problem to solve
 algorithmically but also pushes current computing solutions to the edge of their
 capability, especially when attempting to keep up with real-time video rates.
 Many solutions have been proposed for robust activity classification in videos
@@ -11,9 +11,9 @@ hardware augmentation (a motion tracking device for example), used to track
 motions of hands etc, and do not rely solely on the video source for
 classification. Our method requires no other augmentation  other than the
 videos.  Other methods such as \cite{niebles2010modeling}, use similar
-techniques that are done in this thesis, however they do not address the
+techniques that are done in this paper, however they do not address the
 computational burden of producing a histogram of features to use for
-classification. We extend parts of their idea and create a  distributed that
+classification. We extend parts of their idea and create a distributed  framework that
 scales both horizontally and vertically. Finally, new deep learning methods such
 as convolutional neural networks are also gaining popularity in activity
 classification in videos because there is no need to select the type of features
@@ -32,113 +32,126 @@ reduce the feature set, but we augment the bag of features and propose
 solution that is also scalable.
 
 Much of the work that has been done in the area of activity recognition and
-video analysis in the cloud is found in Table \ref{tab:paper_summary}. The table
-lists several studies that are used as the literature review for this thesis.
-Many of these papers present exceptional work in both human activity
+video analysis in the cloud is found in
+%Table \ref{tab:paper_summary}
+the list below.
+. Many of these papers present exceptional work in both human activity
 classification as well as video analysis using distributed systems. However,
-none of them fully address the problem presented in this thesis. From Table
-\ref{tab:paper_summary}, it is evident that human activity classification as
+none of them fully address the problem presented here. From
+%Table \ref{tab:paper_summary}
+the list below
+, it is evident that human activity classification as
 well as distributed video analysis is an unsolved problem and many researchers
-continue to publish in this area. Further more, it is obvious that many of these
+continue to publish in this area. Furthermore, it is obvious that many of these
 studies either address activity classification or distributed video systems, but
 none effectively combine both ideas.
+\begin{itemize}
+  \item \textbf{Human activity recognition} \cite{wang2016action} - Uses edge trajectories,
+  optical flow histograms, Fisher Vectors but was not implemented to scale
+  \item \textbf{Large-scale video analysis} \cite{wang2016cloud}  - Uses  google cloud
+  to analyze videos in a secure and robust way but does perform human activity recognition
+  \item \textbf{Video segmentation and activity recognition} \cite{kuehne2016end} - Uses Fisher vectors
+  , structured temporal models and Guassian  mixed models and also uses SVM and PCA as classification
+  technique, but does not prove to be scalable.
+  \item \textbf{Action recognition} \cite{cai2016towards} - Uses dynamic trajectory and static deep features
+   and Linear SVM and combines deep learning techniques with trajectory features. Again, this solution
+   has not proven to be scalable.
+   \item \textbf{Cloud resource management} \cite{kaseb2015cloud} - Scaling resources effectively
+   on the cloud to minimize cost and maximize performance. This paper addresses how to scale
+   properly on the cloud, but doesn't address our human activity recognition needs.
+   \item \textbf{Large-scale video classification} \cite{karpathy2014large} - Does not reduce
+   feature space for human activity classification
+   \item \textbf{Activity classification} \cite{niebles2010modeling}- Uses spatio-temporal synchrony
+   , a synchrony auto-encoder and performs well using using local features. This method has
+   not been shown to scale.
+\end{itemize}
 
-\begin{singlespace}
-  \begin{table}[h]
-  \begin{centering}
-    \begin{tabular}{ | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth}| }
-    \hline
-    \textbf{Study} & \textbf{Features} & \textbf{Classification} & \textbf{Comments} \\
-    \hline
-    Human activity recognition \cite{wang2016action}&
-    edge trajectories, optical flow histograms, Fisher Vector & multi-class SVM
-    & Accurate classif. of various
-    human activities using edge trajectories in combination with optical flow \\
-    \hline
-    Large-scale video analysis \cite{wang2016cloud} & N/A & N/A & Using google cloud to analyze videos in a secure and robust way \\
-    \hline
-    Video segmentation and activity recognition \cite{kuehne2016end} & Fisher Vectors, structured
-    temporal models and Gaussian mixed models & SVM and PCA & Classif. of activities as
-    well as attempting to automatically parse out activities in the videos \\
-    \hline
-    Action recognition \cite{cai2016towards} & Dynamic trajectory and static deep features
-    & Linear SVM & Combining deep learning techniques with trajectory features. \\
-    \hline
-    Cloud resource management \cite{kaseb2015cloud} & N/A & N/A & Scaling resources effectively
-    on the cloud to minimize cost and maximize performance.\\
-    \hline
-    Large-scale video classif. \cite{karpathy2014large} & N/A &
-    Convolution Neural Networks & 1 million youtube videos with 487 classes,
-    not implemented on a distributed framework \\
-    \hline
-    Activity classif. \cite{niebles2010modeling} & spatio-temporal synchrony
-    & synchrony auto-encoder & Quick motion estimation using local features
-    and high classif. rate. \\
-    \hline
-    \end{tabular}
-    \caption{Latest work in video analysis in the cloud and human activity classification}
-    \label{tab:paper_summary}
-  \end{centering}
-\end{table}
-\end{singlespace}
 
-\FloatBarrier
+%   \begin{table*}[t]
+%   \begin{centering}
+%     \begin{tabular}{ | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth} | p{0.21\linewidth}| }
+%     \hline
+%     \textbf{Study} & \textbf{Features} & \textbf{Classification} & \textbf{Comments} \\
+%     \hline
+%     Human activity recognition \cite{wang2016action}&
+%     edge trajectories, optical flow histograms, Fisher Vector & multi-class SVM
+%     & Accurate classif. of various
+%     human activities using edge trajectories in combination with optical flow \\
+%     \hline
+%     Large-scale video analysis \cite{wang2016cloud} & N/A & N/A & Using google cloud to analyze videos in a secure and robust way \\
+%     \hline
+%     Video segmentation and activity recognition \cite{kuehne2016end} & Fisher Vectors, structured
+%     temporal models and Gaussian mixed models & SVM and PCA & Classif. of activities as
+%     well as attempting to automatically parse out activities in the videos \\
+%     \hline
+%     Action recognition \cite{cai2016towards} & Dynamic trajectory and static deep features
+%     & Linear SVM & Combining deep learning techniques with trajectory features. \\
+%     \hline
+%     Cloud resource management \cite{kaseb2015cloud} & N/A & N/A & Scaling resources effectively
+%     on the cloud to minimize cost and maximize performance.\\
+%     \hline
+%     Large-scale video classif. \cite{karpathy2014large} & N/A &
+%     Convolution Neural Networks & 1 million youtube videos with 487 classes,
+%     not implemented on a distributed framework \\
+%     \hline
+%     Activity classif. \cite{niebles2010modeling} & spatio-temporal synchrony
+%     & synchrony auto-encoder & Quick motion estimation using local features
+%     and high classif. rate. \\
+%     \hline
+%     \end{tabular}
+%     \caption{Latest work in video analysis in the cloud and human activity classification}
+%     \label{tab:paper_summary}
+%   \end{centering}
+% \end{table*}
 
-In addition to reviewing the studies in Table \ref{tab:paper_summary},  we also
-summarize many of the datasets used in this field of research in Table
-\ref{tab:common_datasets}. This table illustrates some of the common datasets
-that are used in benchmarking how well a given classification algorithm works in
-comparison with other methods. Our dataset for AOLME is much bigger and is
-considered to be truly a dataset that is ``in the wild''. Additionally, the
-common datasets that are currently being used do not include learning activities
+
+% In addition to reviewing the studies in Table \ref{tab:paper_summary},  we also
+% summarize many of the datasets used in this field of research in Table
+% \ref{tab:common_datasets}. This table illustrates some of the common datasets
+% that are used in benchmarking how well a given classification algorithm works in
+% comparison with other methods.
+
+The AOLME dataset is much bigger and is
+considered to be truly a dataset that is ``in the wild'' than most other ones \cite{soomro2012ucf101},
+\cite{niebles2010modeling}, \cite{vo2014stochastic}, \cite{spriggs2009temporal}
+\cite{rohrbach2012database}. These
+ datasets do not include the learning activities
 that we are interested in automatically analyzing and thus are not a good fit
-for this thesis. Though for this thesis we  use a subset of our entire AOLME
-video database, we can in the future leverage the nearly terabyte sized dataset
+for this research. Though in this paper we use a subset of our entire AOLME
+video database, we can in the future leverage large AOLME dataset
 as soon as we begin manually classifying and segmenting the videos for
 validation of our methods.
 
-\begin{singlespace}
-  \begin{table}[h]
-  \begin{centering}
-    \begin{tabular}{ | p{0.3\linewidth} | p{0.3\linewidth} | p{0.3\linewidth} |  }
-      \hline
-      \textbf{Title} & \textbf{Description} & \textbf{URL} \\
-      \hline
-      UCF101 \cite{soomro2012ucf101}& A dataset of 101 human actions (13,320 videos) &
-      \url{http://www.thumos.info/download.html} \\
-      \hline
-      KTH & Six types of human activity (2391 sequences) & \url{http://www.nada.kth.se/cvap/actions/} \\
-      \hline
-      Olympic \cite{niebles2010modeling} & 16 olympic sports gathered from youtube &
-       \url{http://vision.stanford.edu/Datasets/OlympicSports/} \\
-      \hline
-      Toy Assembly \cite{vo2014stochastic} & 29 sequences of 2-3 minute long sequences
-      of a human assembling a toy from five different bins & \url{http://www.cc.gatech.edu/~nvo9/sin/} \\
-      \hline
-      CMU-MMAC \cite{spriggs2009temporal} & Database that contains multimodal measures of activities such as
-      cooking and food preparation & \url{http://kitchen.cs.cmu.edu/main.php} \\
-      \hline
-      MPIICooking \cite{rohrbach2012database} & Database of 65 cooking activities (8.7GB of AVI formatted video),
-      continuously recorded in a realistic setting & \url{http://tinyurl.com/nvcoh6w} \\
-      \hline
-    \end{tabular}
-    \caption{Common datasets used for activity recognition}
-    \label{tab:common_datasets}
-  \end{centering}
-\end{table}
-\end{singlespace}
+%   \begin{table*}[t]
+%   \begin{centering}
+%     \begin{tabular}{ | p{0.3\linewidth} | p{0.3\linewidth} | p{0.3\linewidth} |  }
+%       \hline
+%       \textbf{Title} & \textbf{Description} & \textbf{URL} \\
+%       \hline
+%       UCF101 \cite{soomro2012ucf101}& A dataset of 101 human actions (13,320 videos) &
+%       \url{http://www.thumos.info/download.html} \\
+%       \hline
+%       KTH & Six types of human activity (2391 sequences) & \url{http://www.nada.kth.se/cvap/actions/} \\
+%       \hline
+%       Olympic \cite{niebles2010modeling} & 16 olympic sports gathered from youtube &
+%        \url{http://vision.stanford.edu/Datasets/OlympicSports/} \\
+%       \hline
+%       Toy Assembly \cite{vo2014stochastic} & 29 sequences of 2-3 minute long sequences
+%       of a human assembling a toy from five different bins & \url{http://www.cc.gatech.edu/~nvo9/sin/} \\
+%       \hline
+%       CMU-MMAC \cite{spriggs2009temporal} & Database that contains multimodal measures of activities such as
+%       cooking and food preparation & \url{http://kitchen.cs.cmu.edu/main.php} \\
+%       \hline
+%       MPIICooking \cite{rohrbach2012database} & Database of 65 cooking activities (8.7GB of AVI formatted video),
+%       continuously recorded in a realistic setting & \url{http://tinyurl.com/nvcoh6w} \\
+%       \hline
+%     \end{tabular}
+%     \caption{Common datasets used for activity recognition}
+%     \label{tab:common_datasets}
+%   \end{centering}
+% \end{table*}
 
-\FloatBarrier
-
-Thus we have defined some of the important research in this area and where it is
-lacking. In the following sections, we explore important algorithms that are
-foundational to the success of our classification and scalable architecture. In
-section \ref{section:optical_flow} we review optical flow and how it can be used
-for classification and then in section \ref{section:cloud_computing} we explore
-the current state-of-the-art cloud computing techniques and how they can be
-utilized to create a flexible and scalable architecture.
-
-\section{\label{section:activity_classification}Human Activity Classification in Videos}
+\subsection{\label{subsection:activity_classification}Human Activity Classification in Videos}
 Human activity classification in video is an unsolved problem and has attracted
 a variety of different image and video processing techniques. One of the main
 contributing factors to its difficulty is the sheer size of the data, videos
@@ -171,13 +184,13 @@ framework that is simple, robust and extremely fast using Amazon Web Services
 for human activity recognition in videos.
 
 Encoding videos as succinct datasets that can easily be classified and are
-representative of the underlying features is another area that this thesis
+representative of the underlying features is another area that this paper
 attempts to address. In \textit{Learning to encode motion using spatio-temporal
 synchrony} \cite{konda2013learning} they attempt to address this need by detecting
 synchrony between frames in videos. They were robustly able to classify motions in
 datasets KTH, UCF sports, Hollywood2 and YUPENN in the low to mid 90s classification
 rate. However, training and testing the system varied between 2-3 minutes all
-the way up to days. In this thesis, we not only get very good classification
+the way up to days. In this paper, we not only get very good classification
 rates, but because the system is horizontally scalable, we can train the system
 in a matter of minutes assuming relatively small video segments (videos on the
 order of 1-2 MB).
@@ -186,7 +199,7 @@ More modern approaches use various compound techniques in an attempt to solve
 human activity recognition such as \cite{wang2016action}. In this paper the
 authors showed that they can classify many of the existing datasets very well
 using a combination of optical flow histograms, edge trajectories, and support
-vector machines for classification. In this thesis, we do not attempt to beat
+vector machines for classification. In this paper, we do not attempt to beat
 the results in this paper, we strive to provide a method for activity
 classification that can distributed on a cloud like infrastructure and that can
 be used in real time. Furthermore, the datasets that they use are not from
@@ -195,176 +208,48 @@ are not ideal for training and testing activity recognition algorithms. This
 makes tuning and tweaking the parameters for any algorithm, edge trajectories or
 not, very difficult. Like them though, we are using optical flow which is well
 studied and robust for video activity recognition. An other contribution of this
-thesis that is not provided in \cite{wang2016action} is that we openly provide
+paper that is not provided in \cite{wang2016action} is that we openly provide
 our software as open source so that other studies can be easily conducted.
 
 
+% \subsection{\label{subsection:cloud_computing}Cloud Computing}
+% Cloud computing has become a common practice among scientists, engineers and
+% business owners alike for solving computationally expensive problems at a
+% relative low cost. Cloud computing offers services on demand rather than
+% provisioning hardware and software ahead of time. This has opened the door to
+% researchers who require thousands of computers but don't necessarily have the
+% funds or access to a cluster of their own \cite{armbrust2009above}. Cloud
+% computing offers a model that is pay as you go, you only pay for what you use.
+% This contrasts with the traditional way of solving computationally expensive
+% problems by acquiring hardware and software ahead of time to run on dedicated
+% machines. This has the advantage that the owner of the hardware has full control
+% of its resources, but it has the disadvantage of costing a significant amount of
+% money and there is a chance that the originally allocated hardware is  either
+% insufficient for the task or is overdone,  therefore wasting money and
+% computational resources.  At its core, information technology resources are now
+% a programmable resource in the cloud, rather than one that has to be manually
+% setup and configured.
+%
+% The programming model for cloud computing is fundamentally different than
+% traditional software models. In the traditional infrastructure of computing,
+% applications ran on servers and often times relied on the state of a particular
+% server to perform computations \cite{awsbestpractices}. That model must be
+% broken in order to efficiently develop applications for the cloud. Clearly, not
+% all applications can be stateless, but the keys is to eliminate as many stateful
+% components as possible and replace them with stateless ones. When this paradigm
+% is followed, along with designing software with well defined interfaces, it makes creating a scalable, flexible application easy using cloud
+% service providers \cite{awsbestpractices} and how to make auto deployment a snap
+% for rapid testing and distribution using container technologies such as docker.
+% An example of a well defined interface is a representational state transfer (RESTful) one,
+%  which is an interface that provides easy interoperability between compute nodes
+%  on a network. Typically an interface like this communicates over http or https.
+%
+% In the following subsections we explore the current state of cloud computing and
+% what types of applications can leverage a cloud like infrastructure, a high
+% level overview AWS and a few of the services that can benefit a video processing
+% application.
 
-\subsection{\label{section:optical_flow}Optical Flow}
-There are many varieties of algorithms that aid in the analysis of motions in
-videos.  Farneback, Lucas-Kanade and Horn-Schunck \cite{horn1981determining} are
-all well studied and successful algorithms for this analysis. In this paper
-though, we have chosen to limit the scope to two optical flow methods that are
-available to a variety of languages. We explain the implementation of the
-Farneback optical flow algorithm \cite{farneback2003two}, also known as dense
-optical flow, and the pyramidal, Lucas-Kanade approach to optical flow
-\cite{bouguet2001pyramidal}.
-
-\subsection{\label{section:optical_flow_methods}Optical Flow Methods}
-In this thesis we attempt to classify two types of activities in video,  typing
-and writing. Since both of these activities involve motion, i.e. a change of
-apparent structure position from one video frame to the next, optical flow
-algorithms  are a suitable tool for attempting to extract germane features from
-the video.
-
-We use both Lucas-Kanade \cite{lucas1981iterative} and the Farneback
-\cite{farneback2003two}  optical flow algorithms to attempt to extract
-important motion features from the AOLME videos. Both algorithms attempt to solve
-a common problem known as the \textit{aperture problem}. The problem is defined
-by assuming that there have been small changes in both the $x$, $y$ and time components
-of a video scene. This is outlined in Equation \ref{eq:delta_image}
-Equation \ref{eq:delta_image}
-
-\begin{equation}
-I(x,y,t) = I(x+dx, y+dy, t+dt)
-\label{eq:delta_image}
-\end{equation}
-
-where $I$ is the image, $x$ \& $y$ are the column row coordinates
-respectively, and $t$ is the time between two adjacent image frames. Taking the
-Taylor series expansion of Equation \ref{eq:delta_image} results in Equation
-\ref{eq:taylor_expansion}
-
-
-\begin{equation}
-f_x u + f_y v + f_t = 0
-\label{eq:taylor_expansion}
-\end{equation}
-
-where
-
-\begin{equation}
-f_x = \frac{\partial f}{\partial x} \; ; \; f_y = \frac{\partial f}{\partial y} \\
-u = \frac{dx}{dt} \; ; \; v = \frac{dy}{dt}
-\label{eq:taylor_expansion_partial}
-\end{equation}
-
- Equation is \ref{eq:taylor_expansion_partial} is known as the Optical Flow
- equation. The object is to determine what $u$ and $v$ are given that $f_x$ and
- $f_y$ are the image gradients and $f_t$ is the time gradient. Since in Equation
- \ref{eq:taylor_expansion} we have only two unknowns, we cannot solve the system
- without additional constraints. This is known as the \textit{aperture problem}.
- Both the Lucas-Kanade method and the Farneback method attempt to estimate this
- problem. Lucas-Kande attempts to reframe the problem such that we have an
- overdetermined system, solving it and then providing motion vectors for only
- features that move. The Farneback solution, on the other hand, argues that is
- possible to solve the \textit{aperture problem} by first approximating each
- neighborhood of both frames with quadratic polynomials, and then estimating the
- displacement fields between the frames using polynomial expansion. Rather than
- providing only a few motion vectors, the Farneback method provides dense
- optical flow. That is to say that there is a motion vector for every pixel
- between the frames \cite{farneback2003two}.
-
-\subsection{\label{subsection:lucas_kanade} Lucas-Kanade Method}
-We leverage a common C++ library that has already implemented a specialized
-version of the general Lucas-Kanade algorithm which uses pyramids to solve the
-optical flow at different scales of motion \cite{bouguet2001pyramidal}. This
-algorithm is provided freely in a C++ computer vision library known as OpenCV
-\cite{itseez2015opencv}. Essentially, this algorithm is much like the original
-paper published by Lucas and Kanade, but it solves the issue of large motions
-between frames and at different scales. By definition, the Lucas-Kande method
-assumes that the displacement of features in the image between two frames is
-small and roughly constant within a pixel neighborhood. This algorithm, then, by
-definition cannot handle large motions between frames, and hence the algorithm
-presented in \cite{bouguet2001pyramidal} attempts to more robustly solve optical
-flow. The Lucas-Kanade method in OpenCV is often used with Shi-Tomasi
-\cite{shi1994good} detection points to estimate what are good features to track
-in a frame. This allows the Lucas-Kanade algorithm to perform calculations on a
-sparse matrix rather than computing dense optical flow.
-
-\subsection{\label{subsection:farneback_method}Farneback Method} Again, we
-leverage the C++ OpenCV library to calculate the motion vectors for Farneback
-optical flow. Unlike the previous method, the Farneback algorithm does not
-require any track points to estimate motion vectors because it is a dense
-optical flow algorithm, i.e. 100\% of the pixels has an associated optical flow
-vector. The main idea behind calculating the motion vectors in this method, is
-to use polynomial expansion for a neighborhood of pixels \cite{farneback2003two}
-and then use that estimation to find a global translation between the two
-frames. This essentially aids with global background movement so that unique
-movements in the foreground can be accurately measured.
-
-\section{\label{section:cloud_computing}Cloud Computing}
-Cloud computing has become a common practice among scientists, engineers and
-business owners alike for solving computationally expensive problems at a
-relative low cost. Cloud computing offers services on demand rather than
-provisioning hardware and software ahead of time. This has opened the door to
-researchers who require thousands of computers but don't necessarily have the
-funds or access to a cluster of their own \cite{armbrust2009above}. Cloud
-computing offers a model that is pay as you go, you only pay for what you use.
-This contrasts with the traditional way of solving computationally expensive
-problems by acquiring hardware and software ahead of time to run on dedicated
-machines. This has the advantage that the owner of the hardware has full control
-of its resources, but it has the disadvantage of costing a significant amount of
-money and there is a chance that the originally allocated hardware is  either
-insufficient for the task or is overdone,  therefore wasting money and
-computational resources.  At its core, information technology resources are now
-a programmable resource in the cloud, rather than one that has to be manually
-setup and configured.
-
-The programming model for cloud computing is fundamentally different than
-traditional software models. In the traditional infrastructure of computing,
-applications ran on servers and often times relied on the state of a particular
-server to perform computations \cite{awsbestpractices}. That model must be
-broken in order to efficiently develop applications for the cloud. Clearly, not
-all applications can be stateless, but the keys is to eliminate as many stateful
-components as possible and replace them with stateless ones. When this paradigm
-is followed, along with designing software with well defined interfaces, it makes creating a scalable, flexible application easy using cloud
-service providers \cite{awsbestpractices} and how to make auto deployment a snap
-for rapid testing and distribution using container technologies such as docker.
-An example of a well defined interface is a representational state transfer (RESTful) one,
- which is an interface that provides easy interoperability between compute nodes
- on a network. Typically an interface like this communicates over http or https.
-
-In the following subsections we explore the current state of cloud computing and
-what types of applications can leverage a cloud like infrastructure, a high
-level overview AWS and a few of the services that can benefit a video processing
-application.
-
-\subsection{\label{subsection:in_the_cloud}What's in the cloud?}
-In most of the modern cloud architectures such as Amazon Web Services (AWS),
-Microsoft's Azure and Google's Cloud Platform, services offered range from
-compute power to database solutions. However, the resources that are often
-most important are access to compute resources, highly available networks and
-redundant and durable storage. With these three resources available, its possible
-to create almost any kind of application in a cloud architecture. The idea is
-to eliminate servers, and instead replace them services. Buzzwords
-that emerge from this context are software as a service (SaaS), hardware as a service
-(HaaS), and X as a service (XaaS) where X can refer to any number common IT
-processes.
-
-The compute resources that are provided are simply virtual machines that can be
-created programmatically, usually through some kind of application program
-interface (API) provided by the cloud company. These virtual machines can
-usually be provisioned with almost any kind of operating system that is
-supported by the cloud company of choice. As a result, developers can easily
-stand up thousands of virtual instances in the cloud with their operating system
-of choice with the click of a button, and tear them down just as quickly.
-
-Storage resources are also crucial to effective cloud software development.
-Making storage resources highly available has the advantage of there being
-no single point of failure in the data and also facilitates fast access to the
-data because no one network interface will be throttled on the network. In a
-distributed computing sense, this is extremely important so that data can be operated
-upon efficiently over potentially thousands of nodes.
-
-Without a well provisioned network, this could be the ultimate bottleneck for
-a software package attempting to leverage the cloud. Fortunately, network as a
-service (NaaS) is also available in most commercially available clouds. Most
-providers will supply very basic networking for free, but then as with most
-resources available in the cloud, it is something that can be upgraded, provisioned
-and tailored to the developer's desire.
-
-\subsection{\label{subsection:aws}Amazon Web Services}
+\subsubsection{\label{subsubsection:aws}Amazon Web Services}
 Amazon Web Services (AWS) is the most mature cloud solution architecture
 available to the public. A popular streaming service in the United States,
 Netflix, recently moved all of its streaming services to AWS
@@ -379,91 +264,69 @@ storage needs}, \enquote{service availability}, and \enquote{cost reduction}
 institution to begin leveraging the power of micro services and cloud
 infrastructure.
 
-AWS provides a number of services that are important to scaling our architecture
-both horizontally and vertically. Several services that are important to
-our video processing paradigm are:
-\begin{itemize}
-\item Elastic compute cloud (EC2) - These are virtual machines that can be
-provisioned quickly and can be configured a number of ways. They are the work
-horses for operating effectively on the AWS cloud. Furthermore, you can
-provision one, a thousand, or have them created as you begin to saturate
-existing instances.
-\item Simple storage service (S3) - This services provides storage that is enormous,
-durable and distributed over regions in the united states. Petabytes of data can
-be easily accessed from anywhere within an Amazon region and have the advantage
-of being redundant and fault tolerant. That is to say, the data is not simply
-stored on a hard drive at amazon, but is replicated over hundreds of machines
-and locations.
-\item Simple queue service (SQS) - Is a distributed queue that allows asynchronous
-reads and writes to any node in a cluster that has access. This service allows
-extremely reliable communication between micro services.
-\item Amazon Auto Scaling (AAS) - Auto scaling is a service that allows users
-to scale their EC2 instances automatically based on CPU and memory saturation. It
-is a key service that allows users to keep costs low yet perform at maximum
-capability.
-\item Elastic container service (ECS) - This services provides orchestration for
-automatic deployment of containers. This is an especially useful service if
-your application is deployed into a Docker container.
-\end{itemize}
+% AWS provides a number of services that are important to scaling our architecture
+% both horizontally and vertically. Several services that are important to
+% our video processing paradigm are:
+% \begin{itemize}
+% \item Elastic compute cloud (EC2) - These are virtual machines that can be
+% provisioned quickly and can be configured a number of ways. They are the work
+% horses for operating effectively on the AWS cloud. Furthermore, you can
+% provision one, a thousand, or have them created as you begin to saturate
+% existing instances.
+% \item Simple storage service (S3) - This services provides storage that is enormous,
+% durable and distributed over regions in the united states. Petabytes of data can
+% be easily accessed from anywhere within an Amazon region and have the advantage
+% of being redundant and fault tolerant. That is to say, the data is not simply
+% stored on a hard drive at amazon, but is replicated over hundreds of machines
+% and locations.
+% \item Simple queue service (SQS) - Is a distributed queue that allows asynchronous
+% reads and writes to any node in a cluster that has access. This service allows
+% extremely reliable communication between micro services.
+% \item Amazon Auto Scaling (AAS) - Auto scaling is a service that allows users
+% to scale their EC2 instances automatically based on CPU and memory saturation. It
+% is a key service that allows users to keep costs low yet perform at maximum
+% capability.
+% \item Elastic container service (ECS) - This services provides orchestration for
+% automatic deployment of containers. This is an especially useful service if
+% your application is deployed into a Docker container.
+% \end{itemize}
+%
+% The list provided is by no means meant to be exhaustive, but rather provide
+% a brief summary of the services that are important to creating an application
+% that can be horizontally scaled on the cloud. AWS offers dozens of services, each
+% one can be tailored to the specific needs of the developer and the application
+% requirements.
+%
+% EC2 instances are the work horses in the Amazon cloud. Not only are they important
+% for horizontal scalability, but they are also important for vertical scalability.
+% There are a number of instance types that can be chosen for customized
+% applications needs. For example, instances can be provisioned with a single CPU
+% of moderate frequency and several hundred MBs of random access memory (RAM) or
+% they can be vertically scaled to contain state-of-the-art GPUs with dozens of
+% CPU cores and hundreds of GBs of RAM. In fact, AWS is one of the few cloud
+% services providers that does provide access to instances with GPUs, which is
+% extremely important for video processing algorithms that leverage efficient
+% GPU algorithms written in CUDA and/or OpenCL. Thus applications can be scaled
+% vertically and horizontally using these EC2 instances.
 
-The list provided is by no means meant to be exhaustive, but rather provide
-a brief summary of the services that are important to creating an application
-that can be horizontally scaled on the cloud. AWS offers dozens of services, each
-one can be tailored to the specific needs of the developer and the application
-requirements.
-
-EC2 instances are the work horses in the Amazon cloud. Not only are they important
-for horizontal scalability, but they are also important for vertical scalability.
-There are a number of instance types that can be chosen for customized
-applications needs. For example, instances can be provisioned with a single CPU
-of moderate frequency and several hundred MBs of random access memory (RAM) or
-they can be vertically scaled to contain state-of-the-art GPUs with dozens of
-CPU cores and hundreds of GBs of RAM. In fact, AWS is one of the few cloud
-services providers that does provide access to instances with GPUs, which is
-extremely important for video processing algorithms that leverage efficient
-GPU algorithms written in CUDA and/or OpenCL. Thus applications can be scaled
-vertically and horizontally using these EC2 instances.
-
-\subsection{\label{subsection:activity_in_the_cloud}Activity Recognition Using the Cloud}
-Until this point, we have only presented the basics of how the cloud can be used
-to perform computationally heavy tasks. In this subsection, we investigate how
-other research has leveraged the cloud to perform similar video processing tasks.
-One of the latest works is ``A Cloud-Based Large-Scale Distributed Video Analysis
-System'' \cite{wang2016cloud}. In this paper, the authors attempt to make a
-robust, scalable and secure platform for performing video analysis using the
-Google cloud computing infrastructure. Their system proposes video analysis
-modules that are pluggable and therefore could perform a multitude of tasks and
-they also detail the data model for processing videos. However, their infrastructure
-lacks the continuous deployment and ease of deployment that the architecture
-in this thesis provides and they do not provide the software they wrote as a
-deliverable as we do. Many of the same concepts are shared between our thesis
-and this paper in terms of architecture, but they are not automatically
-orchestrating their services from software development to deployment. Our proposal
-not only supports a cloud like infrastructure for analyzing videos, but also proposes
-a delivery system that is not only convenient for the end users of our video analysis
-package, but is also convenient for developers wishing to plug their particular
-application into our architecture. Furthermore this thesis provides all the
-software openly to the public so that experiments can easily be redone and leveraged
-for future work.
-
-\subsection{\label{subsection:docker}Docker}
-Over the last two years, Docker has gained significant traction amongst software
-developers for application deployment. Docker is a software package that allows
-a variety of *nix type machines to run applications developed on different
-platforms to be run natively. For example, if an application was developed to run
-on Ubuntu 14.04, a user who has Docker installed on Cent OS 7 will be able to
-run that same byte code. This has a significant impact on the way that software
-is deployed. With Docker, gone are the days when software had to be compiled on
-multiple architectures or having users install hundreds of third
-party libraries just to run the release version of the software.
-
-This paradigm has significant advantages for deploying scalable applications
-in a cloud infrastructure. The first advantage being that as long as a *nix
-machine is being run on an EC2 instance, you can deploy the package to the instance as
-fast as it takes to download the docker image. As a result, maintaining packages
-on the instance is not needed. All the software needed for the application
-is packaged into the docker image. Secondly, ECS makes it a trivial task to deploy
-your Docker container to thousands of instances with only a few commands. With
-ECS you can start and stop services, orchestrate varieties of instances and
-also perform load balancing to ensure that your application is being run at
-top performance and not costing exorbitant amounts of money.
+% \subsubsection{\label{subsubsection:activity_in_the_cloud}Activity Recognition Using the Cloud}
+% Until this point, we have only presented the basics of how the cloud can be used
+% to perform computationally heavy tasks. In this subsection, we investigate how
+% other research has leveraged the cloud to perform similar video processing tasks.
+% One of the latest works is ``A Cloud-Based Large-Scale Distributed Video Analysis
+% System'' \cite{wang2016cloud}. In this paper, the authors attempt to make a
+% robust, scalable and secure platform for performing video analysis using the
+% Google cloud computing infrastructure. Their system proposes video analysis
+% modules that are pluggable and therefore could perform a multitude of tasks and
+% they also detail the data model for processing videos. However, their infrastructure
+% lacks the continuous deployment and ease of deployment that the architecture
+% in this thesis provides and they do not provide the software they wrote as a
+% deliverable as we do. Many of the same concepts are shared between our paper
+% and this paper in terms of architecture, but they are not automatically
+% orchestrating their services from software development to deployment. Our proposal
+% not only supports a cloud like infrastructure for analyzing videos, but also proposes
+% a delivery system that is not only convenient for the end users of our video analysis
+% package, but is also convenient for developers wishing to plug their particular
+% application into our architecture. Furthermore this paper provides all the
+% software openly to the public so that experiments can easily be redone and leveraged
+% for future work.

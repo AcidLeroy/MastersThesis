@@ -1,0 +1,111 @@
+\documentclass[
+	%draft,
+	submission,
+	%compressed,
+	final,
+	%
+	%technote,
+	%internal,
+	%submitted,
+	%inpress,
+	%reprint,
+	%
+	%titlepage,
+	notitlepage,
+	%anonymous,
+	narroweqnarray,
+	inline,
+	twoside,
+  %invited,
+	]{ieee}
+
+\newcommand{\latexiie}{\LaTeX2{\Large$_\varepsilon$}}
+
+%\usepackage{ieeetsp}	% if you want the "trans. sig. pro." style
+%\usepackage{ieeetc}	% if you want the "trans. comp." style
+%\usepackage{ieeeimtc}	% if you want the IMTC conference style
+% \usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+%\usepackage{algorithmic}
+\usepackage[noend]{algpseudocode}
+% \usepackage{minted}
+\usepackage{csquotes}
+\usepackage{placeins}
+\usepackage{booktabs,siunitx}
+%
+%
+% \usepackage{datetime}
+%
+% \usepackage{xcolor}
+% Use the `endfloat' package to move figures and tables to the end
+% of the paper. Useful for `submission' mode.
+%\usepackage {endfloat}
+
+% Use the `times' package to use Helvetica and Times-Roman fonts
+% instead of the standard Computer Modern fonts. Useful for the
+% IEEE Computer Society transactions.
+%\usepackage{times}
+% (Note: If you have the commercial package `mathtime,' (from
+% y&y (http://www.yandy.com), it is much better, but the `times'
+% package works too). So, if you have it...
+%\usepackage {mathtime}
+
+% for any plug-in code... insert it here. For example, the CDC style...
+%\usepackage{ieeecdc}
+
+\begin{document}
+
+%----------------------------------------------------------------------
+% Title Information, Abstract and Keywords
+%----------------------------------------------------------------------
+\title{\input{title}}
+
+% format author this way for journal articles.
+% MAKE SURE THERE ARE NO SPACES BEFORE A \member OR \authorinfo
+% COMMAND (this also means `don't break the line before these
+% commands).
+\author[]{Cody W. Eilar
+       \authorinfo{C.\,W.\,Eilar is with the Department of Computer
+       Engineering, University of New Mexico, Albuquerque, NM 87109.
+       Phone: $+$1\,505\,514-5961, e-mail: ceilar@unm.edu}%
+}
+
+\journal{IEEE }
+\titletext{\today}
+%\ieeecopyright{0018--9456/97\$10.00 \copyright\ 1997 IEEE}
+%\lognumber{xxxxxxx}
+%\pubitemident{S 0018--9456(97)09426--6}
+%\loginfo{Manuscript received September 27, 1997.}
+\firstpage{1}
+
+%\confplacedate{Ottawa, Canada, May 19--21, 1997}
+\maketitle
+
+%----------------------------------------------------------------------
+% ABSTRACT
+%----------------------------------------------------------------------
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+
+\section{Introduction}
+\input{introduction}
+
+\section{Background}
+\input{background}
+
+\section{Methods}
+\input{method}
+
+\section{Results \& Discussion}
+\input{results}
+
+\section{Summary}
+\input{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{ivpcl_publications}
+
+\end{document}
